@@ -47,7 +47,7 @@ export async function getSong(key, id) {
     if (allSongs.some(value => value.id === id)) {
         return allSongs.find(value => value.id === id);
     } else {
-        return endPoints.getVideoFake(key, id);
+        return URL.createObjectURL(endPoints.getVideoFake(key, id).blob);
         // return endPoints.getVideo(key, id);
     }
 }
