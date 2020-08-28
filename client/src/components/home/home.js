@@ -4,24 +4,50 @@ import {Container, CssBaseline, Typography} from "@material-ui/core";
 import keys from "../../api/keys/keys";
 import endPoints from "../../api/endpoints/endpoints";
 import SongCard from "../SongCard/SongCard";
-import CustomBottomNavigation from "../CustomBottomNavigation/CustomBottomNavigation";
 import CustomAppBar from "../CustomAppBar/CustomAppBar";
+import {getSong} from "../../functions/songs";
 
-
-const HomeComponent = () => {
+let ListArray = [];
+const HomeComponent = (props) => {
     const [popular, setPopular] = React.useState(() => {
         fetch(endPoints.mostPopularFake(keys.youtube))
             .then(v => v.json())
             .then(value => {
+                ListArray = value;
                 setPopular(value.items.map((video, index) => {
-                    return (<SongCard key={index} video={video}/>)
+                    return (<SongCard onPlay={PlaySong} key_={index} key={index} video={video}/>)
                 }));
             });
     });
+
+    function PlaySong(data, index) {
+        getSong(keys.youtube, data.id).then(value => {
+            if (value) {
+                //Avoid the Promise Error
+                setTimeout(function () {
+                    console.log({
+                        uri: value,
+                        thumbnail: data.snippet.thumbnails.maxres.url,
+                        video: data,
+                        list: ListArray,
+                        index: index
+                    });
+                    return props.appState({
+                        uri: value,
+                        thumbnail: data.snippet.thumbnails.maxres.url,
+                        video: data,
+                        list: ListArray,
+                        index: index
+                    });
+                }, 100);
+            }
+            /* setAudioElemet(<div/>); setAudioElemet(<Player audio={new Audio(value)} thumbnail={data.snippet.thumbnails.maxres.url} video={data}/> */
+        });
+    }
+
     return (
         <div className="home">
             <CssBaseline/>
-            <audio id="wavSource" type="audio/webm" className={'d-none'} controls/>
             <CustomAppBar/>
             <div style={{marginTop: '5rem'}}>
                 <Typography variant={'h5'} className={'pl-3 text-left'}>
@@ -33,7 +59,6 @@ const HomeComponent = () => {
                     </div>
                 </Container>
             </div>
-            <CustomBottomNavigation/>
         </div>
     );
 };

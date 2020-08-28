@@ -5,20 +5,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import {Typography} from "@material-ui/core";
-import {getSong} from "../../functions/songs";
-import keys from "../../api/keys/keys";
 
 // = {title, description, tags, channelTitle, videoId, thumbnail}
-async function PlaySong(data) {
-    getSong(keys.youtube, data.id).then(value => {
-        console.log(value)
-    })
-}
-
 function SongCard(props) {
     const video_ = props.video.snippet;
     return (
-        <Card className={'SongCard'} onClick={() => PlaySong(props.video)}>
+        <Card className={'SongCard'} onClick={() => props.onPlay(props.video, props.key_)}>
             <CardActionArea>
                 <CardMedia
                     component="img"

@@ -3,8 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const cors_proxy = require('cors-anywhere');
 const rateLimit = require("express-rate-limit");
+var path = require('path');
 
 const app = express();
+
 
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 10 minutes 20 request
@@ -33,13 +35,8 @@ app.use(cors({
 app.options("*", cors());
 */
 app.use(cors());
-const port = 3000;
-
-app.get("/", (req, res) => {
-    res.send("Welcome to ylight api")
-});
-
-
+const port = 5000;
+app.use(express.static(path.join(__dirname, 'public')));
 app.get('/song', async (req, res) =>
     ytdl
         .getInfo(req.query.id)

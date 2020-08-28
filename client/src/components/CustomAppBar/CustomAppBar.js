@@ -13,7 +13,7 @@ const CustomAppBar = () => (
                 <Menu/>
             </IconButton>
             <Typography variant="h6">
-                News
+                Music
             </Typography>
         </Toolbar>
     </AppBar>
