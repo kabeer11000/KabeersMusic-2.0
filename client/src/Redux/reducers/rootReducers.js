@@ -1,18 +1,28 @@
 import {CHANGE_DRAWER, CURRENT_SONG} from '../actions/actions';
 
 const initialState = {
-    drawer: false
+    currentSong: {
+        audioElement: new Audio(''),
+        videoElement: {},
+        playList: {index: 0, list: []},
+        reOpenDialog: () => {
+        }
+    },
+    drawer: false,
+
 };
 
 function rootReducer(state = initialState, action) {
     switch (action.type) {
         case CHANGE_DRAWER:
             return {
-                drawer: action.drawer
+                currentSong: state.currentSong,
+                drawer: action.drawer,
             };
         case CURRENT_SONG:
             return {
-                currentSong: action
+                currentSong: action.currentSong,
+                drawer: state.drawer
             };
         default:
             return state;

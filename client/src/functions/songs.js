@@ -4,7 +4,17 @@ import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
 
 const db_version = 10;
-
+function uniqid(a = "", b = false) {
+    const c = Date.now() / 1000;
+    let d = c.toString(16).split(".").join("");
+    while (d.length < 14) d += "0";
+    let e = "";
+    if (b) {
+        e = ".";
+        e += Math.round(Math.random() * 100000000);
+    }
+    return a + d + e;
+}
 export const db = new Dexie("KabeersMusic_Songs");
 db.version(db_version).stores({
     songs:
@@ -13,7 +23,7 @@ db.version(db_version).stores({
 const historydb = new Dexie('KabeersMusic_History');
 historydb.version(db_version).stores({
     songs:
-        "id, &videoId, time, rating, thumbnail, channelTitle, title, tags"
+        "id, videoId, time, rating, thumbnail, channelTitle, title, tags"
 });
 
 export async function downloadSong(data = {videoId: null, rating: 0}) {
@@ -131,7 +141,10 @@ export async function isOfflineAvailable(videoId) {
 
 export async function saveToHistory(object) {
     historydb.songs.put({
-        id: object.videoId,
+        id: uniqid() + uniqid(),
+        title: object.title,
+        channelTitle: object.ChannelTitle,
+        tags: object.tags,
         thumbnail: object.thumbnail,
         time: Date.now(),
         videoId: object.videoId,

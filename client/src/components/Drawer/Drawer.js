@@ -17,8 +17,8 @@ import IconButton from "@material-ui/core/IconButton";
 import {ChevronLeft} from "@material-ui/icons";
 
 
-const drawerWidth = 240;
-
+//const drawerWidth = 240;
+const drawerWidth = 1;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',

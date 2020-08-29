@@ -5,16 +5,22 @@ export function setDrawerState(state) {
     return {type: CHANGE_DRAWER, drawer: state};
 }
 
-export function setCurrentSongState(audioElement, isHidden, videoObject, functions, audioPosition, appStates, playPauseButton, closeAll) {
+export function setCurrentSongState(audioElement, videoElement, componentStates, reOpenDialog, playList) {
     return {
         type: CURRENT_SONG,
-        audioElement: audioElement,
-        isHidden: isHidden,
-        videoObject: videoObject,
-        functions: functions,
-        position: audioPosition,
-        AppStates: appStates,
-        playPauseButton: playPauseButton,
-        closeAll: closeAll,
+        currentSong: {
+            audioElement: audioElement,
+            videoElement: videoElement,
+            componentState: componentStates,
+            reOpenDialog: reOpenDialog,
+            playList: {...playList},
+        }
     }
 }
+
+/*
+ComponentState = {
+    MiniPlayer: true,
+    Dialog: false
+}
+ */

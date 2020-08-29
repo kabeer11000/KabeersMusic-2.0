@@ -24,7 +24,7 @@ const HomeComponent = (props) => {
             if (value) {
                 //Avoid the Promise Error
                 setTimeout(function () {
-                    return props.appState({
+                    props.appState({
                         uri: value,
                         thumbnail: data.snippet.thumbnails.maxres.url,
                         video: data,
