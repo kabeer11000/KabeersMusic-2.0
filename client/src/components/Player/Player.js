@@ -16,12 +16,12 @@ import {
     SkipPrevious
 } from "@material-ui/icons";
 import Slide from "@material-ui/core/Slide";
-import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 import {downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import * as PropTypes from "prop-types";
 import keys from "../../api/keys/keys";
+import CustomSlider from "./CustomSlider";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -30,20 +30,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const MiniPlayerTransition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
-
-const _Slider = (props) => {
-    const [scrubbing, setScrubbing] = React.useState(props.audioElement);
-    setInterval(() => !props.audioElement.paused ? setScrubbing(props.getAudioPosition) : null, 1000);
-    return (<Slider
-        className={props.classnames}
-        defaultValue={0}
-        value={scrubbing}
-        min={0.0}
-        max={props.audioElement.duration}
-        valueLabelDisplay="auto"
-        onChangeCommitted={async (v, x) => props.handleScrubbing(x)}
-    />);
-};
 
 const Player = (props) => {
     if (props.hidden) {
@@ -57,7 +43,7 @@ const Player = (props) => {
             audioElement.loop = false
         }} style={{backgroundColor: '#3F51B5'}}><Loop style={{color: '#FFFFFF'}}/></IconButton>)
     }}><Loop style={{color: "initial"}}/></IconButton>);
-    const audioElement = props.audio;
+    let audioElement = props.audio;
     const [miniplayer, setMiniplayer] = React.useState(false);
     const [downloadButton, setDownloadButton] = React.useState(<div/>);
 
@@ -76,6 +62,20 @@ const Player = (props) => {
 
     };
 
+    /*
+
+        useImperativeHandle(ref, () => ({
+
+            getAlert() {
+                alert("getAlert from Child");
+            },
+            cutComponent : function() {
+                audioElement.pause();
+                audioElement = null;
+            }
+
+        }));
+        */
     async function addToHistory() {
         saveToHistory({
             videoId: props.video.id,
@@ -150,8 +150,8 @@ const Player = (props) => {
                             <IconButton onClick={closeAll}><Close/></IconButton>
                         </div>
                     </div>
-                    <_Slider getAudioPosition={getAudioPosition} audioElement={audioElement}
-                             handleScrubbing={handleScrubbing} classnames={'p-0 m-0'}/>
+                    <CustomSlider getAudioPosition={getAudioPosition} audioElement={audioElement}
+                                  handleScrubbing={handleScrubbing} classnames={'p-0 m-0'}/>
                 </AppBar></HideOnScroll>
             );
         }
@@ -184,6 +184,28 @@ const Player = (props) => {
         }
     }
 
+    function addMediaSession(data) {
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new window.MediaMetadata({
+                title: data.title,
+                artist: data.artist,
+                album: data.album,
+                artwork: data.artwork
+            });
+
+            navigator.mediaSession.setActionHandler('play', function () {
+                playAudio();
+            });
+            navigator.mediaSession.setActionHandler('pause', function () {
+                pauseAudio()
+            });
+            //navigator.mediaSession.setActionHandler('seekbackward', function() {});
+            //navigator.mediaSession.setActionHandler('seekforward', function() {});
+            //navigator.mediaSession.setActionHandler('previoustrack', function() {});
+            //navigator.mediaSession.setActionHandler('nexttrack', function() {});
+        }
+    }
+
     useEffect(() => {
         window.addEventListener('unhandledRejection', () => {
 
@@ -195,15 +217,21 @@ const Player = (props) => {
         }
     }, []);
     useEffect(() => {
-        console.log(props.list);
         setTimeout(() => {
-            if (audioElement.paused) return audioElement.play();
+            if (audioElement.paused) {
+                audioElement.play();
+                addMediaSession({
+                    artist: props.video.channelTitle,
+                    title: props.video.title,
+                    artwork: [{src: props.video.snippet.thumbnails.maxres.url, sizes: '96x96', type: 'image/png'}]
+                })
+            }
         }, 150)
     }, []);
 
     function SkipSong(data) {
         audioElement.pause();
-        audioElement.src = null;
+        audioElement = null;
         getSong(keys.youtube, data.video.id).then(value => {
             if (value) {
                 setTimeout(function () {
@@ -266,9 +294,8 @@ const Player = (props) => {
                         width: '100%',
                         backgroundColor: 'light'
                     }} component={'div'}>
-                        <_Slider classnames={'container'} getAudioPosition={getAudioPosition}
-                                 audioElement={audioElement} handleScrubbing={handleScrubbing}/>
-                        {}
+                        <CustomSlider classnames={'container'} getAudioPosition={getAudioPosition}
+                                      audioElement={audioElement} handleScrubbing={handleScrubbing}/>
                         <div className={'container mb-2'} style={{
                             width: '70%',
                             display: 'inline-flex',
@@ -284,7 +311,6 @@ const Player = (props) => {
                             </div>
                             {props.list.items[props.index + 1] ? <IconButton onClick={() => {
                                 const item = props.list.items[props.index + 1];
-                                // return props.changes({uri: value, thumbnail: data.snippet.thumbnails.maxres.url, video: data, list:props.list, index:data.index});
                                 SkipSong({video: item, index: props.index + 1});
                             }}><SkipNext/></IconButton> : <IconButton disabled={true}><SkipNext/></IconButton>}
                         </div>

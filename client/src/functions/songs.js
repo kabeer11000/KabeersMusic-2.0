@@ -49,7 +49,7 @@ export async function getBlob(key) {
 }
 
 export async function getSong(key, id) {
-
+    db.songs.toArray().then(value => console.log(value));
     return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json());
     const
         allSongs = await db.songs.toArray();

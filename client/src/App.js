@@ -7,6 +7,13 @@ import Downloads from "./components/Downloads/Downloads";
 import Player from "./components/Player/Player";
 import Redirect from "react-router-dom/es/Redirect";
 import {createMuiTheme, MuiThemeProvider} from "@material-ui/core/styles";
+import CustomAppBar from "./components/CustomAppBar/CustomAppBar";
+import SearchComponent from "./components/SearchComponent/SearchComponent";
+import DrawerComponent from "./components/Drawer/Drawer";
+import {Provider} from "react-redux";
+import store from "./Redux/store/store";
+
+//const {useRef} = require("react");
 
 
 function App() {
@@ -34,6 +41,7 @@ function App() {
     function changeStates(state) {
         try {
             audio.pause();
+            audio.src = '';
             setPlayerState({
                 index: state.index,
                 audio: audio,
@@ -51,22 +59,30 @@ function App() {
         }
     }
 
+
     return (
-        <MuiThemeProvider theme={darkTheme}>
-            <Router>
-                <div className="App">
-                    <Player list={PlayerState.list} index={PlayerState.index} audio={PlayerState.audio}
-                            thumbnail={PlayerState.thumbnail} video={PlayerState.video}
-                            hidden={PlayerState.hidden} changes={changeStates}/>
-                    <Route path={'/home'} render={() => <HomeComponent appState={changeStates}/>}/>
-                    <Route path={'/downloads'} component={Downloads}/>
-                    <Route exact path={'/'} render={() => {
-                        return <Redirect to={'/home'}/>
-                    }}/>
-                    <CustomBottomNavigation/>
-                </div>
-            </Router>
-        </MuiThemeProvider>
+        <Provider store={store}>
+            <MuiThemeProvider theme={darkTheme}>
+                <Router>
+                    <div className="App">
+                        <DrawerComponent>
+                            <audio id={'MainAudio'} src={''} preload={'auto'}/>
+                            <CustomAppBar/>
+                            <Player list={PlayerState.list} index={PlayerState.index} audio={PlayerState.audio}
+                                    thumbnail={PlayerState.thumbnail} video={PlayerState.video}
+                                    hidden={PlayerState.hidden} changes={changeStates}/>
+                            <Route path={'/home'} render={() => <HomeComponent appState={changeStates}/>}/>
+                            <Route path={'/downloads'} component={Downloads}/>
+                            <Route path={'/search'} component={SearchComponent}/>
+                            <Route exact path={'/'} render={() => {
+                                return <Redirect to={'/home'}/>
+                            }}/>
+                            <CustomBottomNavigation/>
+                        </DrawerComponent>
+                    </div>
+                </Router>
+            </MuiThemeProvider>
+        </Provider>
     );
 }
 

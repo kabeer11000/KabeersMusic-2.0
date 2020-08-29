@@ -4,7 +4,6 @@ import {Container, CssBaseline, Typography} from "@material-ui/core";
 import keys from "../../api/keys/keys";
 import endPoints from "../../api/endpoints/endpoints";
 import SongCard from "../SongCard/SongCard";
-import CustomAppBar from "../CustomAppBar/CustomAppBar";
 import {getSong} from "../../functions/songs";
 
 let ListArray = [];
@@ -25,13 +24,6 @@ const HomeComponent = (props) => {
             if (value) {
                 //Avoid the Promise Error
                 setTimeout(function () {
-                    console.log({
-                        uri: value,
-                        thumbnail: data.snippet.thumbnails.maxres.url,
-                        video: data,
-                        list: ListArray,
-                        index: index
-                    });
                     return props.appState({
                         uri: value,
                         thumbnail: data.snippet.thumbnails.maxres.url,
@@ -48,7 +40,6 @@ const HomeComponent = (props) => {
     return (
         <div className="home">
             <CssBaseline/>
-            <CustomAppBar/>
             <div style={{marginTop: '5rem'}}>
                 <Typography variant={'h5'} className={'pl-3 text-left'}>
                     Trending Now
