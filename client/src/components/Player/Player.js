@@ -4,19 +4,18 @@ import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
-import {ArrowBack, Loop, Pause, PlayCircleOutline, SkipNext, SkipPrevious} from "@material-ui/icons";
+import {ArrowBack, Done, GetApp, Loop, Pause, PlayCircleOutline, SkipNext, SkipPrevious} from "@material-ui/icons";
 import Slide from "@material-ui/core/Slide";
 import Typography from "@material-ui/core/Typography";
-import {downloadSong, getSong, saveToHistory} from "../../functions/songs";
+import {downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import * as PropTypes from "prop-types";
-import keys from "../../api/keys/keys";
 import CustomSlider from "./CustomSlider";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import store from "../../Redux/store/store";
-import MiniPlayer from "./MiniPlayer";
 import {connect} from "react-redux";
-
+import {useSnackbar} from 'notistack';
+import ComingNext from "./ComingNext/ComingNext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -32,7 +31,8 @@ const Player = (props) => {
 
 
     const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
-    const [button, setButton] = React.useState(<IconButton onClick={pauseAudio}><Pause color={'#fff'}/></IconButton>);
+    const [button, setButton] = React.useState(<IconButton color={'#60B18A'} colorSecondary={'#60B18A'}
+                                                           onClick={pauseAudio}><Pause color={'#fff'}/></IconButton>);
     const [looping, setLooping] = React.useState(<IconButton style={{backgroundColor: "initial"}} onClick={() => {
         audioElement.loop = true;
         setLooping(<IconButton onClick={() => {
@@ -41,18 +41,20 @@ const Player = (props) => {
     }}><Loop style={{color: "initial"}}/></IconButton>);
     let audioElement = props.audioElement;
     const [downloadButton, setDownloadButton] = React.useState(<div/>);
+    const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
     const handleClose = () => {
-        setOpen(false);
         addToReduxState([false, true]);
+        setOpen(false);
     };
 
     const ReOpen = () => {
-        setOpen(true);
         addToReduxState([true, false]);
+        setOpen(true);
     };
 
     function addToReduxState(AppState) {
+        if (!AppState) AppState = [store.getState().currentSong.componentState.Dialog, store.getState().currentSong.componentState.MiniPlayer];
         store.dispatch(setCurrentSongState(audioElement, props.videoElement, {
             Dialog: AppState[0],
             MiniPlayer: AppState[1]
@@ -65,7 +67,7 @@ const Player = (props) => {
             title: props.videoElement.snippet.title,
             channelTitle: props.videoElement.snippet.channelTitle,
             tags: props.videoElement.snippet.tags,
-            thumbnail: props.videoElement.snippet.thumbnails.standard.url,
+            thumbnail: props.videoElement.snippet.thumbnails.high.url,
             rating: 0
         });
     }
@@ -77,7 +79,21 @@ const Player = (props) => {
     }
 
     function downloadAudio() {
-        downloadSong({videoId: props.videoElement.id, rating: 0});
+        let videoID = '';
+        if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
+        if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
+
+        downloadSong({
+            videoId: videoID,
+            rating: 0,
+            title: props.videoElement.snippet.title,
+            channelTitle: props.videoElement.snippet.channelTitle,
+            tags: props.videoElement.snippet.tags,
+            videoElement: props.videoElement
+        }).then(() => {
+            enqueueSnackbar('Download Complete');
+        });
+        enqueueSnackbar('Download Started');
     }
 
     function HideOnScroll(props) {
@@ -101,7 +117,8 @@ const Player = (props) => {
 
     function pauseAudio() {
         audioElement.pause();
-        setButton(<IconButton onClick={playAudio}><PlayCircleOutline color={'#fff'}/></IconButton>);
+        setButton(<IconButton className={'PlayerPlayPauseBtn'} onClick={playAudio}><PlayCircleOutline
+            color={'#fff'}/></IconButton>);
     }
 
     function addMediaSession(data) {
@@ -112,7 +129,6 @@ const Player = (props) => {
                 album: data.album,
                 artwork: data.artwork
             });
-
             navigator.mediaSession.setActionHandler('play', function () {
                 playAudio();
             });
@@ -131,35 +147,50 @@ const Player = (props) => {
                     artist: props.videoElement.channelTitle,
                     title: props.videoElement.title,
                     artwork: [{
-                        src: props.videoElement.snippet.thumbnails.maxres.url,
+                        src: props.videoElement.snippet.thumbnails.high.url,
                         sizes: '96x96',
                         type: 'image/png'
                     }]
                 });
-                //addToHistory();
-                //addToReduxState([true, false]);
+                addToHistory();
+                addToReduxState([true, false]);
+                let videoID = '';
+                if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
+                if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
+
+                isOfflineAvailable(videoID).then((v) => {
+                    setDownloadButton(v ? <IconButton><Done/></IconButton> :
+                        <IconButton onClick={downloadAudio}><GetApp/></IconButton>);
+                    console.log(v)
+                });
+
             }
         }, 150)
     }, []);
 
     function SkipSong(data) {
-        getSong(keys.youtube, data.video.id).then(value => {
+        let videoID = '';
+        if (typeof data.video.id === 'object') videoID = data.video.id.videoId;
+        if (typeof data.video.id === 'string') videoID = data.video.id;
+        getSong(videoID).then(value => {
             if (value) {
                 try {
                     setTimeout(function () {
                         props.changes({
                             uri: value,
-                            thumbnail: data.video.snippet.thumbnails.maxres.url,
+                            thumbnail: data.video.snippet.thumbnails.high.url,
                             video: data.video,
                             list: props.playList.list,
                             index: data.index
                         }).then(() => {
                             audioElement.pause();
                             audioElement = null;
+                            setOpen(false);
+                            addToReduxState([false, false])
                         });
                     }, 100);
                 } catch (e) {
-                    console.log(e)
+                    console.log(e);
                 }
             }
         });
@@ -169,14 +200,12 @@ const Player = (props) => {
         if (isFinite(v)) {
             audioElement.currentTime = v;
             // Update Redux State
-            store.dispatch(setCurrentSongState(audioElement, store.getState().currentSong.videoElement, {...store.getState().currentSong.componentState}));
+            //store.dispatch(setCurrentSongState(audioElement, store.getState().currentSong.videoElement, {...store.getState().currentSong.componentState}));
         }
     }
-
     return (
         <div className="Player">
             <div className={'container'}>
-                <MiniPlayer/>
                 <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                     <AppBar>
                         <Toolbar>
@@ -197,16 +226,16 @@ const Player = (props) => {
                             </>
                         </Toolbar>
                     </AppBar>
-                    <div>
+                    <div style={{backgroundColor: '#FAFAFA', height: '100%', width: '100%'}}>
                         <div
                             className={'ImageCircle rounded-circle thumbnail'}>
-                            <img src={props.videoElement.snippet.thumbnails.maxres.url}
-                                 className={'image img-fluid roun1ded-circle border'}
+                            <img src={props.videoElement.snippet.thumbnails.high.url}
+                                 className={'image img-fluid rounded-circle border shadow'}
                                  style={{
-                                     width: 'auto',
-                                     height: '100%',
+                                     width: '10rem',
+                                     height: '10rem',
                                      position: 'absolute',
-                                     top: '50%',
+                                     top: '42%',
                                      left: '50%',
                                      transform: 'translate(-50%, -50%)'
                                  }} alt={'Thumbnail'}/>
@@ -220,8 +249,7 @@ const Player = (props) => {
                         width: '100%',
                         backgroundColor: 'light'
                     }} component={'div'}>
-                        <CustomSlider audioElement={audioElement}
-                                      handleScrubbing={handleScrubbing} classnames={'container'}/>
+                        <CustomSlider/>
 
                         {/* Custom SLIDER
                         <CustomSlider classnames={'container'} getAudioPosition={getAudioPosition}
@@ -232,19 +260,22 @@ const Player = (props) => {
                             justifyContent: 'space-around',
                             transform: 'translate(0%)'
                         }}>
-                            {props.playList.list.items[props.index - 1] ? <IconButton><SkipPrevious onClick={() => {
-                                const item = props.playList.list.items[props.playList.index - 1];
-                                SkipSong({video: item, index: props.playList.index - 1});
-                            }}/></IconButton> : <IconButton disabled={true}><SkipPrevious/></IconButton>}
+                            {props.playList.list.items[props.playList.index - 1] ?
+                                <IconButton><SkipPrevious onClick={() => {
+                                    const item = props.playList.list.items[props.playList.index - 1];
+                                    SkipSong({video: item, index: props.playList.index - 1});
+                                }}/></IconButton> : <IconButton disabled={true}><SkipPrevious/></IconButton>}
                             <div className={'ExpandedPlayButtonContainer'}>
                                 {button}
                             </div>
-                            {props.playList.list.items[props.index + 1] ? <IconButton onClick={() => {
+                            {props.playList.list.items[props.playList.index + 1] ? <IconButton onClick={() => {
                                 const item = props.playList.list.items[props.playList.index + 1];
                                 SkipSong({video: item, index: props.playList.index + 1});
                             }}><SkipNext/></IconButton> : <IconButton disabled={true}><SkipNext/></IconButton>}
 
                         </div>
+
+                        <ComingNext/>
                     </AppBar>
                 </Dialog>
             </div>

@@ -20,8 +20,9 @@ const HomeComponent = (props) => {
     });
 
     function PlaySong(data, index) {
-        getSong(keys.youtube, data.id).then(value => {
+        getSong(data.id).then(value => {
             if (value) {
+                console.log(data);
                 //Avoid the Promise Error
                 setTimeout(function () {
                     props.appState({

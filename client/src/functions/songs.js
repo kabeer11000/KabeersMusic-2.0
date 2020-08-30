@@ -23,10 +23,10 @@ db.version(db_version).stores({
 const historydb = new Dexie('KabeersMusic_History');
 historydb.version(db_version).stores({
     songs:
-        "id, videoId, time, rating, thumbnail, channelTitle, title, tags"
+        "id, &videoId, time, rating, thumbnail, channelTitle, title, tags"
 });
 
-export async function downloadSong(data = {videoId: null, rating: 0}) {
+export async function downloadSong(data = {videoId: null, rating: 0, title: '', channelTitle: '', tags: ''}) {
     try {
         console.log('Download Started');
         const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
@@ -44,6 +44,10 @@ export async function downloadSong(data = {videoId: null, rating: 0}) {
             time: Date.now(),
             videoId: data.videoId,
             rating: data.rating,
+            tags: data.tags || [],
+            title: data.title,
+            channelTitle: data.channelTitle,
+            videoElement: data.videoElement
         }).then((v) => {
             console.log(v);
         });
@@ -58,19 +62,20 @@ export async function getBlob(key) {
     return await db.songs.get(key);
 }
 
-export async function getSong(key, id) {
-    db.songs.toArray().then(value => console.log(value));
-    return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json());
+export async function getSong(id) {
     const
         allSongs = await db.songs.toArray();
-    if (allSongs.some(value => value.videoId === id)) {
+
+    if (allSongs.some(value => value.id === id)) {
         return allSongs.find(value => value.videoId === id);
     } else {
-        return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json());
-        // return endPoints.getVideo(key, id);
+        return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json()).catch(err => err);
     }
 }
 
+export async function getAllDownloadedSongs() {
+    return db.songs.toArray();
+}
 console.log('%20 SongJS Loaded');
 //downloadSong({rating: 0, videoId:'iYKXdt0LRs8'});
 
@@ -136,9 +141,10 @@ db.songs.put({videoId: "Porno", time: Date.now(), rating:0, valid:1, blob:new Bl
 */
 export async function isOfflineAvailable(videoId) {
     let songs = await db.songs.toArray();
-    return songs && songs.some(song => song.videoId === videoId);
+    return songs && songs.some(song => song.id === videoId);
 }
 
+/*
 export async function saveToHistory(object) {
     historydb.songs.put({
         id: uniqid() + uniqid(),
@@ -152,6 +158,10 @@ export async function saveToHistory(object) {
     }).then((v) => {
         console.log(v);
     });
+}
+*/
+export async function saveToHistory() {
+
 }
 
 export async function getHistory() {

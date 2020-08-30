@@ -10,7 +10,7 @@ import {Typography} from "@material-ui/core";
 function SongCard(props) {
     const video_ = props.video.snippet;
     return (
-        <Card className={'SongCard'} onClick={() => props.onPlay(props.video, props.key_)}>
+        <Card className={'SongCard'} style={{width: "18rem"}} onClick={() => props.onPlay(props.video, props.key_)}>
             <CardActionArea>
                 <CardMedia
                     component="img"

@@ -13,12 +13,10 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import store from '../../Redux/store/store';
 import {setDrawerState} from '../../Redux/actions/actions';
 import {connect} from "react-redux";
-import IconButton from "@material-ui/core/IconButton";
-import {ChevronLeft} from "@material-ui/icons";
 
 
 //const drawerWidth = 240;
-const drawerWidth = 1;
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -52,6 +50,20 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
+    logoText: {
+        paddingRight: theme.spacing(1)
+    },
+    logoContainer: {
+        alignItems: 'baseline',
+        fontSize: theme.spacing(2.25),
+        marginLeft: theme.spacing(2.5),
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2),
+    },
+    logoImage: {
+        height: 'auto',
+        width: theme.spacing(3),
+    },
 }));
 
 function DrawerComponent(props) {
@@ -66,19 +78,21 @@ function DrawerComponent(props) {
     const {children, window} = props;
     const classes = useStyles();
     const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const [mobileOpen, setMobileOpen] = React.useState(props.isOpen);
+
     const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-        store.dispatch(setDrawerState(!mobileOpen));
+        setMobileOpen(!props.isOpen);
+        store.dispatch(setDrawerState(!props.isOpen));
     };
 
     const drawer = (
         <div>
-            <div className={classes.toolbar}/>
+            <div className={`${classes.logoContainer} d-inline-flex`}>
+                <img src="assets/icons/kabeersnetwork.svg" className={classes.logoImage} alt='Kabeers Network Logo'/>
+                <span className={classes.logoText}>&nbsp; Kabeers Network</span>
+            </div>
+            <div className={`classes.toolbar`}/>
             <Divider/>
-            <IconButton onClick={handleDrawerToggle}>
-                <ChevronLeft/>
-            </IconButton>
             <List>
                 {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                     <ListItem button key={text}>

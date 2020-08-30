@@ -13,27 +13,47 @@ import DrawerComponent from "./components/Drawer/Drawer";
 import {Provider} from "react-redux";
 import store from "./Redux/store/store";
 import {setCurrentSongState} from "./Redux/actions/actions";
+import MiniPlayer from "./components/Player/MiniPlayer";
+import SearchResultComponent from "./components/SearchComponent/SearchResultComponent";
+import HistoryComponent from "./components/History/History";
+import {SnackbarProvider} from "notistack";
 
 //const {useRef} = require("react");
 
 
 function App() {
     const audio = new Audio('');
-    const [PlayerState, setPlayerState] = React.useState({
-        audio: audio,
-        uri: '',
-        thumbnail: '',
-        video: {snippet: {}},
-        hidden: true,
-        list: [],
-        index: 0
-    });
+    /*
+            const [PlayerState, setPlayerState] = React.useState({
+            audio: audio,
+            uri: '',
+            thumbnail: '',
+            video: {snippet: {}},
+            hidden: true,
+            list: [],
+            index: 0
+        });
+     */
     const [darkState, setDarkState] = React.useState(false);
     const [Player__, SetPlayer] = React.useState(true);
+    const [PlayerHTML, SETPLAYERHTML] = React.useState(<></>);
     const palletType = darkState ? "dark" : "light";
     const darkTheme = createMuiTheme({
         palette: {
             type: palletType,
+            primary: {
+                contrastText: '#FFF',
+                main: '#68C398',
+                light: '#FFFFFF',
+                dark: '#FFFFFF',
+            },
+            secondary: {
+                main: '#FFFFFF',
+            },
+            slider: {
+                trackColor: "yellow",
+                selectionColor: "red"
+            }
         }
     });
     const handleThemeChange = () => {
@@ -42,11 +62,17 @@ function App() {
 
     async function changeStates(state) {
         try {
-            //audio.pause();
-            //audio.src = '';
-            state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = false : state.hidden = true;
-            //audio.src = state.uri;
-            store.dispatch(setCurrentSongState(new Audio(state.uri), state.video, {
+
+            audio.pause();
+            audio.src = '';
+            state.list &&
+            state.index &&
+            state.thumbnail &&
+            state.video &&
+            state.uri ? state.hidden = false : state.hidden = true;
+            audio.src = state.uri;
+            console.log(state.uri);
+            store.dispatch(setCurrentSongState(audio, state.video, {
                 Dialog: true,
                 MiniPlayer: false
             }, () => {
@@ -54,6 +80,7 @@ function App() {
                 list: state.list,
                 index: state.index
             }));
+            SetPlayer(true);
             SetPlayer(false);
         } catch (e) {
             console.log(e);
@@ -91,20 +118,27 @@ function App() {
         <Provider store={store}>
             <MuiThemeProvider theme={darkTheme}>
                 <Router>
-                    <div className="App">
-                        <DrawerComponent>
-                            <audio id={'MainAudio'} src={''} preload={'auto'}/>
-                            <CustomAppBar/>
-                            <Player hidden={Player__} changes={changeStates}/>
-                            <Route path={'/home'} render={() => <HomeComponent appState={changeStates}/>}/>
-                            <Route path={'/downloads'} component={Downloads}/>
-                            <Route path={'/search'} component={SearchComponent}/>
-                            <Route exact path={'/'} render={() => {
-                                return <Redirect to={'/home'}/>
-                            }}/>
-                            <CustomBottomNavigation/>
-                        </DrawerComponent>
-                    </div>
+                    <SnackbarProvider maxSnack={1}>
+                        <div className="App">
+                            <DrawerComponent>
+                                <audio id={'MainAudio'} src={''} preload={'auto'}/>
+                                <CustomAppBar/>
+                                <Player hidden={Player__} changes={changeStates}/>
+                                <MiniPlayer hidden={Player__}/>
+                                <Route path={'/home'} render={() => <HomeComponent appState={changeStates}/>}/>
+                                <Route path={'/downloads'} render={() => <Downloads appState={changeStates}/>}/>
+                                <Route path={'/search'} component={SearchComponent}/>
+                                <Route path={'/history'} component={HistoryComponent}/>
+                                <Route exact path={'/'} render={() => {
+                                    return <Redirect to={'/home'}/>
+                                }}/>
+                                <Route path={'/search/results'} render={() => {
+                                    return <SearchResultComponent appState={changeStates}/>
+                                }}/>
+                                <CustomBottomNavigation/>
+                            </DrawerComponent>
+                        </div>
+                    </SnackbarProvider>
                 </Router>
             </MuiThemeProvider>
         </Provider>

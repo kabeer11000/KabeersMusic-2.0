@@ -1,4 +1,4 @@
-import {CHANGE_DRAWER, CURRENT_SONG} from '../actions/actions';
+import {CHANGE_DRAWER, CURRENT_SONG, SEARCH_QUERY_PARAM} from '../actions/actions';
 
 const initialState = {
     currentSong: {
@@ -9,6 +9,7 @@ const initialState = {
         }
     },
     drawer: false,
+    q: '',
 
 };
 
@@ -23,6 +24,11 @@ function rootReducer(state = initialState, action) {
             return {
                 currentSong: action.currentSong,
                 drawer: state.drawer
+            };
+        case SEARCH_QUERY_PARAM:
+            return {
+                ...state,
+                q: action.q,
             };
         default:
             return state;

@@ -1,7 +1,7 @@
 import React from 'react';
 import './CustomBottomNavigation.css';
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
-import {Folder, GetApp, Home, LocationOn} from "@material-ui/icons";
+import {Favorite, GetApp, History, Home} from "@material-ui/icons";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import AppBar from "@material-ui/core/AppBar";
@@ -25,11 +25,17 @@ const CustomBottomNavigation = () => {
             <AppBar color="primary" style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}}
                     component={'div'}>
                 <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
-                    <BottomNavigationAction component={Link} to={'/home'} label="Home" value="recents" icon={<Home/>}/>
-                    <BottomNavigationAction component={Link} to={'/downloads'} label="Downloads" value="favorites"
+                    <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/home'} label="Home"
+                                            value="recents" icon={<Home/>}/>
+                    <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/downloads'}
+                                            label="Downloads" value="downloads"
                                             icon={<GetApp/>}/>
-                    <BottomNavigationAction label="Nearby" value="nearby" icon={<LocationOn/>}/>
-                    <BottomNavigationAction label="Folder" value="folder" icon={<Folder/>}/>
+                    <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/history'}
+                                            label="History" value="history"
+                                            icon={<History/>}/>
+                    <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/liked'}
+                                            label="Liked" value="favorites"
+                                            icon={<Favorite/>}/>
                 </BottomNavigation>
             </AppBar>
         </>

@@ -11,8 +11,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import store from "../../Redux/store/store";
+import {connect} from "react-redux";
+import {setQueryParams} from "../../Redux/actions/actions";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,12 +36,8 @@ const useStyles = makeStyles((theme) => ({
         margin: 4,
     },
 }));
-const PushToHistory = (newURL) => {
-    //history.pushState({}, null, newURL);
-};
-const SearchComponent = () => {
-
-    console.log(store.getState());
+const SearchComponent = (props) => {
+    let history = useHistory();
     const [open, setOpen] = React.useState(true);
     const [query, setQuery] = React.useState('');
     const [queryArray, setQueryArray] = React.useState([]);
@@ -50,7 +48,7 @@ const SearchComponent = () => {
         setListItems(() => queryArray.map((value, index) => {
             if (!value) return;
             return (
-                <ListItem button key={index}>
+                <ListItem button key={index} component={Link} to={'/search/results'}>
                     <ListItemIcon>
                         <SearchOutlined/>
                     </ListItemIcon>
@@ -59,18 +57,21 @@ const SearchComponent = () => {
             );
         }));
     };
-    const serialize = function (obj) {
-        var str = [];
-        for (let p in obj)
-            if (obj.hasOwnProperty(p)) {
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            }
-        return str.join("&");
-    };
+
     const Search = async (e) => {
         SuggestSearch(e.target.value).then(v => setQueryArray(v));
         ListItems();
-        //PushToHistory(`${window.location.href}?${serialize({q:e.target.value})}`);
+        props.history.push({
+            pathname: `search`,
+            search: "?" + new URLSearchParams({q: e.target.value}).toString()
+        });
+        store.dispatch(setQueryParams(e.target.value));
+    };
+    const handleEnterPress = (e) => {
+        if (e.key === 'Enter') {
+            const query = store.getState().q;
+            if (query) return history.push("/search/results");
+        }
     };
     return (
         <div className="SearchComponent">
@@ -88,6 +89,7 @@ const SearchComponent = () => {
                             autoComplete={true}
                             autoFocus={true}
                             onKeyUp={Search}
+                            onKeyDown={handleEnterPress}
                             onFocus={() => {
                             }}
                             onBlur={() => {
@@ -115,4 +117,7 @@ SearchComponent.propTypes = {};
 
 SearchComponent.defaultProps = {};
 
-export default SearchComponent;
+const mapStateToProps = state => ({
+    query: state.q,
+});
+export default connect(mapStateToProps)(SearchComponent);

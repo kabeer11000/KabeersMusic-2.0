@@ -1,7 +1,7 @@
 function SkipSong(data) {
     audioElement.pause();
     audioElement = null;
-    getSong(keys.youtube, data.video.id).then(value => {
+    getSong(data.video.id).then(value => {
         if (value) {
             setTimeout(function () {
                 return props.changes({
