@@ -79,9 +79,11 @@ const Downloads = (props) => {
     }, []);
 
     return (
-        <List className={`${classes.root} mt-5`}>
-            {HistoryItems}
-        </List>
+        <div className={'KabeersDownloadContainer'} color={'primary.dark'}>
+            <List className={`${classes.root} mt-5 bg-transparent`}>
+                {HistoryItems}
+            </List>
+        </div>
     );
 };
 

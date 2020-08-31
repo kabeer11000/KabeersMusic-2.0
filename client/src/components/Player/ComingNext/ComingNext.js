@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import Divider from "@material-ui/core/Divider";
 import NextListItem from "./NextListItem";
 import List from "@material-ui/core/List";
+import Switch from "@material-ui/core/Switch";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,6 +24,12 @@ const useStyles = makeStyles((theme) => ({
 const ComingNext = (props) => {
     const classes = useStyles();
     const [list, setList] = React.useState(<div/>);
+    const [autoPlaySwitch, setAutoPlaySwitch] = React.useState({
+        AutoPlaySwitch: false,
+    });
+    const handleSwitch = (event) => {
+        setAutoPlaySwitch({[event.target.name]: event.target.checked});
+    };
 
     function createList() {
         setList(() => {
@@ -63,17 +70,26 @@ const ComingNext = (props) => {
             return listItemsWithDividers;
         });
     }, []);
-
+// myAudio.addEventListener("ended", function(){
+//      myAudio.currentTime = 0;
+//      console.log("ended");
+// });
     return (<div className="ComingNext">
             <Accordion square={true}>
                 <AccordionSummary
                     expandIcon={<ExpandMore/>}
                     aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
+                    id="panel1a-header">
                     <div className={'d-inline-flex'} style={{justifyContent: 'space-around'}}>
                         <LibraryMusic/>
-                        <Typography className={`${classes.heading} ml-2`}>Coming Next</Typography>
+                        <Typography className={`${classes.heading}`}>Coming Next</Typography>
+                        <Switch
+                            checked={autoPlaySwitch}
+                            onChange={handleSwitch}
+                            name="AutoPlaySwitch"
+                            color="primary"
+                            className={'d-none'}
+                        />
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>

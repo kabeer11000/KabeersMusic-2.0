@@ -1,9 +1,10 @@
 import React, {lazy, Suspense} from 'react';
+import Preloader from "../Preloader/Preloader";
 
 const LazyCustomAppBar = lazy(() => import('./CustomAppBar'));
 
 const CustomAppBar = props => (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Preloader/>}>
         <LazyCustomAppBar {...props} />
     </Suspense>
 );

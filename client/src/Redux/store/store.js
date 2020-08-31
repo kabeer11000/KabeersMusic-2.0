@@ -1,6 +1,7 @@
 import {applyMiddleware, compose, createStore} from 'redux';
 import rootReducer from '../reducers/rootReducers';
 import thunk from "redux-thunk";
+import StateLoader from "./state.loader"
 
 const initialState = {
     currentSong: {
@@ -11,14 +12,20 @@ const initialState = {
         }
     },
     drawer: false,
+    q: '',
 };
+const stateLoader = new StateLoader();
 const middleware = [thunk];
-export default createStore(
+const store = createStore(
     rootReducer,
-    initialState,
+    stateLoader.loadState(),
     compose(
         applyMiddleware(...middleware),
         window.__REDUX_DEVTOOLS_EXTENSION__
             ? window.__REDUX_DEVTOOLS_EXTENSION__()
             : f => f
     ));
+export default store;
+store.subscribe(() => {
+    stateLoader.saveState(store.getState());
+});

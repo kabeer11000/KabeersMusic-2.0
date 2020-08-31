@@ -28,11 +28,11 @@ const CustomSlider = (props) => {
     }
 
     return (<Slider
-        className={'container'}
+        className={'container PlayerSlider'}
         defaultValue={0}
         value={scrubbing}
         min={0.0}
-        color={'secondary'}
+        color={'primary.player.slider'}
         max={props.audioElement.duration}
         valueLabelDisplay="auto"
         thumbColorPrimary={'#000'}

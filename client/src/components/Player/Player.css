@@ -1,4 +1,25 @@
 .ExpandedPlayButtonContainer button {
-    background-color: rgb(63, 81, 181);
+    background-color: #68C398;
     color: rgb(255, 255, 255);
+    border-color: white;
+}
+
+.Player .ImageCircle .image {
+    border: #68C398 solid 1rem;
+}
+
+.KabeersMiniPlayerContainer {
+    width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+    .KabeersMiniPlayerContainer {
+        width: 50% !important;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .KabeersMiniPlayerContainer {
+        width: 30% !important;
+    }
 }

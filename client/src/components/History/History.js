@@ -29,7 +29,7 @@ const HistoryComponent = () => {
             setHistoryItems(() => {
                 return value.map((v, i) => {
                     const divider_ = i = value.length ? <div/> : <Divider variant="inset" component="li"/>;
-                    return <div key={i}><DownloadListItem key={i} title={v.title} channelTitle={v.channelTitle}
+                    return <div key={i}><DownloadListItem title={v.title} channelTitle={v.channelTitle}
                                                           thumbnail={v.thumbnail} tags={v.tags}/>{divider_}</div>
                 });
             });
@@ -41,7 +41,7 @@ const HistoryComponent = () => {
     }, []);
 
     return (
-        <List className={`${classes.root} mt-5`}>
+        <List className={`${classes.root} mt-5 bg-transparent`}>
             {HistoryItems}
         </List>
     );

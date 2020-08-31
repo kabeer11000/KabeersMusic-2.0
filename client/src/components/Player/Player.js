@@ -226,7 +226,7 @@ const Player = (props) => {
                             </>
                         </Toolbar>
                     </AppBar>
-                    <div style={{backgroundColor: '#FAFAFA', height: '100%', width: '100%'}}>
+                    <div style={{backgroundColor: 'primary.dark', height: '100%', width: '100%'}}>
                         <div
                             className={'ImageCircle rounded-circle thumbnail'}>
                             <img src={props.videoElement.snippet.thumbnails.high.url}

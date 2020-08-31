@@ -6,12 +6,12 @@ import {connect} from "react-redux";
 
 const CustomMiniPlayerSlider = (props) => {
     if (!props.componentState.MiniPlayer) {
-        return <></>
+        return <></>;
     }
     const [scrubbing, setScrubbing] = React.useState(props.audioElement.currentTime);
     useEffect(() => {
-        if (props.componentState.Dialog) {
-            setInterval(() => !props.audioElement.paused && props.componentState.Dialog ? setScrubbing(props.audioElement.currentTime) : null, 1000);
+        if (props.componentState.MiniPlayer) {
+            setInterval(() => !props.audioElement.paused && props.componentState.MiniPlayer ? setScrubbing(props.audioElement.currentTime) : null, 1000);
         }
     }, []);
 
@@ -33,7 +33,7 @@ const CustomMiniPlayerSlider = (props) => {
         defaultValue={0}
         value={scrubbing}
         min={0.0}
-        color={'secondary'}
+        color={'primary'}
         max={props.audioElement.duration}
         valueLabelDisplay="auto"
         onChangeCommitted={async (v, x) => handleScrubbing(x)}

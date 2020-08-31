@@ -4,10 +4,7 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import {List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import store from '../../Redux/store/store';
@@ -15,20 +12,19 @@ import {setDrawerState} from '../../Redux/actions/actions';
 import {connect} from "react-redux";
 
 
-//const drawerWidth = 240;
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
     drawer: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('xl')]: {
             width: drawerWidth,
             flexShrink: 0,
         },
     },
     appBar: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('xl')]: {
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: drawerWidth,
         },
@@ -95,7 +91,7 @@ function DrawerComponent(props) {
             <Divider/>
             <List>
                 {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
+                    <ListItem button key={index}>
                         <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
                         <ListItemText primary={text}/>
                     </ListItem>
@@ -104,7 +100,7 @@ function DrawerComponent(props) {
             <Divider/>
             <List>
                 {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
+                    <ListItem button key={index}>
                         <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
                         <ListItemText primary={text}/>
                     </ListItem>
