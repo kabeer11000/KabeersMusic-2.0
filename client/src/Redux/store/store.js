@@ -14,6 +14,7 @@ const initialState = {
     drawer: false,
     q: '',
 };
+/*
 const stateLoader = new StateLoader();
 const middleware = [thunk];
 const store = createStore(
@@ -29,3 +30,16 @@ export default store;
 store.subscribe(() => {
     stateLoader.saveState(store.getState());
 });
+*/
+const stateLoader = new StateLoader();
+const middleware = [thunk];
+const store = createStore(
+    rootReducer,
+    initialState,
+    compose(
+        applyMiddleware(...middleware),
+        window.__REDUX_DEVTOOLS_EXTENSION__
+            ? window.__REDUX_DEVTOOLS_EXTENSION__()
+            : f => f
+    ));
+export default store;

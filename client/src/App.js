@@ -17,7 +17,6 @@ import SearchResultComponent from "./components/SearchComponent/SearchResultComp
 import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import {getSong} from "./functions/songs";
 
 //const {useRef} = require("react");
 
@@ -98,6 +97,7 @@ function App() {
     }
 
     useEffect(() => {
+        /*
         const currentSong = store.getState().currentSong;
         const videoElement = currentSong.videoElement;
         if (videoElement) {
@@ -122,7 +122,7 @@ function App() {
                     }
                 }
             });
-        }
+        }*/
 
     }, []);
     return (
@@ -136,14 +136,16 @@ function App() {
                                 <audio id={'MainAudio'} src={''} preload={'auto'}/>
                                 <CustomAppBar/>
                                 <Player hidden={Player__} changes={changeStates}/>
-                                <Route path={'/home'} render={() => <HomeComponent appState={changeStates}/>}/>
-                                <Route path={'/downloads'} render={() => <Downloads appState={changeStates}/>}/>
-                                <Route path={'/search'} component={SearchComponent}/>
-                                <Route path={'/history'} component={HistoryComponent}/>
-                                <Route exact path={'/'} render={() => {
+                                <Route exact={true} path={'/home'}
+                                       render={() => <HomeComponent appState={changeStates}/>}/>
+                                <Route exact={true} path={'/downloads'}
+                                       render={() => <Downloads appState={changeStates}/>}/>
+                                <Route exact={true} path={'/search'} component={SearchComponent}/>
+                                <Route exact={true} path={'/history'} component={HistoryComponent}/>
+                                <Route exact={true} path={'*'} render={() => {
                                     return <Redirect to={'/home'}/>
                                 }}/>
-                                <Route path={'/search/results'} render={() => {
+                                <Route exact={true} path={'/search/results'} render={() => {
                                     return <SearchResultComponent appState={changeStates}/>
                                 }}/>
                                 <CustomBottomNavigation/>

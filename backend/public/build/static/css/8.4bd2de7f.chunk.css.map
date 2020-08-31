@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "sources": [
+    "E:/Projects/phpstormprojects/music_react/client/src/components/home/E:/Projects/phpstormprojects/music_react/client/src/components/home/home.css",
+    "8.4bd2de7f.chunk.css",
+    "E:/Projects/phpstormprojects/music_react/client/src/components/SongCard/E:/Projects/phpstormprojects/music_react/client/src/components/SongCard/SongCard.css"
+  ],
+  "names": [],
+  "mappings": "AAwBA,OACI,sBCCJ,CC1BA,UACI,WAAA,CACA,iBD6BJ,CC1BA,YACI,YAAA,CACA,aAAA,CACA,kBD6BJ,CC1BA,+BACI,YD6BJ,CC1BA,WACI,aAAA,CACA,kBD6BJ,CC1BA,qBACI,oBD6BJ",
+  "file": "8.4bd2de7f.chunk.css",
+  "sourcesContent": [
+    ".SongCard {\r\n    width: 15rem;\r\n    margin-right: 1rem;\r\n}\r\n\r\n.cardSlider {\r\n    padding: 1rem;\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n.cardSlider::-webkit-scrollbar {\r\n    display: none\r\n}\r\n\r\ndiv.Slider {\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\ndiv.Slider .SongCard {\r\n    display: inline-block;\r\n}\r\n\r\n*:focus {\r\n    outline: none !important;\r\n}\r\n",
+    ".SongCard {\r\n    width: 15rem;\r\n    margin-right: 1rem;\r\n}\r\n\r\n.cardSlider {\r\n    padding: 1rem;\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n.cardSlider::-webkit-scrollbar {\r\n    display: none\r\n}\r\n\r\ndiv.Slider {\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\ndiv.Slider .SongCard {\r\n    display: inline-block;\r\n}\r\n\r\n*:focus {\r\n    outline: none !important;\r\n}\r\n\n.SongCard {\r\n    width: 15rem;\r\n    margin-right: 1rem;\r\n}\r\n\r\n.cardSlider {\r\n    padding: 1rem;\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n.cardSlider::-webkit-scrollbar {\r\n    display: none\r\n}\r\n\r\ndiv.Slider {\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\ndiv.Slider .SongCard {\r\n    display: inline-block;\r\n}\r\n\n",
+    ".SongCard {\r\n    width: 15rem;\r\n    margin-right: 1rem;\r\n}\r\n\r\n.cardSlider {\r\n    padding: 1rem;\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n.cardSlider::-webkit-scrollbar {\r\n    display: none\r\n}\r\n\r\ndiv.Slider {\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\ndiv.Slider .SongCard {\r\n    display: inline-block;\r\n}\r\n"
+  ]
+}
