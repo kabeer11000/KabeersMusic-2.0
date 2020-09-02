@@ -58,7 +58,7 @@
 <div id="root"></div>
 <script>!function (i) {
     function e(e) {
-        for (var t, r, n = e[0], o = e[1], a = e[2], u = 0, c = []; u < n.length; u++) r = n[u], s[r] && c.push(s[r][0]), s[r] = 0;
+        for (var t, r, n = e[0], o = e[1], a = e[2], u = 0, c = []; u < n.length; u++) r = n[u], d[r] && c.push(d[r][0]), d[r] = 0;
         for (t in o) Object.prototype.hasOwnProperty.call(o, t) && (i[t] = o[t]);
         for (h && h(e); c.length;) c.shift()();
         return l.push.apply(l, a || []), f()
@@ -68,14 +68,14 @@
         for (var e, t = 0; t < l.length; t++) {
             for (var r = l[t], n = !0, o = 1; o < r.length; o++) {
                 var a = r[o];
-                0 !== s[a] && (n = !1)
+                0 !== d[a] && (n = !1)
             }
             n && (l.splice(t--, 1), e = p(p.s = r[0]))
         }
         return e
     }
 
-    var r = {}, d = {1: 0}, s = {1: 0}, l = [];
+    var r = {}, s = {1: 0}, d = {1: 0}, l = [];
 
     function p(e) {
         if (r[e]) return r[e].exports;
@@ -85,14 +85,14 @@
 
     p.e = function (l) {
         var e = [];
-        d[l] ? e.push(d[l]) : 0 !== d[l] && {
+        s[l] ? e.push(s[l]) : 0 !== s[l] && {
             4: 1,
             6: 1,
             7: 1,
             8: 1,
             9: 1,
             10: 1
-        }[l] && e.push(d[l] = new Promise(function (e, n) {
+        }[l] && e.push(s[l] = new Promise(function (e, n) {
             for (var t = "static/css/" + ({}[l] || l) + "." + {
                 3: "31d6cfe0",
                 4: "3c2c4944",
@@ -117,39 +117,39 @@
             f.rel = "stylesheet", f.type = "text/css", f.onload = e, f.onerror = function (e) {
                 var t = e && e.target && e.target.src || o,
                     r = new Error("Loading CSS chunk " + l + " failed.\n(" + t + ")");
-                r.request = t, delete d[l], f.parentNode.removeChild(f), n(r)
+                r.request = t, delete s[l], f.parentNode.removeChild(f), n(r)
             }, f.href = o, document.getElementsByTagName("head")[0].appendChild(f)
         }).then(function () {
-            d[l] = 0
+            s[l] = 0
         }));
-        var r = s[l];
+        var r = d[l];
         if (0 !== r) if (r) e.push(r[2]); else {
             var t = new Promise(function (e, t) {
-                r = s[l] = [e, t]
+                r = d[l] = [e, t]
             });
             e.push(r[2] = t);
             var n, a = document.createElement("script");
             a.charset = "utf-8", a.timeout = 120, p.nc && a.setAttribute("nonce", p.nc), a.src = p.p + "static/js/" + ({}[l] || l) + "." + {
-                3: "122bf8a2",
-                4: "5dfff005",
-                5: "1b860432",
-                6: "bf71ecb7",
-                7: "dbd9138a",
-                8: "d909e8b5",
+                3: "2d8b582e",
+                4: "41304079",
+                5: "f16a3eb6",
+                6: "6e74b395",
+                7: "cd084ac4",
+                8: "ff33ce82",
                 9: "cbda34e5",
                 10: "5fad8ffe",
                 11: "b4d3a786",
-                12: "1d084478"
+                12: "b1831f95"
             }[l] + ".chunk.js", n = function (e) {
                 a.onerror = a.onload = null, clearTimeout(u);
-                var t = s[l];
+                var t = d[l];
                 if (0 !== t) {
                     if (t) {
                         var r = e && ("load" === e.type ? "missing" : e.type), n = e && e.target && e.target.src,
                             o = new Error("Loading chunk " + l + " failed.\n(" + r + ": " + n + ")");
                         o.type = r, o.request = n, t[1](o)
                     }
-                    s[l] = void 0
+                    d[l] = void 0
                 }
             };
             var u = setTimeout(function () {
@@ -191,8 +191,8 @@
     var h = n;
     f()
 }([])</script>
-<script src="/static/js/2.d66c296d.chunk.js"></script>
-<script src="/static/js/main.382f8d17.chunk.js"></script>
+<script src="/static/js/2.195e1e42.chunk.js"></script>
+<script src="/static/js/main.bdb14998.chunk.js"></script>
 </body>
 <style>.Player .thumbnail {
     position: relative;

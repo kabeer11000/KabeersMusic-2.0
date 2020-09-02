@@ -66,7 +66,6 @@ let proxy = cors_proxy.createServer({
     removeHeaders: [] // Do not remove any headers.
 });
 
-
 app.listen(port, () => console.log(`Server is listening on port ${port}.`));
 module.exports = app;
 // https://www.googleapis.com/youtube/v3/videos?part=snippet&videoCategoryId=10&type=video&key=AIzaSyB1msCdExGF2q9oyAjUq4bmSQq6i89VId8&chart=mostPopular

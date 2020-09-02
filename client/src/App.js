@@ -17,6 +17,7 @@ import SearchResultComponent from "./components/SearchComponent/SearchResultComp
 import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import "./functions/Helper/history";
 
 //const {useRef} = require("react");
 
@@ -42,6 +43,10 @@ function App() {
                     rail: '#FFF',
                     thumb: '#FFF',
                     thumbColorPrimary: '#FFF'
+                },
+                invertButtons: {
+                    main: "#68C398",
+                    invert: "#FFFFFF"
                 }
             }
         },
@@ -54,7 +59,7 @@ function App() {
     };
     const darkTheme = createMuiTheme({
         palette: {
-            type: "light",
+            type: "dark",
             ...colors,
             slider: {
                 trackColor: "yellow",
@@ -97,6 +102,7 @@ function App() {
     }
 
     useEffect(() => {
+
         /*
         const currentSong = store.getState().currentSong;
         const videoElement = currentSong.videoElement;

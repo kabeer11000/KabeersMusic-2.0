@@ -3,7 +3,7 @@ import './Downloads.css';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import {getAllDownloadedSongs, getSong} from "../../functions/songs";
+import {getAllDownloadedSongs, getSongFromStorage} from "../../functions/songs";
 import DownloadListItem from "./DownloadListItem";
 
 
@@ -27,7 +27,7 @@ const Downloads = (props) => {
         let videoID = '';
         if (typeof data.videoElement.id === 'object') videoID = data.videoElement.id.videoId;
         if (typeof data.videoElement.id === 'string') videoID = data.videoElement.id;
-        getSong(videoID).then(value => {
+        getSongFromStorage(videoID).then(value => {
             if (value) {
                 //Avoid the Promise Error
                 setTimeout(function () {

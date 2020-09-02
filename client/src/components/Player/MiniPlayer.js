@@ -46,8 +46,24 @@ const MiniPlayer = (props) => {
     }
 
     useEffect(() => {
+        // TODO Because you lisened to travis scott
+        // Record artist name to database for that user
+        // Search Yt for artist name
+        // Show Because You Listened to travis scott
+
         const Mounted = true;
-        if (!Mounted) return null
+        if (!Mounted) return null;
+        document.addEventListener('swiped-up', function (e) {
+            props.reOpenDialog();
+            // Update Redux State
+            store.dispatch(setCurrentSongState(audioElement, videoElement, {
+                Dialog: true,
+                MiniPlayer: false
+            }, props.reOpenDialog, props.playList));
+            if (props.componentState.Dialog) {
+                store.getState().currentSong.reOpenDialog();
+            }
+        });
     });
 
     if (!ComponentStates.dialog && ComponentStates.MiniPlayer && audioElement !== null || '' || undefined) {

@@ -92,8 +92,8 @@ const ComingNext = (props) => {
                         />
                     </div>
                 </AccordionSummary>
-                <AccordionDetails>
-                    <List className={'text-truncate'}>
+                <AccordionDetails style={{maxHeight: "90vh", overflowY: "scroll"}}>
+                    <List className={'text-truncate'} style={{maxHeight: "80vh", overflowY: "scroll"}}>
                         {list}
                     </List>
                 </AccordionDetails>

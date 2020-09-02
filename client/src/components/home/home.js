@@ -27,7 +27,7 @@ const HomeComponent = (props) => {
                 setTimeout(function () {
                     props.appState({
                         uri: value,
-                        thumbnail: data.snippet.thumbnails.maxres.url,
+                        thumbnail: data.snippet.thumbnails.high.url,
                         video: data,
                         list: ListArray,
                         index: index

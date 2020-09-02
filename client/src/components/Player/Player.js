@@ -16,6 +16,7 @@ import store from "../../Redux/store/store";
 import {connect} from "react-redux";
 import {useSnackbar} from 'notistack';
 import ComingNext from "./ComingNext/ComingNext";
+import {saveHistoryToServer} from "../../functions/Helper/history";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -33,12 +34,17 @@ const Player = (props) => {
     const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
     const [button, setButton] = React.useState(<IconButton color={'#60B18A'} colorSecondary={'#60B18A'}
                                                            onClick={pauseAudio}><Pause color={'#fff'}/></IconButton>);
-    const [looping, setLooping] = React.useState(<IconButton style={{backgroundColor: "initial"}} onClick={() => {
-        audioElement.loop = true;
-        setLooping(<IconButton onClick={() => {
-            audioElement.loop = false
-        }} style={{backgroundColor: '#3F51B5'}}><Loop style={{color: '#FFFFFF'}}/></IconButton>)
-    }}><Loop style={{color: "initial"}}/></IconButton>);
+    const [looping, setLooping] = React.useState(<IconButton color={"primary.player.invertButtons.main"}
+                                                             style={{backgroundColor: "primary.player.invertButtons.main"}}
+                                                             onClick={() => {
+                                                                 audioElement.loop = true;
+                                                                 setLooping(<IconButton
+                                                                     color={"primary.player.invertButtons.invert"}
+                                                                     onClick={() => {
+                                                                         audioElement.loop = false
+                                                                     }}
+                                                                     style={{backgroundColor: "primary.player.invertButtons.invert"}}><Loop/></IconButton>)
+                                                             }}><Loop/></IconButton>);
     let audioElement = props.audioElement;
     const [downloadButton, setDownloadButton] = React.useState(<div/>);
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -140,6 +146,7 @@ const Player = (props) => {
 
 
     useEffect(() => {
+
         setTimeout(() => {
             if (audioElement.paused) {
                 audioElement.play();
@@ -153,6 +160,7 @@ const Player = (props) => {
                     }]
                 });
                 addToHistory();
+                saveHistoryToServer(props.videoElement);
                 addToReduxState([true, false]);
                 let videoID = '';
                 if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
@@ -163,11 +171,10 @@ const Player = (props) => {
                         <IconButton onClick={downloadAudio}><GetApp/></IconButton>);
                     console.log(v)
                 });
-
+                document.addEventListener('swiped-down', handleClose);
             }
         }, 150)
     }, []);
-
     function SkipSong(data) {
         let videoID = '';
         if (typeof data.video.id === 'object') videoID = data.video.id.videoId;
@@ -260,6 +267,7 @@ const Player = (props) => {
                             justifyContent: 'space-around',
                             transform: 'translate(0%)'
                         }}>
+                            {looping}
                             {props.playList.list.items[props.playList.index - 1] ?
                                 <IconButton><SkipPrevious onClick={() => {
                                     const item = props.playList.list.items[props.playList.index - 1];

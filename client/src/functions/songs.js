@@ -23,7 +23,7 @@ db.version(db_version).stores({
 const historydb = new Dexie('KabeersMusic_History');
 historydb.version(db_version).stores({
     songs:
-        "id, &videoId, time, rating, thumbnail, channelTitle, title, tags"
+        "id, time, rating, thumbnail, channelTitle, title, tags"
 });
 
 export async function downloadSong(data = {videoId: null, rating: 0, title: '', channelTitle: '', tags: ''}) {
@@ -63,6 +63,10 @@ export async function getBlob(key) {
 }
 
 export async function getSong(id) {
+    return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json()).catch(err => err);
+}
+
+export async function getSongFromStorage(id) {
     const
         allSongs = await db.songs.toArray();
 
@@ -76,6 +80,12 @@ export async function getSong(id) {
 export async function getAllDownloadedSongs() {
     return db.songs.toArray();
 }
+
+export async function getFeed() {
+    return fetch(endPoints.getFeed(id)).then(value => value.json()).catch(err => err);
+}
+
+
 console.log('%20 SongJS Loaded');
 //downloadSong({rating: 0, videoId:'iYKXdt0LRs8'});
 
@@ -144,7 +154,7 @@ export async function isOfflineAvailable(videoId) {
     return songs && songs.some(song => song.id === videoId);
 }
 
-/*
+
 export async function saveToHistory(object) {
     historydb.songs.put({
         id: uniqid() + uniqid(),
@@ -153,15 +163,10 @@ export async function saveToHistory(object) {
         tags: object.tags,
         thumbnail: object.thumbnail,
         time: Date.now(),
-        videoId: object.videoId,
         rating: object.rating,
     }).then((v) => {
         console.log(v);
     });
-}
-*/
-export async function saveToHistory() {
-
 }
 
 export async function getHistory() {

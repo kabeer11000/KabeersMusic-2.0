@@ -33,6 +33,9 @@ const HistoryComponent = () => {
                                                           thumbnail={v.thumbnail} tags={v.tags}/>{divider_}</div>
                 });
             });
+            if (!HistoryItems) {
+                setHistoryItems()
+            }
         })
     }
 
