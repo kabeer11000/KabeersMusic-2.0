@@ -1,0 +1,48 @@
+{
+  "short_name": "Kabeers CDNs",
+  "name": "Kabeers Network CDNs",
+  "description": "Choose from hundreds of free and fast CDNs for your apps & websites.",
+  "icons": [
+    {
+      "src": "kslogo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "kslogo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/cdn",
+  "background_color": "#3EBE7A",
+  "display": "minimal-ui",
+  "scope": "/cdn",
+  "theme_color": "#3EBE7A",
+  "shortcuts": [
+    {
+      "name": "Launch Kabeers Network CDNs",
+      "short_name": "Kabeers CDNs",
+      "description": "Choose from hundreds of free and fast CDNs for your apps & websites.",
+      "url": "/cdn",
+      "icons": [
+        {
+          "src": "kslogo.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Launch Kabeers Network CDNs",
+      "short_name": "Kabeers CDNs",
+      "description": "Choose from hundreds of CDNs Free and Fast",
+      "url": "/cdn",
+      "icons": [
+        {
+          "src": "kslogo.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

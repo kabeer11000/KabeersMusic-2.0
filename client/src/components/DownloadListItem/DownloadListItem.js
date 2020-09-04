@@ -31,12 +31,10 @@ const DownloadListItem = (props) => {
                         >
                             {props.channelTitle}
                         </Typography>
-                        {props.tags}
                     </React.Fragment>
                 }
             />
-        </ListItem>
-    )
+    </ListItem>)
 };
 
 DownloadListItem.propTypes = {};

@@ -5,6 +5,7 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import {getHistory} from "../../functions/songs";
 import DownloadListItem from "../DownloadListItem/DownloadListItem";
+import Container from "@material-ui/core/Container";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +26,8 @@ const HistoryComponent = () => {
 
     function createList() {
         getHistory().then(value => {
-            value = value.reverse();
+            //value = value.reverse();
+            value = value.slice(Math.max(value.length - 5, 1)).reverse(); // Get 5 Recent
             setHistoryItems(() => {
                 return value.map((v, i) => {
                     const divider_ = i = value.length ? <div/> : <Divider variant="inset" component="li"/>;
@@ -44,9 +46,11 @@ const HistoryComponent = () => {
     }, []);
 
     return (
-        <List className={`${classes.root} mt-5 bg-transparent`}>
-            {HistoryItems}
-        </List>
+        <Container fixed>
+            <List className={`${classes.root} mt-5 bg-transparent`}>
+                {HistoryItems}
+            </List>
+        </Container>
     );
 };
 

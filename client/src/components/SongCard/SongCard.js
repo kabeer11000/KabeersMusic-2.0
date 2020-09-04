@@ -9,15 +9,21 @@ import {Typography} from "@material-ui/core";
 // = {title, description, tags, channelTitle, videoId, thumbnail}
 function SongCard(props) {
     const video_ = props.video.snippet;
+
+    function unEntity(str) {
+        return str.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+    }
+
     return (
-        <Card className={'SongCard'} style={{width: "18rem"}} onClick={() => props.onPlay(props.video, props.key_)}>
+        <Card className={'SongCard'} style={{width: "18rem"}}
+              onClick={() => props.onPlay(props.video, props.key_, props.list)}>
             <CardActionArea>
                 <CardMedia
                     component="img"
                     alt="Contemplative Reptile"
                     height="140"
-                    image={video_.thumbnails.standard.url}
-                    title={video_.title}
+                    image={props.thumbnail || video_.thumbnails.standard.url}
+                    title={unEntity(video_.title)}
                     loading={'lazy'}
 
                 />

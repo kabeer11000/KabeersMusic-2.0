@@ -12,14 +12,12 @@ import DrawerComponent from "./components/Drawer/Drawer.lazy";
 import {Provider} from "react-redux";
 import store from "./Redux/store/store";
 import {setCurrentSongState} from "./Redux/actions/actions";
-import MiniPlayer from "./components/Player/MiniPlayer";
+import MiniPlayer from "./components/Player/MiniPlayer.lazy";
 import SearchResultComponent from "./components/SearchComponent/SearchResultComponent";
 import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import "./functions/Helper/history";
-
-//const {useRef} = require("react");
+import {initAuth} from "./functions/auth";
 
 
 function App() {
@@ -30,12 +28,12 @@ function App() {
     const colors = {
         primary: {
             contrastText: darkState ? "#757575" : "#FFFFFF",
-            main: "#68C398",
+            main: "#E14A58",
             light: darkState ? "#757575" : "#FFFFFF",
             dark: darkState ? "#303030" : "#FFFFFF",
             miniPlayer: {
                 main: darkState ? "#303030" : "#FEFEFE",
-                borderTop: darkState ? "#507262" : "#3C3F41",
+                borderTop: darkState ? "#E14A58" : "#3C3F41",
                 text: darkState ? "#FFFFFF" : "#2B2B2B",
             },
             player: {
@@ -45,13 +43,13 @@ function App() {
                     thumbColorPrimary: '#FFF'
                 },
                 invertButtons: {
-                    main: "#68C398",
+                    main: "#E14A58",
                     invert: "#FFFFFF"
                 }
             }
         },
         secondary: {
-            main: "#68C398",
+            main: "#E14A58",
             light: darkState ? "#757575" : "#FFFFFF",
             dark: darkState ? "#303030" : "#FFFFFF"
         },
@@ -74,12 +72,8 @@ function App() {
     async function changeStates(state) {
         try {
             audio.pause();
-            audio.src = '';
-            state.list &&
-            state.index &&
-            state.thumbnail &&
-            state.video &&
-            state.uri ? state.hidden = false : state.hidden = true;
+            audio.src = "";
+            state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
             audio.src = state.uri;
             console.log(state.uri);
             store.dispatch(setCurrentSongState(audio, state.video, {
@@ -129,8 +123,9 @@ function App() {
                 }
             });
         }*/
-
+        initAuth().then(value => console.log(value))
     }, []);
+
     return (
         <Provider store={store}>
             <MuiThemeProvider theme={darkTheme}>
@@ -139,7 +134,6 @@ function App() {
                         <CssBaseline/>
                         <div className="App">
                             <DrawerComponent>
-                                <audio id={'MainAudio'} src={''} preload={'auto'}/>
                                 <CustomAppBar/>
                                 <Player hidden={Player__} changes={changeStates}/>
                                 <Route exact={true} path={'/home'}
@@ -148,7 +142,7 @@ function App() {
                                        render={() => <Downloads appState={changeStates}/>}/>
                                 <Route exact={true} path={'/search'} component={SearchComponent}/>
                                 <Route exact={true} path={'/history'} component={HistoryComponent}/>
-                                <Route exact={true} path={'*'} render={() => {
+                                <Route exact={true} path={'/*'} render={() => {
                                     return <Redirect to={'/home'}/>
                                 }}/>
                                 <Route exact={true} path={'/search/results'} render={() => {

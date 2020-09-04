@@ -1,0 +1,51 @@
+{
+  "Folders": [
+    {
+      "folder": "dist"
+    },
+    {
+      "folder": "scss"
+    },
+    {
+      "folder": "js"
+    }
+  ],
+  "Files": [
+    {
+      "file": "bootstrap-reboot.min.css.map"
+    },
+    {
+      "file": "bootstrap-reboot.min.css"
+    },
+    {
+      "file": "bootstrap-grid.min.css"
+    },
+    {
+      "file": "bootstrap-reboot.css"
+    },
+    {
+      "file": "bootstrap.css.map"
+    },
+    {
+      "file": "bootstrap.min.css.map"
+    },
+    {
+      "file": "bootstrap.css"
+    },
+    {
+      "file": "bootstrap-grid.min.css.map"
+    },
+    {
+      "file": "bootstrap-grid.css"
+    },
+    {
+      "file": "bootstrap.min.css"
+    },
+    {
+      "file": "bootstrap-grid.css.map"
+    },
+    {
+      "file": "bootstrap-reboot.css.map"
+    }
+  ]
+}

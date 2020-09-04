@@ -15,7 +15,7 @@ const NextListItem = (props) => {
 
     const classes = useStyles();
     return (
-        <ListItem alignItems="flex-start" className={props.currentIndex === props.keyIndex ? 'bg-light p-0' : 'p-0'}
+        <ListItem alignItems="flex-start" selected={props.currentIndex === props.keyIndex} className={'p-0 px-1'}
                   onClick={props.onClick}>
             <ListItemAvatar>
                 <Avatar alt={props.title} src={props.image}/>

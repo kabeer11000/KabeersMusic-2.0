@@ -1,7 +1,7 @@
 export const CHANGE_DRAWER = 'CHANGE_DRAWER';
 export const CURRENT_SONG = 'CURRENT_SONG';
 export const SEARCH_QUERY_PARAM = 'SEARCH_QUERY_PARAM';
-
+export const HOME_COMPONENT_STATE = 'HOME_COMPONENT_STATE';
 
 export function setDrawerState(state) {
     return {type: CHANGE_DRAWER, drawer: state};
@@ -27,6 +27,12 @@ export function setQueryParams(queryString) {
     }
 }
 
+export function setHomeScreen(components) {
+    return {
+        type: HOME_COMPONENT_STATE,
+        home: components,
+    }
+}
 /*
 ComponentState = {
     MiniPlayer: true,

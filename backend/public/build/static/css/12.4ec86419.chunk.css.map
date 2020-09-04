@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "sources": [
+    "E:/Projects/phpstormprojects/music_react/client/src/components/home/E:/Projects/phpstormprojects/music_react/client/src/components/home/home.css",
+    "12.4ec86419.chunk.css"
+  ],
+  "names": [],
+  "mappings": "AAAA,UACI,WAAA,CACA,iBCCJ,CDEA,YACI,YAAA,CACA,aAAA,CACA,kBCCJ,CDEA,+BACI,YCCJ,CDEA,WACI,aAAA,CACA,kBCCJ,CDEA,qBACI,oBCCJ,CDEA,OACI,sBCCJ",
+  "file": "12.4ec86419.chunk.css",
+  "sourcesContent": [
+    ".SongCard {\r\n    width: 15rem;\r\n    margin-right: 1rem;\r\n}\r\n\r\n.cardSlider {\r\n    padding: 1rem;\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n.cardSlider::-webkit-scrollbar {\r\n    display: none\r\n}\r\n\r\ndiv.Slider {\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\ndiv.Slider .SongCard {\r\n    display: inline-block;\r\n}\r\n\r\n*:focus {\r\n    outline: none !important;\r\n}\r\n",
+    ".SongCard {\r\n    width: 15rem;\r\n    margin-right: 1rem;\r\n}\r\n\r\n.cardSlider {\r\n    padding: 1rem;\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\n.cardSlider::-webkit-scrollbar {\r\n    display: none\r\n}\r\n\r\ndiv.Slider {\r\n    overflow: auto;\r\n    white-space: nowrap;\r\n}\r\n\r\ndiv.Slider .SongCard {\r\n    display: inline-block;\r\n}\r\n\r\n*:focus {\r\n    outline: none !important;\r\n}\r\n\n"
+  ]
+}

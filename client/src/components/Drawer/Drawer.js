@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
         height: 'auto',
         width: theme.spacing(3),
     },
+    marginRight: {
+        marginLeft: drawerWidth
+    }
 }));
 
 function DrawerComponent(props) {
@@ -135,8 +138,8 @@ function DrawerComponent(props) {
                         classes={{
                             paper: classes.drawerPaper,
                         }}
-                        variant="permanent"
-                        open
+                        variant="persistent"
+                        open={mobileOpen}
                     >
                         {drawer}
                     </Drawer>
@@ -149,6 +152,7 @@ function DrawerComponent(props) {
     );
 }
 
+// ${ !props.isOpen ?  '' : classes.marginRight}
 // style={{marginLeft: props.isOpen ? drawerWidth : 0}}
 DrawerComponent.propTypes = {
     children: PropTypes.element.isRequired,

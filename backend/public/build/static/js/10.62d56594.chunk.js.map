@@ -1,0 +1,51 @@
+{
+  "version": 3,
+  "sources": [
+    "../node_modules/@material-ui/icons/esm/Menu.js",
+    "../node_modules/@material-ui/icons/esm/Search.js",
+    "components/CustomAppBar/CustomAppBar.js"
+  ],
+  "names": [
+    "Menu",
+    "Object",
+    "createSvgIcon",
+    "react_default",
+    "a",
+    "createElement",
+    "d",
+    "Search",
+    "useStyles",
+    "makeStyles",
+    "appBar",
+    "width",
+    "CustomAppBar",
+    "props",
+    "AppBar",
+    "position",
+    "Toolbar",
+    "IconButton",
+    "onClick",
+    "store",
+    "dispatch",
+    "setDrawerState",
+    "edge",
+    "color",
+    "aria-label",
+    "Typography",
+    "variant",
+    "style",
+    "flex",
+    "component",
+    "Link",
+    "to",
+    "defaultProps"
+  ],
+  "mappings": "wLAEeA,EAAAC,OAAAC,EAAA,GAAcC,EAAAC,EAAKC,cAAA,QAClCC,EAAA,kDACC,QCFcC,EAAAN,OAAAC,EAAA,GAAcC,EAAAC,EAAKC,cAAA,QAClCC,EAAA,+OACC,mDCQKE,EAAYC,YAAW,CACzBC,OAAQ,CACJC,MAAO,WAGTC,EAAe,SAACC,GAKFL,IAChB,OACIL,EAAAC,EAAAC,cAAA,WACIF,EAAAC,EAAAC,cAACS,EAAA,EAAD,CAAQC,SAAS,SACbZ,EAAAC,EAAAC,cAACW,EAAA,EAAD,KACIb,EAAAC,EAAAC,cAACY,EAAA,EAAD,CAAYC,QATT,WACfC,IAAMC,SAASC,aAAe,KAQeC,KAAK,QAAQC,MAAO,UAAWC,aAAW,QACvErB,EAAAC,EAAAC,cAACL,EAAD,OAEJG,EAAAC,EAAAC,cAACoB,EAAA,EAAD,CAAYC,QAAQ,MAApB,SAGAvB,EAAAC,EAAAC,cAAA,OAAKsB,MAAO,CAACC,KAAM,cACnBzB,EAAAC,EAAAC,cAACY,EAAA,EAAD,CACIK,KAAK,QACLC,MAAM,UACNC,aAAW,SACXK,UAAWC,IACXC,GAAI,WAEJ5B,EAAAC,EAAAC,cAACE,EAAD,WAUxBK,EAAaoB,aAAe,GAEbpB",
+  "file": "static/js/10.62d56594.chunk.js",
+  "sourcesContent": [
+    "import React from 'react';\nimport createSvgIcon from './utils/createSvgIcon';\nexport default createSvgIcon(React.createElement(\"path\", {\n  d: \"M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z\"\n}), 'Menu');",
+    "import React from 'react';\nimport createSvgIcon from './utils/createSvgIcon';\nexport default createSvgIcon(React.createElement(\"path\", {\n  d: \"M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z\"\n}), 'Search');",
+    "import React from 'react';\nimport './CustomAppBar.css';\nimport AppBar from \"@material-ui/core/AppBar\";\nimport Toolbar from \"@material-ui/core/Toolbar\";\nimport IconButton from \"@material-ui/core/IconButton\";\nimport {Menu, Search} from \"@material-ui/icons\";\nimport Typography from \"@material-ui/core/Typography\";\nimport {Link} from \"react-router-dom\";\nimport store from \"../../Redux/store/store\";\nimport {setDrawerState} from \"../../Redux/actions/actions\";\nimport {makeStyles} from \"@material-ui/core/styles\";\n\nconst useStyles = makeStyles({\n    appBar: {\n        width: '100vw'\n    },\n});\nconst CustomAppBar = (props) => {\n    const OpenDrawer = () => {\n        store.dispatch(setDrawerState(true));\n    };\n\n    const classes = useStyles();\n    return (\n        <div>\n            <AppBar position=\"fixed\">\n                <Toolbar>\n                    <IconButton onClick={OpenDrawer} edge=\"start\" color={'inherit'} aria-label=\"menu\">\n                        <Menu/>\n                    </IconButton>\n                    <Typography variant=\"h6\">\n                        Music\n                    </Typography>\n                    <div style={{flex: '1 1 auto'}}/>\n                    <IconButton\n                        edge=\"start\"\n                        color=\"inherit\"\n                        aria-label=\"Search\"\n                        component={Link}\n                        to={'/search'}\n                    >\n                        <Search/>\n                    </IconButton>\n                </Toolbar>\n            </AppBar>\n        </div>\n    );\n};\n\nCustomAppBar.propTypes = {};\n\nCustomAppBar.defaultProps = {};\n\nexport default CustomAppBar;\n"
+  ],
+  "sourceRoot": ""
+}

@@ -98,5 +98,44 @@
         max-width: 100%;
     }
 </style>
-<script src="https://cdn.jsdelivr.net/gh/john-doherty/swiped-events/dist/swiped-events.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/gh/john-doherty/swiped-events/dist/swiped-events.min.js"></script>
+<!-- <script src="https://unpkg.com/ml5@0.4.3/dist/ml5.min.js"></script> -->
+<script>
+    /*
+    // On load:
+    var state = history.state || {};
+    var reloadCount = state.reloadCount || 0;
+    if (performance.navigation.type === 1) { // Reload
+        state.reloadCount = ++reloadCount;
+        history.replaceState(state, null, document.URL);
+    } else if (reloadCount) {
+        delete state.reloadCount;
+        reloadCount = 0;
+        history.replaceState(state, null, document.URL);
+    }
+    if (reloadCount >= 2) {
+        // Now, do whatever you want...
+        alert('The page was reloaded more than twice!');
+    }
+    */
+    /*
+    const audioContext = new AudioContext();
+    const MicStream = MicStream;
+    const pitch = ml5.pitchDetection(
+        './model/',
+        audioContext,
+        MicStream,
+        modelLoaded,
+    );
+
+    // When the model is loaded
+    function modelLoaded() {
+        console.log('Model Loaded!');
+    }
+
+    pitch.getPitch((err, frequency) => {
+        console.log(frequency);
+    });
+     */
+</script>
 </html>

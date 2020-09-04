@@ -1,0 +1,318 @@
+{
+  "kind": "youtube#videoListResponse",
+  "etag": "tA3jcp1TgYilZt66qm1jOMhYcbs",
+  "items": [
+    {
+      "kind": "youtube#video",
+      "etag": "hRXbCbNLVZ9oQHlqKznAQIf-nOA",
+      "id": "gdZLi9oWNZg",
+      "snippet": {
+        "publishedAt": "2020-08-21T03:58:10Z",
+        "channelId": "UC3IZKseVpdzPSBaWxBxundA",
+        "title": "BTS (방탄소년단) 'Dynamite' Official MV",
+        "description": "BTS (방탄소년단) 'Dynamite' Official MV\n\n\nCredits:\nDirector: Yong Seok Choi (Lumpens)\nAssistant Director: Jihye Yoon (Lumpens)\n\nDirector of Photography: Hyunwoo Nam (GDW)\nB Camera Operator: Eumko\nFocus Puller: Sangwoo Yun, Youngwoo Lee\n2nd AC: Eunki Kim\n3rd AC: Kyuwon Seo\nDIT: Eunil Lee\n\nGaffer: Song Hyunsuk\nLighting Crew: Choi Jung Hyun, Hwang Uigyu, Kim Hyun Ju, Park Cheonil, Park Yeonghwan, Yeom Jaehyeok\n\nJimmy Jib Operator: Youngjung Kim\nJimmy Jib Assistant: Hyun in Kim, Sung Hoon Kim\n\nArt Director: Bona Kim, Jinsil Park (MU:E)\nAssistant Art Team: Yeri Kang (MU:E)\nArt-team Manager: ilho Heo (MU:E)\n\nProducer: Emma Sungeun Kim (GE Production)\nLocation Manager: Ji Hoon Han\n\nVFX STUDIO: PLASTIC BEACH\nVFX Supervisor: Ohzeon\nVFX Assistant Supervisor: Jojeem\nVFX Project Manager: Chanyoung Song, Jieun Jeong\nVFX Producer: Kyutae Jang\n3D Artist: Kwangwon Lee, Doyeon Kim, Jeonghwa Lee, Jiwon Jeon\n2D Artist: Gihoon Jang, Hyunjun Lee\n\nVisual Creative: Nu Kim, Sabinne Cheon, Lee Sun Kyoung, Kim Ga Eun, Jung Su Jung\nBrand Experience Design: Kris Seongmin Gim, Hyeri Lee \nPerformance Directing: Son Sung Deuk, Lee Ga Hun, Lee Byung Eun, Hyewon Park\nArtist Management: Kim Shin Gyu, Kim Su Bin, Kim Dae Young, Park Jun Tae, An Da Sol, Ahn Jong Hun, Yun Tae Woong, Lee Seung Byeong, Lee Jung Min\n\nBig Hit Entertainment. Rights are reserved selectively in the video. Unauthorized reproduction is a violation of applicable laws. Manufactured by Big Hit Entertainment, Seoul, Korea.\n\nConnect with BTS: \nhttps://ibighit.com/bts \nhttp://twitter.com/BTS_bighit\nhttp://twitter.com/BTS_twt \nhttp://www.facebook.com/bangtan.official \nhttps://www.youtube.com/user/BANGTANTV \nhttp://instagram.com/BTS.bighitofficial \nhttps://channels.vlive.tv/FE619 \nhttps://www.tiktok.com/@bts_official_bighit\nhttps://weverse.onelink.me/qt3S/94808190\nhttps://www.weibo.com/BTSbighit\nhttps://www.weibo.com/BTSmembers \nhttp://i.youku.com/btsofficial \nhttp://btsblog.ibighit.com\n\n\n#BTS #방탄소년단 #BTS_Dynamite #Dynamite #MV",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "Big Hit Labels",
+        "tags": [
+          "BIGHIT",
+          "빅히트",
+          "방탄소년단",
+          "BTS",
+          "BANGTAN",
+          "방탄"
+        ],
+        "categoryId": "10",
+        "liveBroadcastContent": "none",
+        "defaultLanguage": "ko",
+        "localized": {
+          "title": "BTS (방탄소년단) 'Dynamite' Official MV",
+          "description": "BTS (방탄소년단) 'Dynamite' Official MV\n\n\nCredits:\nDirector: Yong Seok Choi (Lumpens)\nAssistant Director: Jihye Yoon (Lumpens)\n\nDirector of Photography: Hyunwoo Nam (GDW)\nB Camera Operator: Eumko\nFocus Puller: Sangwoo Yun, Youngwoo Lee\n2nd AC: Eunki Kim\n3rd AC: Kyuwon Seo\nDIT: Eunil Lee\n\nGaffer: Song Hyunsuk\nLighting Crew: Choi Jung Hyun, Hwang Uigyu, Kim Hyun Ju, Park Cheonil, Park Yeonghwan, Yeom Jaehyeok\n\nJimmy Jib Operator: Youngjung Kim\nJimmy Jib Assistant: Hyun in Kim, Sung Hoon Kim\n\nArt Director: Bona Kim, Jinsil Park (MU:E)\nAssistant Art Team: Yeri Kang (MU:E)\nArt-team Manager: ilho Heo (MU:E)\n\nProducer: Emma Sungeun Kim (GE Production)\nLocation Manager: Ji Hoon Han\n\nVFX STUDIO: PLASTIC BEACH\nVFX Supervisor: Ohzeon\nVFX Assistant Supervisor: Jojeem\nVFX Project Manager: Chanyoung Song, Jieun Jeong\nVFX Producer: Kyutae Jang\n3D Artist: Kwangwon Lee, Doyeon Kim, Jeonghwa Lee, Jiwon Jeon\n2D Artist: Gihoon Jang, Hyunjun Lee\n\nVisual Creative: Nu Kim, Sabinne Cheon, Lee Sun Kyoung, Kim Ga Eun, Jung Su Jung\nBrand Experience Design: Kris Seongmin Gim, Hyeri Lee \nPerformance Directing: Son Sung Deuk, Lee Ga Hun, Lee Byung Eun, Hyewon Park\nArtist Management: Kim Shin Gyu, Kim Su Bin, Kim Dae Young, Park Jun Tae, An Da Sol, Ahn Jong Hun, Yun Tae Woong, Lee Seung Byeong, Lee Jung Min\n\nBig Hit Entertainment. Rights are reserved selectively in the video. Unauthorized reproduction is a violation of applicable laws. Manufactured by Big Hit Entertainment, Seoul, Korea.\n\nConnect with BTS: \nhttps://ibighit.com/bts \nhttp://twitter.com/BTS_bighit\nhttp://twitter.com/BTS_twt \nhttp://www.facebook.com/bangtan.official \nhttps://www.youtube.com/user/BANGTANTV \nhttp://instagram.com/BTS.bighitofficial \nhttps://channels.vlive.tv/FE619 \nhttps://www.tiktok.com/@bts_official_bighit\nhttps://weverse.onelink.me/qt3S/94808190\nhttps://www.weibo.com/BTSbighit\nhttps://www.weibo.com/BTSmembers \nhttp://i.youku.com/btsofficial \nhttp://btsblog.ibighit.com\n\n\n#BTS #방탄소년단 #BTS_Dynamite #Dynamite #MV"
+        },
+        "defaultAudioLanguage": "en"
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "CADK6Os7M4Ip1IY226vq0e1-1uk",
+      "id": "JFm7YDVlqnI",
+      "snippet": {
+        "publishedAt": "2020-08-14T04:00:08Z",
+        "channelId": "UCQznUf1SjfDqx65hX3zRDiA",
+        "title": "Drake - Laugh Now Cry Later (Official Music Video) ft. Lil Durk",
+        "description": "Laugh Now Cry Later ft. Lil Durk available everywhere now: http://drake.lnk.to/lncl\n\nConnect with Drake:\nhttps://www.instagram.com/champagnepapi \nhttps://www.facebook.com/Drake \nhttps://twitter.com/drake \nhttps://www.drakeofficial.com \n\nDirector: Dave Meyers\nExecutive Producer: Nathan Scherrer\nProduction Company: Freenjoy\n\nProducers: Nathan Scherrer & Matt O'Connor\nDirector of Photography: Scott Cunningham \nProduction Designer: Eric Shoonover\n\nEditor: Greg Scruton at Cabin Edit\nColourist: Stefan Sonnenfeld at Company3\nVFX Supervisor: Les Umberger at Mod Creations\nSound Mix: Tom Paolantonio at Lime Studios\n\nLyrics:\n\nSometimes we laugh and sometimes we cry but I guess you know now\nBaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby \nWhere do these niggas be at when they say they doing all this and all that\nTired of beefing of bums you can’t even pay me enough me to react \n\nBeen waking up in the crib and sometimes I don’t even know where I’m at\nPlease don’t play that niggas songs in this party I can’t even listen to that\nAnytime that I run into somebody it must be a victory lap eh \nShawty come sit on my lap eh\nThey saying Drizzy just snap\nDistance between us is not like a store this isn’t a close able gap\nI’ve seen some niggas attack\nAnd don’t end up making it back\n\nI know that they at the crib going crazy down bad what they had didn’t last Damn baby\nSometimes we laugh and sometimes we cry but I guess you know now\nbaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby\nWhere do these niggas be at when they say they doing all this and all that \n\nI’m in the trenches relax\nCan you not play that lil boy in the club cause we do not listen to rats\nWe in the line I buy her a wig she tellin me Tay is the best\nPoint at that nigga who act like a killer\nBut you only want from the neck\nI’m like the baby I’m not just a rapper you play with me you gon get stressed\nOoooh\nBring Drake to the hood\nSurround Drake around Drakes\nEven though I got a case\nImma do what it takes\n\nAnd I never been embraced\nAnd the moneys hard to make\nSo I bet they on they face right\n\nI know that they at the crib going crazy down bad what they had didn’t last Damn baby\nSometimes we laugh and sometimes we cry but I guess you know now\nbaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby\nWhere do these niggas be at when they say they doing all this and all that \n\nWhen he tell the story that’s not how it went\nKnow they be lying 100 percent \nMove out the Ritz forgot bout the Bent\nValet just called to tell me come get it\nI knocked that boy off  I don’t want no credit\nIf it Was me they wouldn’t regret it\nleft me for dead and now they want dead it\nheart is still beating\nMy niggas still eating\nThe backyard it look like the Garden of Eden\nPillow talk with Me she spilling the tea and then shawty came back and said she didn’t mean it\nIts hard to believe it\n\nI know that they at the crib going crazy down bad what they had didn’t last Damn baby\nSometimes we laugh and sometimes we cry but I guess you know now\nbaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby\nWhere do these niggas be at when they say they doing all this and all that\n\n#Drake #LilDurk #LaughNowCryLater",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/JFm7YDVlqnI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/JFm7YDVlqnI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/JFm7YDVlqnI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/JFm7YDVlqnI/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/JFm7YDVlqnI/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "DrakeVEVO",
+        "tags": [
+          "Drake",
+          "Laugh",
+          "Now",
+          "Cry",
+          "Later",
+          "OVO",
+          "Hip",
+          "Hop"
+        ],
+        "categoryId": "10",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "Drake - Laugh Now Cry Later (Official Music Video) ft. Lil Durk",
+          "description": "Laugh Now Cry Later ft. Lil Durk available everywhere now: http://drake.lnk.to/lncl\n\nConnect with Drake:\nhttps://www.instagram.com/champagnepapi \nhttps://www.facebook.com/Drake \nhttps://twitter.com/drake \nhttps://www.drakeofficial.com \n\nDirector: Dave Meyers\nExecutive Producer: Nathan Scherrer\nProduction Company: Freenjoy\n\nProducers: Nathan Scherrer & Matt O'Connor\nDirector of Photography: Scott Cunningham \nProduction Designer: Eric Shoonover\n\nEditor: Greg Scruton at Cabin Edit\nColourist: Stefan Sonnenfeld at Company3\nVFX Supervisor: Les Umberger at Mod Creations\nSound Mix: Tom Paolantonio at Lime Studios\n\nLyrics:\n\nSometimes we laugh and sometimes we cry but I guess you know now\nBaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby \nWhere do these niggas be at when they say they doing all this and all that\nTired of beefing of bums you can’t even pay me enough me to react \n\nBeen waking up in the crib and sometimes I don’t even know where I’m at\nPlease don’t play that niggas songs in this party I can’t even listen to that\nAnytime that I run into somebody it must be a victory lap eh \nShawty come sit on my lap eh\nThey saying Drizzy just snap\nDistance between us is not like a store this isn’t a close able gap\nI’ve seen some niggas attack\nAnd don’t end up making it back\n\nI know that they at the crib going crazy down bad what they had didn’t last Damn baby\nSometimes we laugh and sometimes we cry but I guess you know now\nbaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby\nWhere do these niggas be at when they say they doing all this and all that \n\nI’m in the trenches relax\nCan you not play that lil boy in the club cause we do not listen to rats\nWe in the line I buy her a wig she tellin me Tay is the best\nPoint at that nigga who act like a killer\nBut you only want from the neck\nI’m like the baby I’m not just a rapper you play with me you gon get stressed\nOoooh\nBring Drake to the hood\nSurround Drake around Drakes\nEven though I got a case\nImma do what it takes\n\nAnd I never been embraced\nAnd the moneys hard to make\nSo I bet they on they face right\n\nI know that they at the crib going crazy down bad what they had didn’t last Damn baby\nSometimes we laugh and sometimes we cry but I guess you know now\nbaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby\nWhere do these niggas be at when they say they doing all this and all that \n\nWhen he tell the story that’s not how it went\nKnow they be lying 100 percent \nMove out the Ritz forgot bout the Bent\nValet just called to tell me come get it\nI knocked that boy off  I don’t want no credit\nIf it Was me they wouldn’t regret it\nleft me for dead and now they want dead it\nheart is still beating\nMy niggas still eating\nThe backyard it look like the Garden of Eden\nPillow talk with Me she spilling the tea and then shawty came back and said she didn’t mean it\nIts hard to believe it\n\nI know that they at the crib going crazy down bad what they had didn’t last Damn baby\nSometimes we laugh and sometimes we cry but I guess you know now\nbaby\nI took a half and she took the whole thing slow down\nBaby\nWe took a trip now we on your block and it’s like a ghost town\nBaby\nWhere do these niggas be at when they say they doing all this and all that\n\n#Drake #LilDurk #LaughNowCryLater"
+        }
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "LQlOQ1bTSvYsNWvLCtlQbcrwC2k",
+      "id": "u0LaoQks5mY",
+      "snippet": {
+        "publishedAt": "2020-08-20T19:00:09Z",
+        "channelId": "UCGIelM2Dj3zza3xyV3pL3WQ",
+        "title": "Migos - Need It (Official Video) ft. YoungBoy Never Broke Again",
+        "description": "Listen to Migos \"Need It\" featuring NBA Youngboy here: https://QualityControl.lnk.to/NeedIt \n\nFollow Migos on socials:\nhttps://instagram.com/migos\nhttps://facebook.com/THEMigosAtl\nhttps://twitter.com/migos\n\nLyrics:\n\n[Intro: Offset & YoungBoy Never Broke Again]\nLet's go\nI'm surrounded by some real niggas (Lil Top)\nHey (Yeah), yessir (They won't do it), Buddah Bless this beat\n\n[Chorus: Offset & YoungBoy Never Broke Again]\nI said I need it\nThis Draco undefeated (Rrah)\nHit your block and then I bleed it (Yeah)\nGo long, these bullets, he receive it\nI can't see it (I can't)\nMy wrist look like a snow cone, make her eat it (Woah)\nOnce I see her, I give her that dope dick just like it's ether\nThen I leave her, I can't get caught up, I can't be on Cheaters\nThere go them people, you know what it is\nGo put the dope up 'fore they breach us\nBefore they breach us\nI'ma get out this bitch and I'm strikin', I'm throwin' my heater\nWhole lotta money, and still they keep comin'\nForever I'm livin' my life like a bleeder (Slime)\n\n[Verse 1: Offset, YoungBoy Never Broke Again & Both]\nDope boy (Dope)\nI'm straight out the Nawf, I came up sellin' hard (Hard)\nHeroin (Dawg)\nI'm straight from the Nawf, I went, bought me a don (the Nawf)\nI jumped off the porch and went bought me a gun\nWe boardin' the jet 'cause my dawg got a warrant\nWe don't give a fuck, bring the stick, where we goin'?\nI'm booted up off that Molly, I cover my gun\nThis stick got a ELO, my aim on point (On point)\nShootin' that Glock give me pain in my joints (Pew-pew)\nWe shoot a fifty-round drum, honey bun (Bun)\nI want two thousand, I want both of they tongues\nI know how to handle it, bust on my damages\nThese niggas can't run, we gon' peel everyone\nYou know where I'm from, give a fuck how you come\nGot a stick in the car and it sound like a bomb (Boom)\nI came in this bitch with a mil' worth of cash (M)\nLike Bandicoot, we 'bout to crash (Crash)\nNo remorse, I put five to your dash (Bitch)\nOff the porch, bought a Porsche, then I drag\nOff the building, them young niggas slide (Slide)\nPut up 30, now you do the math (Fool)\nIf you seek on my son, I won't hide (I won't hide)\nBullets rain, we give him a bath\n\n[Chorus: Offset & YoungBoy Never Broke Again]\nI said I need it (Ha)\nThis Draco undefeated (Rrah)\nHit your block and then I bleed it (Yeah)\nGo long, these bullets, he receive it\nI can't see it (I can't)\nMy wrist look like a snow cone, make her eat it (Woah)\nOnce I see her, I give her that dope dick just like it's ether\nThen I leave her, I can't get caught up, I can't be on Cheaters\nThere go them people, you know what it is\nGo put the dope up 'fore they breach us\nBefore they breach us\nI'ma get out this bitch and I'm strikin', I'm throwin' my heater\nWhole lotta money, and still they keep comin'\nForever I'm livin' my life like a bleeder\n\n[Verse 2: Takeoff & Quavo]\nFrom the bando to bandit, we makin' it happen\nI like a bitch bougie but keep me a ratchet\nWinning's fantastic, Cartiers straight out the plastic\nDiamonds in all of my glasses (Chill)\nI'm fuckin' more bitches than Magic\nStraight out the basket, they say them young niggas havin' (Hey)\nThe money too old, it's growin' maggots, nasty\nFinger-fuck it with the Magnum (MAG)\nI'm thinkin' they forgot the way we paved\nWe been givin' too many niggas these passes (Too many)\nFuck it, drop a bag and cash it (Fuck it)\nWho gonna press 'em the fastest? (Who?)\nExtendo barrel elastic, new attachment, shit get tactic (Tactical)\nThey stole the flow (Go), now they tryna run off with the fashion\nMy neck, I freeze it (Ice), just give us the reason\nMake that smoke look easy (Ooh-ooh, easy, woo)\nCouple blue hunnids with the stones, it's bleedin' (Cash, bleedin')\nWhat's your issue? (Woo) If you got a trigger, just squeeze it (Bah, squeeze it, bah, squeeze it)\nWhole block outside, it's a street fest\nAin't no peace treaty (Nah)\nThese stones around my Jesus, they ain't treated (No)\nThey got me heated (Hot)\nDon't play with the gang (Ooh-ooh), they know that we be undefeated\nI get to squeezin' (I get to squeezin')\nWhen we talkin' beef, they say that they vegan\nJumpin', no reason (Jumpin', no reason, woo)\nWe coppin' more ice and tuck in the freezer (Ice)\n\n[Chorus: Offset, YoungBoy Never Broke Again & Quavo]\nI said I need it\nThis Draco undefeated (Rrah)\nHit your block and then I bleed it (Yeah)\nGo long, these bullets, he receive it (Oh-oh)\nI can't see it (I can't)\nMy wrist look like a snow cone (Oh-oh), make her eat it\nOnce I see her, I give her that dope dick just like it's ether (Oh-oh)\nThen I leave her, I can't get caught up, I can't be on Cheaters\nThere go them people (Them people), you know what it is\nGo put the dope up 'fore they breach us\nBefore they breach us\nI'ma get out this bitch and I'm strikin', I'm throwin' my heater\nWhole lotta money, and still they keep comin'\nForever I'm livin' my life like a bleeder (Slime)\n   \n#Migos #NBAYoungboy #NeedIt\n\nMusic video by Migos performing Need It. © 2020 Quality Control Music, LLC, under exclusive licen...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/u0LaoQks5mY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/u0LaoQks5mY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/u0LaoQks5mY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/u0LaoQks5mY/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/u0LaoQks5mY/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "MigosVEVO",
+        "tags": [
+          "Need It",
+          "I Said I Need It",
+          "NBA Youngboy",
+          "Migos",
+          "Youngboy Never Broke Again"
+        ],
+        "categoryId": "10",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "Migos - Need It (Official Video) ft. YoungBoy Never Broke Again",
+          "description": "Listen to Migos \"Need It\" featuring NBA Youngboy here: https://QualityControl.lnk.to/NeedIt \n\nFollow Migos on socials:\nhttps://instagram.com/migos\nhttps://facebook.com/THEMigosAtl\nhttps://twitter.com/migos\n\nLyrics:\n\n[Intro: Offset & YoungBoy Never Broke Again]\nLet's go\nI'm surrounded by some real niggas (Lil Top)\nHey (Yeah), yessir (They won't do it), Buddah Bless this beat\n\n[Chorus: Offset & YoungBoy Never Broke Again]\nI said I need it\nThis Draco undefeated (Rrah)\nHit your block and then I bleed it (Yeah)\nGo long, these bullets, he receive it\nI can't see it (I can't)\nMy wrist look like a snow cone, make her eat it (Woah)\nOnce I see her, I give her that dope dick just like it's ether\nThen I leave her, I can't get caught up, I can't be on Cheaters\nThere go them people, you know what it is\nGo put the dope up 'fore they breach us\nBefore they breach us\nI'ma get out this bitch and I'm strikin', I'm throwin' my heater\nWhole lotta money, and still they keep comin'\nForever I'm livin' my life like a bleeder (Slime)\n\n[Verse 1: Offset, YoungBoy Never Broke Again & Both]\nDope boy (Dope)\nI'm straight out the Nawf, I came up sellin' hard (Hard)\nHeroin (Dawg)\nI'm straight from the Nawf, I went, bought me a don (the Nawf)\nI jumped off the porch and went bought me a gun\nWe boardin' the jet 'cause my dawg got a warrant\nWe don't give a fuck, bring the stick, where we goin'?\nI'm booted up off that Molly, I cover my gun\nThis stick got a ELO, my aim on point (On point)\nShootin' that Glock give me pain in my joints (Pew-pew)\nWe shoot a fifty-round drum, honey bun (Bun)\nI want two thousand, I want both of they tongues\nI know how to handle it, bust on my damages\nThese niggas can't run, we gon' peel everyone\nYou know where I'm from, give a fuck how you come\nGot a stick in the car and it sound like a bomb (Boom)\nI came in this bitch with a mil' worth of cash (M)\nLike Bandicoot, we 'bout to crash (Crash)\nNo remorse, I put five to your dash (Bitch)\nOff the porch, bought a Porsche, then I drag\nOff the building, them young niggas slide (Slide)\nPut up 30, now you do the math (Fool)\nIf you seek on my son, I won't hide (I won't hide)\nBullets rain, we give him a bath\n\n[Chorus: Offset & YoungBoy Never Broke Again]\nI said I need it (Ha)\nThis Draco undefeated (Rrah)\nHit your block and then I bleed it (Yeah)\nGo long, these bullets, he receive it\nI can't see it (I can't)\nMy wrist look like a snow cone, make her eat it (Woah)\nOnce I see her, I give her that dope dick just like it's ether\nThen I leave her, I can't get caught up, I can't be on Cheaters\nThere go them people, you know what it is\nGo put the dope up 'fore they breach us\nBefore they breach us\nI'ma get out this bitch and I'm strikin', I'm throwin' my heater\nWhole lotta money, and still they keep comin'\nForever I'm livin' my life like a bleeder\n\n[Verse 2: Takeoff & Quavo]\nFrom the bando to bandit, we makin' it happen\nI like a bitch bougie but keep me a ratchet\nWinning's fantastic, Cartiers straight out the plastic\nDiamonds in all of my glasses (Chill)\nI'm fuckin' more bitches than Magic\nStraight out the basket, they say them young niggas havin' (Hey)\nThe money too old, it's growin' maggots, nasty\nFinger-fuck it with the Magnum (MAG)\nI'm thinkin' they forgot the way we paved\nWe been givin' too many niggas these passes (Too many)\nFuck it, drop a bag and cash it (Fuck it)\nWho gonna press 'em the fastest? (Who?)\nExtendo barrel elastic, new attachment, shit get tactic (Tactical)\nThey stole the flow (Go), now they tryna run off with the fashion\nMy neck, I freeze it (Ice), just give us the reason\nMake that smoke look easy (Ooh-ooh, easy, woo)\nCouple blue hunnids with the stones, it's bleedin' (Cash, bleedin')\nWhat's your issue? (Woo) If you got a trigger, just squeeze it (Bah, squeeze it, bah, squeeze it)\nWhole block outside, it's a street fest\nAin't no peace treaty (Nah)\nThese stones around my Jesus, they ain't treated (No)\nThey got me heated (Hot)\nDon't play with the gang (Ooh-ooh), they know that we be undefeated\nI get to squeezin' (I get to squeezin')\nWhen we talkin' beef, they say that they vegan\nJumpin', no reason (Jumpin', no reason, woo)\nWe coppin' more ice and tuck in the freezer (Ice)\n\n[Chorus: Offset, YoungBoy Never Broke Again & Quavo]\nI said I need it\nThis Draco undefeated (Rrah)\nHit your block and then I bleed it (Yeah)\nGo long, these bullets, he receive it (Oh-oh)\nI can't see it (I can't)\nMy wrist look like a snow cone (Oh-oh), make her eat it\nOnce I see her, I give her that dope dick just like it's ether (Oh-oh)\nThen I leave her, I can't get caught up, I can't be on Cheaters\nThere go them people (Them people), you know what it is\nGo put the dope up 'fore they breach us\nBefore they breach us\nI'ma get out this bitch and I'm strikin', I'm throwin' my heater\nWhole lotta money, and still they keep comin'\nForever I'm livin' my life like a bleeder (Slime)\n   \n#Migos #NBAYoungboy #NeedIt\n\nMusic video by Migos performing Need It. © 2020 Quality Control Music, LLC, under exclusive licen..."
+        }
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "SoVt4T8M2aHpgXQHzytAixOchig",
+      "id": "hsm4poTWjMs",
+      "snippet": {
+        "publishedAt": "2020-08-07T04:00:10Z",
+        "channelId": "UCxMAbVFmxKUVGAll0WVGpFw",
+        "title": "Cardi B - WAP feat. Megan Thee Stallion [Official Music Video]",
+        "description": "Cardi B - WAP feat. Megan Thee Stallion\nStream/Download - https://CardiB.lnk.to/WAP\n\r\nSubscribe for more official content from Cardi B: https://CardiB.lnk.to/Subscribe\r\n\r\nFollow Cardi B\r\nhttp://cardibofficial.com\r\nhttp://Twitter.com/IAmCardiB\r\nhttp://Facebook.com/IAmCardiB\r\nhttp://Instagram.com/f/iamcardib\r\nhttp://Soundcloud.com/IAmCardiB\r\n\r\nExclusive Bardi Gang merchandise available here: http://smarturl.it/BardiGangMerchYT\r\n\r\nLABEL\nAtlantic Records\nCommissioner: Kareem Johnson / OverScene LLC\nSVP / Head of Marketing:  Marsha St. Hubert\n \nPRODUCTION\nProd Co: Boy in the Castle\nDirector: Colin Tilley\nCreative Director: Kollin Carter & Patientce Foster\nExec Producer: Jamee Ranta\nProducer: Whitney Jackson\nDirector of Photography: Elias Talbot\n1st AD: Ev Salomon \nEditor: Vinnie Hobbs\nBeauty: Sunset Edit\n\nChoreography: J.K. Creatives, Inc.\nChoreographer: JaQuel Knight\nAssistant Choreographers : Darina Littleton and Ashley Seldon\n \nCARDI B GLAM\nStyling: Kollin Carter\nStyling Asst: Jennifer Udechukwu\nHair: Tokyo Stylez\nMakeup: Erika Roman\nNails: Jenny Bui (Nails on 7th) \n \nMEGAN THEE STALLION GLAM\nStyling: EJ King\nHair: Kellon Deryck\nMakeup: Megan Thee Stallion\nNails: Coca Michelle\nThe official YouTube channel of Atlantic Records artist Cardi B. Subscribe for the latest music videos, performances, and more.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/hsm4poTWjMs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/hsm4poTWjMs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/hsm4poTWjMs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/hsm4poTWjMs/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          }
+        },
+        "channelTitle": "Cardi B",
+        "tags": [
+          "Cardi B",
+          "Cardi",
+          "Atlantic Records",
+          "rap",
+          "hip hop",
+          "trap",
+          "latin",
+          "Bodak Yellow",
+          "bloody shoes",
+          "red bottoms",
+          "i like it",
+          "invasion of privacy",
+          "offset",
+          "bruno mars",
+          "finesse",
+          "WAP",
+          "Meg",
+          "Stallion",
+          "Hottie",
+          "Bardi",
+          "Bardi Gang",
+          "Megan The Stallion",
+          "Megan Thee Stallion",
+          "Worldstar",
+          "Onlyfans",
+          "Press",
+          "Money",
+          "Savage",
+          "cJc7xWJbwJw",
+          "lEIqjoO0-Bs",
+          "Kulture",
+          "Shaderoom",
+          "Baller Alert"
+        ],
+        "categoryId": "10",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "Cardi B - WAP feat. Megan Thee Stallion [Official Music Video]",
+          "description": "Cardi B - WAP feat. Megan Thee Stallion\nStream/Download - https://CardiB.lnk.to/WAP\n\r\nSubscribe for more official content from Cardi B: https://CardiB.lnk.to/Subscribe\r\n\r\nFollow Cardi B\r\nhttp://cardibofficial.com\r\nhttp://Twitter.com/IAmCardiB\r\nhttp://Facebook.com/IAmCardiB\r\nhttp://Instagram.com/f/iamcardib\r\nhttp://Soundcloud.com/IAmCardiB\r\n\r\nExclusive Bardi Gang merchandise available here: http://smarturl.it/BardiGangMerchYT\r\n\r\nLABEL\nAtlantic Records\nCommissioner: Kareem Johnson / OverScene LLC\nSVP / Head of Marketing:  Marsha St. Hubert\n \nPRODUCTION\nProd Co: Boy in the Castle\nDirector: Colin Tilley\nCreative Director: Kollin Carter & Patientce Foster\nExec Producer: Jamee Ranta\nProducer: Whitney Jackson\nDirector of Photography: Elias Talbot\n1st AD: Ev Salomon \nEditor: Vinnie Hobbs\nBeauty: Sunset Edit\n\nChoreography: J.K. Creatives, Inc.\nChoreographer: JaQuel Knight\nAssistant Choreographers : Darina Littleton and Ashley Seldon\n \nCARDI B GLAM\nStyling: Kollin Carter\nStyling Asst: Jennifer Udechukwu\nHair: Tokyo Stylez\nMakeup: Erika Roman\nNails: Jenny Bui (Nails on 7th) \n \nMEGAN THEE STALLION GLAM\nStyling: EJ King\nHair: Kellon Deryck\nMakeup: Megan Thee Stallion\nNails: Coca Michelle\nThe official YouTube channel of Atlantic Records artist Cardi B. Subscribe for the latest music videos, performances, and more."
+        }
+      }
+    },
+    {
+      "kind": "youtube#video",
+      "etag": "v_BHXmY8eNYWvkRHJlIKXkZTm8Q",
+      "id": "0C80BSgjb8M",
+      "snippet": {
+        "publishedAt": "2020-08-13T19:43:00Z",
+        "channelId": "UClW4jraMKz6Qj69lJf-tODA",
+        "title": "YoungBoy Never Broke Again - Kacey talk",
+        "description": "YoungBoy Never Broke Again - \nStill Flexin, Still Steppin OUT NOW!\nStream/Download: https://youngboy.lnk.to/StillFlexinStillSteppinID \n\nSubscribe for more official content from YoungBoy NBA: \nhttps://youngboy.lnk.to/Subscribe\n\nConnect with YoungBoy Never Broke Again:\nhttp://www.youngboynba.com\nhttps://www.facebook.com/nbayoungboy\nhttps://www.twitter.com/GGYOUNGBOY\nhttps://www.instagram.com/nba_youngboy\nhttps://www.soundcloud.com/nba-youngboy\n\nThe official YouTube channel of Atlantic Records artist YoungBoy Never Broke Again. Subscribe for the latest music videos, performances, and more.\n\n#YoungBoyNeverBrokeAgain",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/0C80BSgjb8M/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/0C80BSgjb8M/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/0C80BSgjb8M/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          },
+          "standard": {
+            "url": "https://i.ytimg.com/vi/0C80BSgjb8M/sddefault.jpg",
+            "width": 640,
+            "height": 480
+          },
+          "maxres": {
+            "url": "https://i.ytimg.com/vi/0C80BSgjb8M/maxresdefault.jpg",
+            "width": 1280,
+            "height": 720
+          }
+        },
+        "channelTitle": "YoungBoy Never Broke Again",
+        "tags": [
+          "YoungBoy Never Broke Again",
+          "Youngboy Slime Mentality",
+          "NBA YoungBoy",
+          "Slime Belief",
+          "YoungBoy IG Live",
+          "YoungBoy Instagram",
+          "YoungBoy Quando Rondo",
+          "YoungBoy Self Control",
+          "YoungBoy Leak",
+          "No Smoke YoungBoy",
+          "I Am Who They Say I Am",
+          "AI YoungBoy 2",
+          "YoungBoy Carter's Son",
+          "House Arrest Tingz",
+          "Juice WRLD Youngboy",
+          "Bandit Youngboy",
+          "In Control NBA YoungBoy",
+          "Make No Sense YoungBoy",
+          "Youngboy Lost Motives",
+          "YoungBoy Lonely Child",
+          "YoungBoy NBA Music Video",
+          "Yaya Mayweather",
+          "YoungBoy Ranada"
+        ],
+        "categoryId": "10",
+        "liveBroadcastContent": "none",
+        "localized": {
+          "title": "YoungBoy Never Broke Again - Kacey talk",
+          "description": "YoungBoy Never Broke Again - \nStill Flexin, Still Steppin OUT NOW!\nStream/Download: https://youngboy.lnk.to/StillFlexinStillSteppinID \n\nSubscribe for more official content from YoungBoy NBA: \nhttps://youngboy.lnk.to/Subscribe\n\nConnect with YoungBoy Never Broke Again:\nhttp://www.youngboynba.com\nhttps://www.facebook.com/nbayoungboy\nhttps://www.twitter.com/GGYOUNGBOY\nhttps://www.instagram.com/nba_youngboy\nhttps://www.soundcloud.com/nba-youngboy\n\nThe official YouTube channel of Atlantic Records artist YoungBoy Never Broke Again. Subscribe for the latest music videos, performances, and more.\n\n#YoungBoyNeverBrokeAgain"
+        }
+      }
+    }
+  ],
+  "nextPageToken": "CAUQAA",
+  "pageInfo": {
+    "totalResults": 200,
+    "resultsPerPage": 5
+  }
+}

@@ -1,6 +1,7 @@
 import userId from '../userid';
 import commonWords from "./commonWords/commonWords";
 import endPoints from "../../api/endpoints/endpoints";
+import {initAuth} from "../auth";
 
 async function uniqueText(text) {
     const result = text.toLowerCase()
@@ -26,37 +27,41 @@ export function serialize(object) {
 
 export async function saveHistoryToServer(video, callback = () => {
 }) {
-    uniqueText(video.snippet.description.substring(0, 100)).then(desc => {
-        let videoID = '';
-        if (typeof video.id === 'object') videoID = video.id.videoId;
-        if (typeof video.id === 'string') videoID = video.id;
-        const options = {
-            method: 'POST',
-            body: serialize({
-                time: new Date().getTime(),
-                user_id: userId,
-                video_id: videoID,
-                artist_name: video.snippet.channelTitle,
-                tags: video.snippet.tags || [],
-                yt_catagory: 10,
-                video_title: video.snippet.title,
-                video_keywords: [...desc],
-                video_featuring_artists: video.snippet.title.split(/ft.|feat.|ft|feat/i) || '',
-                video_description: video.snippet.description.substring(0, 100)
-            }),
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-        };
-        fetch(endPoints.saveWatchHistory, options)
-            .then(() => {
-                callback();
-            }).catch(function (e) {
-            return e;
-        });
-    })
+    initAuth().then(token => {
+        uniqueText(video.snippet.description.substring(0, 100)).then(desc => {
+            let videoID = '';
+            if (typeof video.id === 'object') videoID = video.id.videoId;
+            if (typeof video.id === 'string') videoID = video.id;
+            const options = {
+                method: 'POST',
+                body: serialize({
+                    time: new Date().getTime(),
+                    user_id: userId,
+                    video_id: videoID,
+                    artist_name: video.snippet.channelTitle,
+                    tags: video.snippet.tags || [],
+                    yt_catagory: 10,
+                    video_title: video.snippet.title,
+                    video_keywords: [...desc],
+                    video_featuring_artists: video.snippet.title.split(/ft.|feat.|ft|feat/i) || '',
+                    video_description: video.snippet.description.substring(0, 100)
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": `Bearer ${token}`
+                })
+            };
+            fetch(endPoints.saveWatchHistory, options)
+                .then(() => {
+                    callback();
+                }).catch(function (e) {
+                return e;
+            });
+        })
+    });
 }
 
+/*
 fetch('https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/yt.json')
     .then(value => value.json())
     .then(value => {
@@ -64,3 +69,4 @@ fetch('https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/yt.json')
             // await saveHistoryToServer(v);
         })
     });
+*/

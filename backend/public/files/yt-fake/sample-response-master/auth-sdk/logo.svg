@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="2500" width="2500" viewBox="21 21 470 470">
+    <linearGradient id="A" x1="61.119%" x2="29.146%" y1="11.82%" y2="84.194%">
+        <stop offset="0" stop-color="#4e5aa0"/>
+        <stop offset="1" stop-color="#4c5da9"/>
+    </linearGradient>
+    <linearGradient id="B" x1="50%" x2="50%" y1="0%" y2="100%">
+        <stop offset="0" stop-color="#6b91c8"/>
+        <stop offset="1" stop-color="#618ac3"/>
+    </linearGradient>
+    <linearGradient id="C" x1="50%" x2="50%" y1="0%" y2="100%">
+        <stop offset="0" stop-color="#6fc69d"/>
+        <stop offset="1" stop-color="#66c296"/>
+    </linearGradient>
+    <g fill-rule="evenodd">
+        <path d="M256 491V21C126.213 21 21 126.213 21 256s105.213 235 235 235z" fill="#d3e1f2"/>
+        <path d="M256 491V21c129.787 0 235 105.213 235 235S385.787 491 256 491z" fill="#5364ae"/>
+        <path d="M491 491L445.754 43.738l-187.36 202.316-.206 9.946c0 129.057 104.033 233.815 232.812 235z"
+              fill="url(#A)" transform="matrix(-1 0 0 1 749.188 0)"/>
+        <path d="M256 491V21c-68.483 0-124 105.213-124 235s55.517 235 124 235z" fill="url(#B)"/>
+        <path d="M380 491V21c-68.483 0-124 105.213-124 235s55.517 235 124 235z" fill="url(#C)"
+              transform="matrix(-1 0 0 1 636 0)"/>
+    </g>
+</svg>

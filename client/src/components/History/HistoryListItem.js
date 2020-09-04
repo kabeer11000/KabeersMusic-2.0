@@ -33,9 +33,11 @@ const HistoryListItem = (props) => {
                         >
                             <div className={'text-truncate'}>{props.channelTitle}</div>
                         </Typography>
-                        {props.tags.map((value, index) => {
-                            return <Chip key={index} label={value}/>
-                        })}
+                        <div className={'cardSlider Slider'}>
+                            {props.tags.map((value, index) => {
+                                return <Chip className={'mx-1'} key={index} label={value}/>
+                            })}
+                        </div>
                     </React.Fragment>
                 }
             />

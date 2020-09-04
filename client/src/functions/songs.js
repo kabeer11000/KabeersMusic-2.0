@@ -2,8 +2,11 @@ import Dexie from "dexie";
 import "dexie-observable";
 import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
+import userid from "./userid";
+import {initAuth} from "./auth";
 
 const db_version = 10;
+
 function uniqid(a = "", b = false) {
     const c = Date.now() / 1000;
     let d = c.toString(16).split(".").join("");
@@ -15,6 +18,7 @@ function uniqid(a = "", b = false) {
     }
     return a + d + e;
 }
+
 export const db = new Dexie("KabeersMusic_Songs");
 db.version(db_version).stores({
     songs:
@@ -26,8 +30,23 @@ historydb.version(db_version).stores({
         "id, time, rating, thumbnail, channelTitle, title, tags"
 });
 
+export function login() {
+    const tokens = localStorage.getItem('tokens');
+    if (!tokens) {
+        const info = {
+            clientId: 'S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD',
+            scopes: ['s564d68a34dCn9OuUNTZRfuaCnwc6:feed', 's564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite'].join('|'),
+            callback: encodeURI('http://localhost:3000/auth/callback')
+        };
+        const authUrl = `https://kabeers-auth.herokuapp.com/auth/authorize?client_id=${info.clientId}&scope=${info.scopes}&response_type=code&redirect_uri=${info.callback}&state=L8eEgLQZ&nonce=saPP_xyt&prompt=none`;
+
+
+    }
+}
+
 export async function downloadSong(data = {videoId: null, rating: 0, title: '', channelTitle: '', tags: ''}) {
     try {
+
         console.log('Download Started');
         const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
         const url = await fetch(endPoints.getProxyfiedURI(data.videoId)).then(value => value.json());
@@ -63,8 +82,39 @@ export async function getBlob(key) {
 }
 
 export async function getSong(id) {
-    return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json()).catch(err => err);
+    return initAuth().then(token => {
+        return fetch(endPoints.getProxyfiedURI(id), {
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        }).then(value => {
+            if (!value.ok) return null;
+            return value.json();
+        });
+    });
 }
+
+
+initAuth().then(token => {
+    var myHeaders = new Headers();
+
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+    var urlencoded = new URLSearchParams();
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    fetch("http://localhost:9000/api/test", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+});
+
 
 export async function getSongFromStorage(id) {
     const
@@ -73,7 +123,17 @@ export async function getSongFromStorage(id) {
     if (allSongs.some(value => value.id === id)) {
         return allSongs.find(value => value.videoId === id);
     } else {
-        return fetch(endPoints.getProxyfiedURI(id)).then(value => value.json()).catch(err => err);
+        return initAuth().then(token => {
+            fetch(endPoints.getProxyfiedURI(id), {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(value => {
+                if (!value.ok) return null;
+                return value.json();
+                // throw new Error('Invalid Response');
+            });
+        });
     }
 }
 
@@ -82,7 +142,13 @@ export async function getAllDownloadedSongs() {
 }
 
 export async function getFeed() {
-    return fetch(endPoints.getFeed(id)).then(value => value.json()).catch(err => err);
+    return initAuth().then(token => {
+        fetch(endPoints.getFeed(userid), {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => value.json()).catch(err => err);
+    });
 }
 
 

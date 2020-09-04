@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import store from "../../Redux/store/store";
 import {setDrawerState} from "../../Redux/actions/actions";
 import {makeStyles} from "@material-ui/core/styles";
+import HideOnScroll from "../HideOnScroll/HideOnScroll";
 
 const useStyles = makeStyles({
     appBar: {
@@ -19,10 +20,9 @@ const CustomAppBar = (props) => {
     const OpenDrawer = () => {
         store.dispatch(setDrawerState(true));
     };
-
     const classes = useStyles();
     return (
-        <div>
+        <HideOnScroll>
             <AppBar position="fixed">
                 <Toolbar>
                     <IconButton onClick={OpenDrawer} edge="start" color={'inherit'} aria-label="menu">
@@ -43,7 +43,7 @@ const CustomAppBar = (props) => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-        </div>
+        </HideOnScroll>
     );
 };
 

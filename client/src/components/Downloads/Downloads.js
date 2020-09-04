@@ -5,6 +5,7 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import {getAllDownloadedSongs, getSongFromStorage} from "../../functions/songs";
 import DownloadListItem from "./DownloadListItem";
+import Container from "@material-ui/core/Container";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -79,10 +80,12 @@ const Downloads = (props) => {
     }, []);
 
     return (
-        <div className={'KabeersDownloadContainer'} color={'primary.dark'}>
-            <List className={`${classes.root} mt-5 bg-transparent`}>
-                {HistoryItems}
-            </List>
+        <div className={'KabeersDownloadContainer mb-5'} color={'primary.dark'}>
+            <Container fixed>
+                <List className={`${classes.root} mt-5 bg-transparent`}>
+                    {HistoryItems}
+                </List>
+            </Container>
         </div>
     );
 };
