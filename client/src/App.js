@@ -17,11 +17,11 @@ import SearchResultComponent from "./components/SearchComponent/SearchResultComp
 import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import {initAuth} from "./functions/auth";
+import Settings from "./components/Settings/Settings.lazy";
 
 
-function App() {
-    const audio = new Audio('');
+const App = () => {
+    let audio = new Audio('');
     const [darkState, setDarkState] = React.useState(false);
     const [Player__, SetPlayer] = React.useState(true);
     const palletType = darkState ? "dark" : "light";
@@ -75,7 +75,6 @@ function App() {
             audio.src = "";
             state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
             audio.src = state.uri;
-            console.log(state.uri);
             store.dispatch(setCurrentSongState(audio, state.video, {
                 Dialog: true,
                 MiniPlayer: false
@@ -123,7 +122,7 @@ function App() {
                 }
             });
         }*/
-        initAuth().then(value => console.log(value))
+        //initAuth().then(value => console.log(value))
     }, []);
 
     return (
@@ -141,6 +140,7 @@ function App() {
                                 <Route exact={true} path={'/downloads'}
                                        render={() => <Downloads appState={changeStates}/>}/>
                                 <Route exact={true} path={'/search'} component={SearchComponent}/>
+                                <Route exact={true} path={'/setting'} component={Settings}/>
                                 <Route exact={true} path={'/history'} component={HistoryComponent}/>
                                 <Route exact={true} path={'/*'} render={() => {
                                     return <Redirect to={'/home'}/>
@@ -157,6 +157,6 @@ function App() {
             </MuiThemeProvider>
         </Provider>
     );
-}
+};
 
 export default App;

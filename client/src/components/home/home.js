@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './home.css';
-import {Button, CssBaseline} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import keys from "../../api/keys/keys";
 import endPoints from "../../api/endpoints/endpoints";
 import SongCard from "../SongCard/SongCard.lazy";
@@ -10,8 +10,8 @@ import {initAuth} from "../../functions/auth";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import {connect} from "react-redux";
-
-let ListArray = [];
+import fetch from "../../functions/fetchWithTimeOut";
+import Preloader from "../Preloader/Preloader";
 
 /*
 
@@ -22,17 +22,28 @@ let ListArray = [];
 const HomeComponent = (props) => {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [other, setOther] = React.useState(() => {
-        if (!navigator.onLine) return errorPage();
+        if (!navigator.onLine) return (
+            <div className={'errorPage'}
+                 style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+                <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
+                     alt={'Kabeers Music Logo'}/>
+                <br/>
+                <div>{'No Internet Connection'}</div>
+                <Button onClick={Load}>Retry</Button>
+            </div>
+        );
+    });
+
+    function Load() {
         initAuth().then(token => {
             fetch(endPoints.getFeedFake(keys.youtube), {
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`
                 })
-            })
-                .then(value => value.json())
+            }, 5000)
+                .then(value => value.ok ? value.json() : null)
                 .then(value => {
 
-                    // ListArray = value.items.songs.items;
                     setOther(
                         <React.Fragment>
                             {
@@ -43,11 +54,12 @@ const HomeComponent = (props) => {
                                         </Typography>
                                         <Container maxWidth="xl" className={'px-0 mx-0'}>
                                             <div className={'cardSlider Slider'}>
-                                                {value1.songs.items.map((video, index) => {
-                                                    return (<SongCard onPlay={PlaySong} list={value1.songs} key_={index}
-                                                                      key={index} video={video}
-                                                                      thumbnail={video.snippet.thumbnails.high.url}/>);
-                                                })}
+                                                {value1.songs.items.map((video, index) => <SongCard onPlay={PlaySong}
+                                                                                                    list={value1.songs}
+                                                                                                    key_={index}
+                                                                                                    key={index}
+                                                                                                    video={video}
+                                                                                                    thumbnail={video.snippet.thumbnails.high.url}/>)}
                                             </div>
                                         </Container>
                                     </div>
@@ -56,31 +68,30 @@ const HomeComponent = (props) => {
                         </React.Fragment>
                     );
                 }).catch(e => {
-                enqueueSnackbar('Failed to Load Songs');
-                // setOther(errorPage('An error Occured Please Re login'));
-                window.location.href = '/auth/redirect';
+                setOther(errorPage('An error Occured Please Re login', <Button onClick={() => {
+                    window.location.href = '/auth/redirect';
+                }}>Login</Button>));
             });
-        })
-    });
-
-    function handleReloadButton() {
+        }).catch(e => {
+            enqueueSnackbar('Failed to Load Songs');
+            setOther(errorPage());
+        });
     }
 
-    const errorPage = (message = 'No Internet Connection') => (
+    const errorPage = (message = 'No Internet Connection', button = <Button onClick={Load}>Retry</Button>) => (
         <div className={'errorPage'}
              style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
             <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
                  alt={'Kabeers Music Logo'}/>
             <br/>
             <div>{message}</div>
-            <Button onClick={handleReloadButton}>Retry</Button>
+            {button}
         </div>
     );
 
     function PlaySong(data, index, list) {
         let videoID = '';
-        if (typeof data.id === 'object') videoID = data.id.videoId;
-        if (typeof data.id === 'string') videoID = data.id;
+        videoID = typeof data.id === 'object' ? data.id.videoId : data.id;
         getSong(videoID).then(value => {
             if (value) {
                 //Avoid the Promise Error
@@ -92,20 +103,22 @@ const HomeComponent = (props) => {
                         list: list,
                         index: index
                     });
-                }, 100);
+                }, 5000);
             }
-            /* setAudioElemet(<div/>); setAudioElemet(<Player audio={new Audio(value)} thumbnail={data.snippet.thumbnails.maxres.url} video={data}/> */
         }).catch(e => {
             console.log('Cannot Play Song');
             enqueueSnackbar('Cannot Play Song');
         });
     }
 
+    useEffect(() => {
+        Load()
+    }, []);
     return (
-        <div className="home mb-5">
-            <CssBaseline/>
+        <div className="home mb-5" style={{minHeight: "75vh"}}>
             <div style={{marginTop: '5rem'}}>
                 {props.homeComponents ? props.homeComponents : <div>{other}</div>}
+                {other ? null : <Preloader/>}
             </div>
         </div>
     );
@@ -119,3 +132,10 @@ const mapStateToProps = state => ({
 });
 export default connect(mapStateToProps)(HomeComponent);
 /// OLD
+/*
+            <ReactPullToRefresh onRefresh={() => {
+                setOther(null);
+                Load()
+            }}>
+            </ReactPullToRefresh>
+ */

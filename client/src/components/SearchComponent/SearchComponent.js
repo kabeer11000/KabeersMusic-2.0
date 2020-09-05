@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './SearchComponent.css';
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -15,6 +15,8 @@ import {Link, useHistory} from "react-router-dom";
 import store from "../../Redux/store/store";
 import {connect} from "react-redux";
 import {setQueryParams} from "../../Redux/actions/actions";
+
+const {useRef} = require("react");
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 const SearchComponent = (props) => {
     let history = useHistory();
     const [open, setOpen] = React.useState(true);
-    const [query, setQuery] = React.useState('');
+    const [isOnline, setOnline] = React.useState(!window.navigator.onLine);
     const [queryArray, setQueryArray] = React.useState([]);
     const [listItems, setListItems] = React.useState(
         <div className={'errorPage text-center'}
@@ -52,7 +54,7 @@ const SearchComponent = (props) => {
             <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
                  alt={'Kabeers Music Logo'}/>
             <br/>
-            <div>Results will appear as you type</div>
+            <div>{navigator.onLine ? 'Results will appear as you type' : 'Searching In Downloads'}</div>
         </div>);
     const classes = useStyles();
     const ListItems = () => {
@@ -85,6 +87,33 @@ const SearchComponent = (props) => {
             if (query) return history.push("/search/results");
         }
     };
+    useEffect(() => {
+        /*
+        document.addEventListener('offline', () => {
+            setItemState(true)
+        });
+        */
+
+        // if (navigator.onLine) setItemState({...itemsState, inputDisabled: false});
+        // navigator.onLine ? setItemState({...itemsState, inputDisabled: false}) : null;
+    }, []);
+
+    function useNetwork() {
+        const [isOnline, setNetwork] = React.useState(window.navigator.onLine);
+        const updateNetwork = () => {
+            setNetwork(window.navigator.onLine);
+        };
+        useEffect(() => {
+            window.addEventListener("offline", updateNetwork);
+            window.addEventListener("online", updateNetwork);
+            return () => {
+                window.removeEventListener("offline", updateNetwork);
+                window.removeEventListener("online", updateNetwork);
+            };
+        });
+        return isOnline;
+    }
+
     return (
         <div className="SearchComponent">
             <Dialog fullScreen open={open} onClose={() => {
@@ -109,6 +138,7 @@ const SearchComponent = (props) => {
                                 // search_iconChange('visible');
                                 // toolbar_colorChange('#CCC')
                             }}
+                            disabled={isOnline}
                             className={`${classes.input} text-light`}
                             placeholder="Search Kabeers Music"
                             inputProps={{'aria-label': 'Search Kabeers Music'}}
@@ -125,7 +155,6 @@ const SearchComponent = (props) => {
         </div>
     )
 };
-
 SearchComponent.propTypes = {};
 
 SearchComponent.defaultProps = {};

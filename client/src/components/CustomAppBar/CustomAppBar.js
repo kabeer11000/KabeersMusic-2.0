@@ -20,7 +20,6 @@ const CustomAppBar = (props) => {
     const OpenDrawer = () => {
         store.dispatch(setDrawerState(true));
     };
-    const classes = useStyles();
     return (
         <HideOnScroll>
             <AppBar position="fixed">

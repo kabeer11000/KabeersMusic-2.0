@@ -67,13 +67,6 @@ const useStyles = makeStyles((theme) => ({
 
 function DrawerComponent(props) {
 
-
-    /*
-        console.log('Before:', store.getState());
-        store.dispatch(setDrawerState(true));
-        console.log('After:', store.getState());
-    */
-
     const {children, window} = props;
     const classes = useStyles();
     const theme = useTheme();

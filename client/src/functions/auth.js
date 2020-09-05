@@ -1,4 +1,5 @@
 import endPoints from "../api/endpoints/endpoints";
+import fetch from "./fetchWithTimeOut";
 
 const cookies = {
     getCookie(cname) {
@@ -28,9 +29,8 @@ export async function initAuth() {
     let token = cookies.getCookie('token');
     if (!token) return window.location.href = endPoints.authRedirect;
     token = JSON.parse(token);
-    //console.log('Working Before Returning Fetch');
-    if (Math.floor(((Date.now() - token.exp) / 1000) / 60) > 30) {
-        return await fetch(endPoints.refreshToken).then(res => res.ok ? res.json() : null);
+    if (Math.floor(((Date.now() - token.exp) / 1000) / 60) > 30) { // Half Hour
+        return await fetch(endPoints.refreshToken, {}, 5000).then(res => res.ok ? res.json() : null);
     } // Expired
     return token.token; // Return Token
 }

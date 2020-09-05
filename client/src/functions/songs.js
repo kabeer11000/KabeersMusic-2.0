@@ -4,6 +4,7 @@ import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
 import userid from "./userid";
 import {initAuth} from "./auth";
+import fetch from "./fetchWithTimeOut";
 
 const db_version = 10;
 
@@ -49,7 +50,7 @@ export async function downloadSong(data = {videoId: null, rating: 0, title: '', 
 
         console.log('Download Started');
         const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
-        const url = await fetch(endPoints.getProxyfiedURI(data.videoId)).then(value => value.json());
+        const url = await fetch(endPoints.getProxyfiedURI(data.videoId)).then(value => value.json()).catch(e => e);
         const [thumbnailBlob, songBlob] = await Promise.all([
             fetchProxiedBlob(thumbURL),
             fetchProxiedBlob(url)
@@ -83,14 +84,15 @@ export async function getBlob(key) {
 
 export async function getSong(id) {
     return initAuth().then(token => {
+        if (!navigator.onLine) return new Error('No Connection');
         return fetch(endPoints.getProxyfiedURI(id), {
             headers: new Headers({
                 'Authorization': `Bearer ${token}`
             })
-        }).then(value => {
+        }, 5000).then(value => {
             if (!value.ok) return null;
             return value.json();
-        });
+        }).catch(e => e);
     });
 }
 
