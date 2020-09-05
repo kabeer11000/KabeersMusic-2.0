@@ -10,7 +10,7 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import store from '../../Redux/store/store';
 import {setDrawerState} from '../../Redux/actions/actions';
 import {connect} from "react-redux";
-
+import Link from "react-router-dom/Link";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -95,8 +95,8 @@ function DrawerComponent(props) {
             </List>
             <Divider/>
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={index}>
+                {['All mail', 'Trash', 'Spam', 'Settings'].map((text, index) => (
+                    <ListItem component={Link} to={'/settings'} button key={index}>
                         <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
                         <ListItemText primary={text}/>
                     </ListItem>

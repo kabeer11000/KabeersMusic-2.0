@@ -171,6 +171,7 @@ const Player = (props) => {
                         <IconButton onClick={downloadAudio}><GetApp/></IconButton>);
                     console.log(v)
                 });
+                props.misc_func.hideBackdrop();
                 document.addEventListener('swiped-down', handleClose);
             }
         }, 150)

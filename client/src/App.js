@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './App.css';
 import HomeComponent from "./components/home/home.lazy";
 import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
@@ -18,12 +18,14 @@ import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
+import BackDropLoader from "./components/BackDropLoader/BackDropLoader.lazy";
 
 
 const App = () => {
     let audio = new Audio('');
     const [darkState, setDarkState] = React.useState(false);
     const [Player__, SetPlayer] = React.useState(true);
+    const [backdrop, SetBackdrop] = React.useState(false);
     const palletType = darkState ? "dark" : "light";
     const colors = {
         primary: {
@@ -71,6 +73,7 @@ const App = () => {
 
     async function changeStates(state) {
         try {
+            SetBackdrop(true);
             audio.pause();
             audio.src = "";
             state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
@@ -90,41 +93,14 @@ const App = () => {
         }
     }
 
-    async function componentDidMount() {
-        return true;
-    }
-
-    useEffect(() => {
-
-        /*
-        const currentSong = store.getState().currentSong;
-        const videoElement = currentSong.videoElement;
-        if (videoElement) {
-            let videoID = '';
-            if (typeof videoElement.id === 'object') videoID = videoElement.id.videoId;
-            if (typeof videoElement.id === 'string') videoID = videoElement.id;
-            console.log('VideoID:', videoID);
-            getSong(videoID).then(value => {
-                if (value) {
-                    try {
-                        setTimeout(function () {
-                            changeStates({
-                                uri: value,
-                                thumbnail: videoElement.snippet.thumbnails.high.url,
-                                video: videoElement,
-                                list: currentSong.playList.list,
-                                index: currentSong.playList.index
-                            });
-                        }, 100);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-            });
-        }*/
-        //initAuth().then(value => console.log(value))
-    }, []);
-
+    const misc_functions = {
+        hideBackdrop() {
+            SetBackdrop(false);
+        },
+        showBackdrop() {
+            SetBackdrop(true)
+        }
+    };
     return (
         <Provider store={store}>
             <MuiThemeProvider theme={darkTheme}>
@@ -134,15 +110,15 @@ const App = () => {
                         <div className="App">
                             <DrawerComponent>
                                 <CustomAppBar/>
-                                <Player hidden={Player__} changes={changeStates}/>
+                                <Player misc_func={misc_functions} hidden={Player__} changes={changeStates}/>
                                 <Route exact={true} path={'/home'}
                                        render={() => <HomeComponent appState={changeStates}/>}/>
                                 <Route exact={true} path={'/downloads'}
                                        render={() => <Downloads appState={changeStates}/>}/>
                                 <Route exact={true} path={'/search'} component={SearchComponent}/>
-                                <Route exact={true} path={'/setting'} component={Settings}/>
+                                <Route exact={true} path={'/settings'} component={Settings}/>
                                 <Route exact={true} path={'/history'} component={HistoryComponent}/>
-                                <Route exact={true} path={'/*'} render={() => {
+                                <Route exact={true} path={'/'} render={() => {
                                     return <Redirect to={'/home'}/>
                                 }}/>
                                 <Route exact={true} path={'/search/results'} render={() => {
@@ -151,6 +127,7 @@ const App = () => {
                                 <CustomBottomNavigation/>
                                 <MiniPlayer hidden={Player__}/>
                             </DrawerComponent>
+                            <BackDropLoader hidden={backdrop}/>
                         </div>
                     </SnackbarProvider>
                 </Router>

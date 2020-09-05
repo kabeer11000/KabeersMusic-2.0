@@ -28,7 +28,7 @@ const HomeComponent = (props) => {
                 <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
                      alt={'Kabeers Music Logo'}/>
                 <br/>
-                <div>{'No Internet Connection'}</div>
+                <div className={"text-truncate"}>{'No Internet Connection'}</div>
                 <Button onClick={Load}>Retry</Button>
             </div>
         );
@@ -43,7 +43,6 @@ const HomeComponent = (props) => {
             }, 5000)
                 .then(value => value.ok ? value.json() : null)
                 .then(value => {
-
                     setOther(
                         <React.Fragment>
                             {
@@ -84,26 +83,22 @@ const HomeComponent = (props) => {
             <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
                  alt={'Kabeers Music Logo'}/>
             <br/>
-            <div>{message}</div>
+            <div className={"text-truncate"}>{message}</div>
             {button}
         </div>
     );
 
     function PlaySong(data, index, list) {
-        let videoID = '';
-        videoID = typeof data.id === 'object' ? data.id.videoId : data.id;
-        getSong(videoID).then(value => {
+        getSong(typeof data.id === 'object' ? data.id.videoId : data.id).then(value => {
             if (value) {
                 //Avoid the Promise Error
-                setTimeout(function () {
-                    props.appState({
-                        uri: value,
-                        thumbnail: data.snippet.thumbnails.high.url,
-                        video: data,
-                        list: list,
-                        index: index
-                    });
-                }, 5000);
+                props.appState({
+                    uri: value,
+                    thumbnail: data.snippet.thumbnails.high.url,
+                    video: data,
+                    list: list,
+                    index: index
+                });
             }
         }).catch(e => {
             console.log('Cannot Play Song');
@@ -112,10 +107,10 @@ const HomeComponent = (props) => {
     }
 
     useEffect(() => {
-        Load()
+        Load();
     }, []);
     return (
-        <div className="home mb-5" style={{minHeight: "75vh"}}>
+        <div className="home mb-5" style={{minHeight: "70vh"}}>
             <div style={{marginTop: '5rem'}}>
                 {props.homeComponents ? props.homeComponents : <div>{other}</div>}
                 {other ? null : <Preloader/>}
@@ -125,8 +120,8 @@ const HomeComponent = (props) => {
 };
 
 HomeComponent.propTypes = {};
-
 HomeComponent.defaultProps = {};
+
 const mapStateToProps = state => ({
     homeComponents: state.home
 });

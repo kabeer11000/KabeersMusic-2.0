@@ -5,6 +5,7 @@ import endPoints from "../api/endpoints/endpoints";
 import userid from "./userid";
 import {initAuth} from "./auth";
 import fetch from "./fetchWithTimeOut";
+import Fuse from "fuse.js";
 
 const db_version = 10;
 
@@ -96,14 +97,15 @@ export async function getSong(id) {
     });
 }
 
-
+/*
 initAuth().then(token => {
-    var myHeaders = new Headers();
+    var myHeaders = new Headers({
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/x-www-form-urlencoded"
+    });
 
     myHeaders.append("Authorization", `Bearer ${token}`);
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-    var urlencoded = new URLSearchParams();
 
     var requestOptions = {
         method: 'GET',
@@ -116,27 +118,23 @@ initAuth().then(token => {
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
 });
-
+*/
 
 export async function getSongFromStorage(id) {
     const
         allSongs = await db.songs.toArray();
 
-    if (allSongs.some(value => value.id === id)) {
-        return allSongs.find(value => value.videoId === id);
-    } else {
-        return initAuth().then(token => {
-            fetch(endPoints.getProxyfiedURI(id), {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then(value => {
-                if (!value.ok) return null;
-                return value.json();
-                // throw new Error('Invalid Response');
-            });
+    if (allSongs.some(value => value.id === id)) return allSongs.find(value => value.videoId === id);
+    return initAuth().then(token => {
+        fetch(endPoints.getProxyfiedURI(id), {
+            headers: new Headers({
+                'Authorization': `Bearer ${token}`
+            })
+        }).then(value => {
+            if (!value.ok) return null;
+            return value.json();
         });
-    }
+    });
 }
 
 export async function getAllDownloadedSongs() {
@@ -153,6 +151,34 @@ export async function getFeed() {
     });
 }
 
+const search_data = {};
+const options = {
+    isCaseSensitive: false,
+    shouldSort: false,
+    threshold: 0.6,
+    ignoreLocation: true,
+    useExtendedSearch: true,
+    findAllMatches: true,
+    keys: [
+        'title',
+        'channelTitle',
+        {
+            name: 'title',
+            weight: 1.5
+        },
+        {
+            name: 'channelTitle',
+            weight: 1.0
+        },
+    ]
+};
+db.songs.toArray().then(v => {
+    search_data.fuse = new Fuse(v, options);
+});
+
+export async function SuggestOfflineSongs(s) {
+    return search_data.fuse.search(s);
+}
 
 console.log('%20 SongJS Loaded');
 //downloadSong({rating: 0, videoId:'iYKXdt0LRs8'});
