@@ -16,7 +16,7 @@ const makeid = t => {
     return o
 };
 const access_token_expired_code = 400;
-/* GET home page. */
+/* GET Home page. */
 router.get('/callback', function (req, res, next) {
     if (!req.query.code) return res.status(302).json('Nothing Here');
     if (req.query.state !== req.session.state) return res.status(402).json('Invalid State');

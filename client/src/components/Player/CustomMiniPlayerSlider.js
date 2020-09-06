@@ -17,6 +17,7 @@ const CustomMiniPlayerSlider = (props) => {
 
     async function handleScrubbing(v) {
         if (isFinite(v)) {
+            setScrubbing(v);
             props.audioElement.currentTime = v;
             // Update Redux State
             store.dispatch(setCurrentSongState(
@@ -35,8 +36,7 @@ const CustomMiniPlayerSlider = (props) => {
         min={0.0}
         color={'primary'}
         max={props.audioElement.duration}
-        valueLabelDisplay="auto"
-        onChangeCommitted={async (v, x) => handleScrubbing(x)}
+        onChange={async (v, x) => handleScrubbing(x)}
     />);
 };
 const mapStateToProps = state => ({

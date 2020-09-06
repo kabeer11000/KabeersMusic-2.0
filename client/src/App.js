@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import HomeComponent from "./components/home/home.lazy";
+import HomeComponent from "./components/Home/home.lazy";
 import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
 import CustomBottomNavigation from "./components/CustomBottomNavigation/CustomBottomNavigation.lazy";
 import Downloads from "./components/Downloads/Downloads.lazy";
@@ -19,17 +19,19 @@ import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
 import BackDropLoader from "./components/BackDropLoader/BackDropLoader.lazy";
-
+import "swiped-events";
+import Liked from "./components/Liked/Liked.lazy";
 
 const App = () => {
     let audio = new Audio('');
-    const [darkState, setDarkState] = React.useState(false);
+    const [darkState, setDarkState] = React.useState(localStorage.getItem('darkmode') === null ? false : JSON.parse(localStorage.getItem('darkmode')));
     const [Player__, SetPlayer] = React.useState(true);
     const [backdrop, SetBackdrop] = React.useState(false);
     const palletType = darkState ? "dark" : "light";
     const colors = {
         primary: {
             contrastText: darkState ? "#757575" : "#FFFFFF",
+            appBarText: "#FFFFFF",
             main: "#E14A58",
             light: darkState ? "#757575" : "#FFFFFF",
             dark: darkState ? "#303030" : "#FFFFFF",
@@ -59,7 +61,7 @@ const App = () => {
     };
     const darkTheme = createMuiTheme({
         palette: {
-            type: "dark",
+            type: palletType,
             ...colors,
             slider: {
                 trackColor: "yellow",
@@ -69,11 +71,11 @@ const App = () => {
     });
     const handleThemeChange = () => {
         setDarkState(!darkState);
+        localStorage.setItem('darkmode', JSON.stringify(!darkState));
     };
 
     async function changeStates(state) {
         try {
-            SetBackdrop(true);
             audio.pause();
             audio.src = "";
             state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
@@ -101,6 +103,8 @@ const App = () => {
             SetBackdrop(true)
         }
     };
+
+
     return (
         <Provider store={store}>
             <MuiThemeProvider theme={darkTheme}>
@@ -109,25 +113,34 @@ const App = () => {
                         <CssBaseline/>
                         <div className="App">
                             <DrawerComponent>
-                                <CustomAppBar/>
+                                <Route exact={true} path={['/', '/home', '/search', '/downloads', '/history', '/liked']}
+                                       render={() => (
+                                           <React.Fragment>
+                                               <CustomAppBar/>
+                                               <BackDropLoader hidden={backdrop}/>
+                                           </React.Fragment>
+                                       )}/>
                                 <Player misc_func={misc_functions} hidden={Player__} changes={changeStates}/>
+                                <MiniPlayer hidden={Player__}/>
                                 <Route exact={true} path={'/home'}
                                        render={() => <HomeComponent appState={changeStates}/>}/>
                                 <Route exact={true} path={'/downloads'}
                                        render={() => <Downloads appState={changeStates}/>}/>
                                 <Route exact={true} path={'/search'} component={SearchComponent}/>
-                                <Route exact={true} path={'/settings'} component={Settings}/>
+                                <Route exact={true} path={'/liked'} component={Liked}/>
+                                <Route exact={true} path={'/settings'} render={() => {
+                                    if (!audio.paused) audio.pause();
+                                    return <Settings handleTheme={handleThemeChange}/>
+                                }}/>
                                 <Route exact={true} path={'/history'} component={HistoryComponent}/>
-                                <Route exact={true} path={'/'} render={() => {
+                                <Route exact={true} path={'/*'} render={() => {
                                     return <Redirect to={'/home'}/>
                                 }}/>
                                 <Route exact={true} path={'/search/results'} render={() => {
                                     return <SearchResultComponent appState={changeStates}/>
                                 }}/>
                                 <CustomBottomNavigation/>
-                                <MiniPlayer hidden={Player__}/>
                             </DrawerComponent>
-                            <BackDropLoader hidden={backdrop}/>
                         </div>
                     </SnackbarProvider>
                 </Router>

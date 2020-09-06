@@ -1,16 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import {List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
-import MailIcon from '@material-ui/icons/Mail';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
+import {
+    Divider,
+    Drawer,
+    Hidden,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    makeStyles,
+    Typography,
+    useTheme
+} from '@material-ui/core';
+import {AccountCircle, Favorite, GetApp, History, Home, Settings} from "@material-ui/icons";
 import store from '../../Redux/store/store';
 import {setDrawerState} from '../../Redux/actions/actions';
 import {connect} from "react-redux";
-import Link from "react-router-dom/Link";
+import {Link} from "react-router-dom";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -86,22 +92,42 @@ function DrawerComponent(props) {
             <div className={`classes.toolbar`}/>
             <Divider/>
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={index}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ListItem button component={Link} to={'/home'}>
+                    <ListItemIcon><Home/></ListItemIcon>
+                    <ListItemText primary={'Home'}/>
+                </ListItem>
+
+                <ListItem button component={Link} to={'/downloads'}>
+                    <ListItemIcon><GetApp/></ListItemIcon>
+                    <ListItemText primary={'Downloads'}/>
+                </ListItem>
+                <ListItem button component={Link} to={'/history'}>
+                    <ListItemIcon><History/></ListItemIcon>
+                    <ListItemText primary={'History'}/>
+                </ListItem>
+                <ListItem button component={Link} to={'/liked'}>
+                    <ListItemIcon><Favorite/></ListItemIcon>
+                    <ListItemText primary={'Liked'}/>
+                </ListItem>
             </List>
             <Divider/>
+            <ListItem button component={Link} to={'/settings'}>
+                <ListItemIcon><Settings/></ListItemIcon>
+                <ListItemText primary={'Settings'}/>
+            </ListItem>
+            <ListItem button>
+                <ListItemIcon><AccountCircle/></ListItemIcon>
+                <ListItemText primary={'Account'}/>
+            </ListItem>
+            <Divider/>
             <List>
-                {['All mail', 'Trash', 'Spam', 'Settings'].map((text, index) => (
-                    <ListItem component={Link} to={'/settings'} button key={index}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                        <ListItemText primary={text}/>
-                    </ListItem>
-                ))}
+                <ListItem button>
+                    <Typography muted small>
+                        <div class="text-muted small">&copy; Kabeers Network</div>
+                    </Typography>
+                </ListItem>
             </List>
+
         </div>
     );
 

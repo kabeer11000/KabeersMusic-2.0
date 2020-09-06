@@ -1,11 +1,72 @@
 import React from 'react';
 import './Settings.css';
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Switch from "@material-ui/core/Switch";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import {Brightness4, BrokenImage} from "@material-ui/icons";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import CustomAppBar from "../CustomAppBar/CustomAppBar.lazy";
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import {FeedbackButton} from "../FeedBack/FeedBack";
 
-const Settings = () => (
-    <div className="Settings">
-        Settings Component
-    </div>
-);
+const Settings = (props) => {
+    const [checked, setChecked] = React.useState(['darkmode']);
+
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
+    return (
+        <div className="Settings">
+            <CustomAppBar title={'Settings'}/>
+            <List className={'mt-5 text-left'} subheader={<ListSubheader>Settings</ListSubheader>}>
+                <div style={{display: 'inline-flex', justifyContent: 'center'}} className={'w-100'}>
+                    {localStorage.getItem('user_data') ?
+                        <Avatar alt={JSON.parse(localStorage.getItem('user_data')).username}
+                                src={JSON.parse(localStorage.getItem('user_data')).avatar}/> :
+                        <Avatar src={<BrokenImage/>}/>}
+                </div>
+                <div className={'text-center'}>
+                    <ListItemText id="switch-list-label-wifi"
+                                  primary={`Welcome ${localStorage.getItem('user_data') === null ? 'User' : JSON.parse(localStorage.getItem('user_data')).username}`}/>
+                </div>
+                <Divider/>
+                <ListItem>
+                    <ListItemIcon>
+                        <Brightness4/>
+                    </ListItemIcon>
+                    <ListItemText id="switch-list-label-wifi" primary="Dark Mode"/>
+                    <ListItemSecondaryAction>
+                        <Switch
+                            edge="end"
+                            onChange={props.handleTheme}
+                            checked={localStorage.getItem('darkmode') === null ? false : JSON.parse(localStorage.getItem('darkmode'))}
+                            inputProps={{'aria-labelledby': 'switch-list-label-wifi'}}
+                        />
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <ListItem>
+                    <ListItemText id="switch-list-label-bluetooth" primary="Feedback and Help"/>
+                    <ListItemSecondaryAction>
+                        <FeedbackButton/>
+                    </ListItemSecondaryAction>
+                </ListItem>
+            </List>
+        </div>
+    );
+};
 
 Settings.propTypes = {};
 

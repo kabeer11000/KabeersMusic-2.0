@@ -216,8 +216,8 @@ const Player = (props) => {
             <div className={'container'}>
                 <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                     <AppBar>
-                        <Toolbar>
-                            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                        <Toolbar color={'#FFF'} style={{color: "#FFFFFF"}}>
+                            <IconButton edge="start" onClick={handleClose} aria-label="close">
                                 <ArrowBack/>
                             </IconButton>
                             <Typography variant={'h6'} component={'div'} className={'py-1 text-truncate'}>
@@ -248,7 +248,6 @@ const Player = (props) => {
                                      transform: 'translate(-50%, -50%)'
                                  }} alt={'Thumbnail'}/>
                         </div>
-                        <div id={'waveForm'} style={{width: '100%'}}/>
                     </div>
                     <AppBar color="primary" style={{
                         position: 'fixed',

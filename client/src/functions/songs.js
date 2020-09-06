@@ -263,6 +263,14 @@ export async function saveToHistory(object) {
     });
 }
 
+export async function createdbifnotexists() {
+    const historydb = new Dexie('KabeersMusic_History');
+    historydb.version(db_version).stores({
+        songs:
+            "id, time, rating, thumbnail, channelTitle, title, tags"
+    });
+}
+
 export async function getHistory() {
-    return historydb.songs.toArray();
+    return historydb.songs.toArray() || [];
 }

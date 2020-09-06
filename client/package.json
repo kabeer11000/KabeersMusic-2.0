@@ -14,6 +14,7 @@
     "fuse.js": "^6.4.1",
     "idb-keyval": "^3.2.0",
     "ml5": "^0.5.0",
+    "mui-feedback-dialog": "^1.2.0",
     "notistack": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -24,7 +25,8 @@
     "react-scripts": "^2.1.8",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "source-map-explorer": "^2.5.0"
+    "source-map-explorer": "^2.5.0",
+    "swiped-events": "^1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

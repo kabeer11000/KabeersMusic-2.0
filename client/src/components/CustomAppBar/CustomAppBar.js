@@ -24,16 +24,16 @@ const CustomAppBar = (props) => {
         <HideOnScroll>
             <AppBar position="fixed">
                 <Toolbar>
-                    <IconButton onClick={OpenDrawer} edge="start" color={'inherit'} aria-label="menu">
+                    <IconButton onClick={OpenDrawer} edge="start" style={{color: "#FFFFFF"}} aria-label="menu">
                         <Menu/>
                     </IconButton>
-                    <Typography variant="h6">
-                        Music
+                    <Typography style={{color: "#FFFFFF"}} variant="h6">
+                        {props.title || 'Music'}
                     </Typography>
                     <div style={{flex: '1 1 auto'}}/>
                     <IconButton
                         edge="start"
-                        color="inherit"
+                        style={{color: "#FFFFFF"}}
                         aria-label="Search"
                         component={Link}
                         to={'/search'}

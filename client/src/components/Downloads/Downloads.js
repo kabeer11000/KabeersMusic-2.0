@@ -31,23 +31,14 @@ const Downloads = (props) => {
         getSongFromStorage(videoID).then(value => {
             if (value) {
                 //Avoid the Promise Error
-                setTimeout(function () {
-                    data.videoElement.snippet.thumbnails.high.url = URL.createObjectURL(value.thumbnail);
-                    console.log({
-                        uri: value,
-                        thumbnail: data.videoElement.snippet.thumbnails.high.url,
-                        video: data.videoElement,
-                        list: {items: [data.videoElement]},
-                        index: index
-                    });
-                    props.appState({
-                        uri: URL.createObjectURL(value.blob),
-                        thumbnail: URL.createObjectURL(value.thumbnail),
-                        video: data.videoElement,
-                        list: {items: [data.videoElement]},
-                        index: index
-                    });
-                }, 100);
+                data.videoElement.snippet.thumbnails.high.url = URL.createObjectURL(value.thumbnail);
+                props.appState({
+                    uri: URL.createObjectURL(value.blob),
+                    thumbnail: URL.createObjectURL(value.thumbnail),
+                    video: data.videoElement,
+                    list: {items: [data.videoElement]},
+                    index: index
+                });
             }
         });
     }

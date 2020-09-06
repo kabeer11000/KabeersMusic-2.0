@@ -15,6 +15,8 @@ import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import {getSong} from "../../functions/songs";
+import {Button} from "@material-ui/core";
+import Preloader from "../Preloader/Preloader";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,8 +43,20 @@ const SearchResultComponent = (props) => {
     let history = useHistory();
     const [open, setOpen] = React.useState(true);
     const [resultsArray, setResultsArray] = React.useState([]);
-    const [listItems, setListItems] = React.useState(<></>);
+    const [listItems, setListItems] = React.useState(<Preloader/>);
     const classes = useStyles();
+
+    const errorPage = (message = 'No Internet Connection', button = <Button component={Link}
+                                                                            to={'/search'}>Retry</Button>) => (
+        <div className={'errorPage text-center'}
+             style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+            <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
+                 alt={'Kabeers Music Logo'}/>
+            <br/>
+            <div className={"text-truncate"}>{message}</div>
+            {button}
+        </div>
+    );
 
     function PlaySong(video, metaData) {
         getSong(video.id.videoId).then(value => {
@@ -64,6 +78,7 @@ const SearchResultComponent = (props) => {
 
     useEffect(() => {
         if (!props.query) return history.push("/search");
+        if (!navigator.onLine) return setListItems(errorPage());
         SearchYoutube(props.query)
             .then(resultsArray => {
                 if (!resultsArray) return;

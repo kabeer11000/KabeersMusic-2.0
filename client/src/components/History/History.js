@@ -6,6 +6,8 @@ import Divider from "@material-ui/core/Divider";
 import {getHistory} from "../../functions/songs";
 import DownloadListItem from "../DownloadListItem/DownloadListItem";
 import Container from "@material-ui/core/Container";
+import {Button} from "@material-ui/core";
+import {Link} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,8 +28,8 @@ const HistoryComponent = () => {
 
     function createList() {
         getHistory().then(value => {
-            //value = value.reverse();
-            value = value.slice(Math.max(value.length - 5, 1)).reverse(); // Get 5 Recent
+            if (!value.length) return setHistoryItems(errorPage('History Will Appear Here', <></>));
+            value = value.length >= 5 ? value.slice(Math.max(value.length - 5, 1)).reverse() : value.reverse(); // Get 5 Recent
             setHistoryItems(() => {
                 return value.map((v, i) => {
                     const divider_ = i = value.length ? <div/> : <Divider variant="inset" component="li"/>;
@@ -35,9 +37,6 @@ const HistoryComponent = () => {
                                                           thumbnail={v.thumbnail} tags={v.tags}/>{divider_}</div>
                 });
             });
-            if (!HistoryItems) {
-                setHistoryItems()
-            }
         })
     }
 
@@ -45,6 +44,17 @@ const HistoryComponent = () => {
         createList();
     }, []);
 
+    const errorPage = (message = 'No Internet Connection', button = <Button component={Link}
+                                                                            to={'/search'}>Retry</Button>) => (
+        <div className={'errorPage text-center'}
+             style={{position: 'absolute', top: '1000%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+            <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
+                 alt={'Kabeers Music Logo'}/>
+            <br/>
+            <div className={"text-truncate"}>{message}</div>
+            {button}
+        </div>
+    );
     return (
         <Container fixed>
             <List className={`${classes.root} mt-5 bg-transparent`}>

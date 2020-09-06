@@ -54,7 +54,7 @@ app.use('/files/yt-fake/sample-response-master/yt-api/suggested-cardib.json', (r
   }
 });
 app.use(express.static(path.join(__dirname, 'public')));
-app.get(['/', '/home', '/downloads', '/liked', '/history'], (req, res) => {
+app.get(['/', '/Home', '/downloads', '/liked', '/history'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public/build', 'index.html'));
 });
 

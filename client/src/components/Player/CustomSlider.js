@@ -16,14 +16,17 @@ const CustomSlider = (props) => {
 
     async function handleScrubbing(v) {
         if (isFinite(v)) {
+            setScrubbing(v);
             props.audioElement.currentTime = v;
             // Update Redux State
+            const store_state = store.getState().currentSong;
             store.dispatch(setCurrentSongState(
                 props.audioElement,
-                store.getState().currentSong.videoElement,
-                store.getState().currentSong.componentState,
-                store.getState().currentSong.reOpenDialog,
-                store.getState().currentSong.playList));
+                store_state.videoElement,
+                store_state.componentState,
+                store_state.reOpenDialog,
+                store_state.playList));
+
         }
     }
 
@@ -34,9 +37,7 @@ const CustomSlider = (props) => {
         min={0.0}
         color={'primary.player.slider'}
         max={props.audioElement.duration}
-        valueLabelDisplay="auto"
-        thumbColorPrimary={'#000'}
-        onChangeCommitted={async (v, x) => handleScrubbing(x)}
+        onChange={async (v, x) => handleScrubbing(x)}
     />);
 };
 const mapStateToProps = state => ({

@@ -73,7 +73,7 @@ const SearchComponentResultScreen = () => {
                             setOpen(false);
                         }} component={Link} to={'/home'} color="primary.light" visibility={false}>
                             <ArrowBack/>
-                        </IconButton> : <></>}
+                        </IconButton> : null}
                         <InputBase
                             autoCapitalize={true}
                             autoComplete={true}
