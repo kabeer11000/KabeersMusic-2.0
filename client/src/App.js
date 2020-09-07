@@ -15,7 +15,7 @@ import {setCurrentSongState} from "./Redux/actions/actions";
 import MiniPlayer from "./components/Player/MiniPlayer.lazy";
 import SearchResultComponent from "./components/SearchComponent/SearchResultComponent.lazy";
 import HistoryComponent from "./components/History/History.lazy";
-import {SnackbarProvider, useSnackbar} from "notistack";
+import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
 import BackDropLoader from "./components/BackDropLoader/BackDropLoader.lazy";

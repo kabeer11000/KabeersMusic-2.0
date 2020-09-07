@@ -13,6 +13,7 @@ import {connect} from "react-redux";
 import fetch from "../../functions/fetchWithTimeOut";
 import Preloader from "../Preloader/Preloader";
 import uniqid from "../../functions/Helper/randomKey";
+
 const HomeComponent = (props) => {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [other, setOther] = React.useState(() => {
