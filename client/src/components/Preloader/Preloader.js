@@ -3,7 +3,7 @@ import './Preloader.css';
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Preloader = () => (
-    <div className="Preloader" style={{
+    <div className="Preloader text-center" style={{
         width: '10rem',
         height: '10rem',
         position: 'absolute',

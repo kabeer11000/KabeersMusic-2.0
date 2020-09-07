@@ -123,7 +123,7 @@ function DrawerComponent(props) {
             <List>
                 <ListItem button>
                     <Typography muted small>
-                        <div class="text-muted small">&copy; Kabeers Network</div>
+                        <div className={"text-muted small"}>&copy; Kabeers Network</div>
                     </Typography>
                 </ListItem>
             </List>

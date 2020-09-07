@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import {ArrowBack, SearchOutlined} from "@material-ui/icons";
+import {ArrowBack} from "@material-ui/icons";
 import InputBase from "@material-ui/core/InputBase";
 import {SearchYoutube} from "../../functions/suggestSearch";
 import ListItem from "@material-ui/core/ListItem";
@@ -57,7 +57,10 @@ const SearchComponentResultScreen = () => {
         }));
     };
     const Search = async (q) => {
-        SearchYoutube(q).then(v => setQueryArray(v));
+        SearchYoutube(q).then(v => setQueryArray(v)).catch(e => {
+            setQueryArray('No Connection');
+            setListItems('No Connection')
+        });
         ListItems()
     };
     useEffect(() => {
@@ -83,7 +86,6 @@ const SearchComponentResultScreen = () => {
                             placeholder="Search For A Song"
                             inputProps={{'aria-label': 'Search Kabeers Notes'}}
                         />
-                        <SearchOutlined visibility={false}/>
                     </Toolbar>
                 </AppBar>
                 <div class="container px-3" style={{marginTop: "4rem"}}>

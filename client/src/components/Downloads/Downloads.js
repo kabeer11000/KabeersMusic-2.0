@@ -48,7 +48,7 @@ const Downloads = (props) => {
             setHistoryItems(() => {
                 const listItems = value.map((v, i) => {
                     const thumbnail = URL.createObjectURL(v.thumbnail);
-                    const songURL = URL.createObjectURL(v.blob);
+                    // const songURL = URL.createObjectURL(v.blob);
                     return <DownloadListItem onClick={() => {
                         PlaySong(v, i);
                     }} className={'text-truncate'} key={i} title={v.title} channelTitle={v.channelTitle}
@@ -58,7 +58,7 @@ const Downloads = (props) => {
                 listItems.forEach((item, index) => {
                     listItemsWithDividers.push(item);
                     if (listItems[index + 1] !== undefined) {
-                        listItemsWithDividers.push(<Divider variant="inset" component="li"/>)
+                        listItemsWithDividers.push(<Divider key={index} variant="inset" component="li"/>)
                     }
                 });
                 return listItemsWithDividers;

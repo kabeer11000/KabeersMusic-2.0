@@ -32,9 +32,11 @@ const HistoryComponent = () => {
             value = value.length >= 5 ? value.slice(Math.max(value.length - 5, 1)).reverse() : value.reverse(); // Get 5 Recent
             setHistoryItems(() => {
                 return value.map((v, i) => {
-                    const divider_ = i = value.length ? <div/> : <Divider variant="inset" component="li"/>;
-                    return <div key={i}><DownloadListItem title={v.title} channelTitle={v.channelTitle}
-                                                          thumbnail={v.thumbnail} tags={v.tags}/>{divider_}</div>
+                    // const divider_ = i = value.length ? null : <Divider variant="inset" component="li"/>;
+                    return <React.Fragment key={i}><DownloadListItem title={v.title} channelTitle={v.channelTitle}
+                                                                     thumbnail={v.thumbnail}
+                                                                     tags={v.tags}/>{value.length ? null :
+                        <Divider variant="inset" component="li"/>}</React.Fragment>
                 });
             });
         })

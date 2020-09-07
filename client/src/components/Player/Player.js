@@ -1,35 +1,22 @@
-import React, {useEffect} from 'react';
-import './Player.css';
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import Dialog from "@material-ui/core/Dialog";
-import IconButton from "@material-ui/core/IconButton";
+import React, {useEffect} from "react";
+import "./Player.css";
+import {AppBar, Dialog, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
 import {ArrowBack, Done, GetApp, Loop, Pause, PlayCircleOutline, SkipNext, SkipPrevious} from "@material-ui/icons";
-import Slide from "@material-ui/core/Slide";
-import Typography from "@material-ui/core/Typography";
 import {downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import * as PropTypes from "prop-types";
 import CustomSlider from "./CustomSlider";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import store from "../../Redux/store/store";
 import {connect} from "react-redux";
-import {useSnackbar} from 'notistack';
+import {useSnackbar} from "notistack";
 import ComingNext from "./ComingNext/ComingNext";
 import {saveHistoryToServer} from "../../functions/Helper/history";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-const MiniPlayerTransition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="down" ref={ref} {...props} />;
-});
 
 const Player = (props) => {
-    if (props.hidden) {
-        return <></>;
-    }
-
+    if (props.hidden) return null;
 
     const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
     const [button, setButton] = React.useState(<IconButton color={'#60B18A'} colorSecondary={'#60B18A'}
@@ -45,7 +32,7 @@ const Player = (props) => {
                                                                      }}
                                                                      style={{backgroundColor: "primary.player.invertButtons.invert"}}><Loop/></IconButton>)
                                                              }}><Loop/></IconButton>);
-    let audioElement = props.audioElement;
+    const audioElement = props.audioElement;
     const [downloadButton, setDownloadButton] = React.useState(<div/>);
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -102,25 +89,6 @@ const Player = (props) => {
         enqueueSnackbar('Download Started');
     }
 
-    function HideOnScroll(props) {
-        const {children, window} = props;
-        const trigger = useScrollTrigger({target: window ? window() : undefined});
-        return (
-            <Slide appear={false} direction="down" in={!trigger}>
-                {children}
-            </Slide>
-        );
-    }
-
-    HideOnScroll.propTypes = {
-        children: PropTypes.element.isRequired,
-        /**
-         * Injected by the documentation to work in an iframe.
-         * You won't need it on your project.
-         */
-        window: PropTypes.func,
-    };
-
     function pauseAudio() {
         audioElement.pause();
         setButton(<IconButton className={'PlayerPlayPauseBtn'} onClick={playAudio}><PlayCircleOutline
@@ -135,81 +103,61 @@ const Player = (props) => {
                 album: data.album,
                 artwork: data.artwork
             });
-            navigator.mediaSession.setActionHandler('play', function () {
-                playAudio();
-            });
-            navigator.mediaSession.setActionHandler('pause', function () {
-                pauseAudio()
-            });
+            navigator.mediaSession.setActionHandler('play', playAudio);
+            navigator.mediaSession.setActionHandler('pause', pauseAudio);
         }
     }
 
 
     useEffect(() => {
+        if (!audioElement.paused) return;
+        audioElement.play();
+        addMediaSession({
+            artist: props.videoElement.channelTitle,
+            title: props.videoElement.title,
+            artwork: [{
+                src: props.videoElement.snippet.thumbnails.high.url,
+                sizes: '96x96',
+                type: 'image/png'
+            }]
+        });
+        addToHistory();
+        saveHistoryToServer(props.videoElement);
+        addToReduxState([true, false]);
+        let videoID = '';
+        if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
+        if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
 
-        setTimeout(() => {
-            if (audioElement.paused) {
-                audioElement.play();
-                addMediaSession({
-                    artist: props.videoElement.channelTitle,
-                    title: props.videoElement.title,
-                    artwork: [{
-                        src: props.videoElement.snippet.thumbnails.high.url,
-                        sizes: '96x96',
-                        type: 'image/png'
-                    }]
-                });
-                addToHistory();
-                saveHistoryToServer(props.videoElement);
-                addToReduxState([true, false]);
-                let videoID = '';
-                if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
-                if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
-
-                isOfflineAvailable(videoID).then((v) => {
-                    setDownloadButton(v ? <IconButton><Done/></IconButton> :
-                        <IconButton onClick={downloadAudio}><GetApp/></IconButton>);
-                    console.log(v)
-                });
-                props.misc_func.hideBackdrop();
-                document.addEventListener('swiped-down', handleClose);
-            }
-        }, 150)
+        isOfflineAvailable(videoID).then((v) => {
+            setDownloadButton(v ? <IconButton><Done/></IconButton> :
+                <IconButton onClick={downloadAudio}><GetApp/></IconButton>);
+            console.log(v)
+        });
     }, []);
+
     function SkipSong(data) {
         let videoID = '';
         if (typeof data.video.id === 'object') videoID = data.video.id.videoId;
         if (typeof data.video.id === 'string') videoID = data.video.id;
         getSong(videoID).then(value => {
             if (value) {
+                setOpen(false);
+                addToReduxState([false, false]);
                 try {
-                    setTimeout(function () {
-                        props.changes({
-                            uri: value,
-                            thumbnail: data.video.snippet.thumbnails.high.url,
-                            video: data.video,
-                            list: props.playList.list,
-                            index: data.index
-                        }).then(() => {
-                            audioElement.pause();
-                            audioElement = null;
-                            setOpen(false);
-                            addToReduxState([false, false])
-                        });
-                    }, 100);
+                    props.changes({
+                        uri: value,
+                        thumbnail: data.video.snippet.thumbnails.high.url,
+                        video: data.video,
+                        list: props.playList.list,
+                        index: data.index
+                    }).then(() => {
+                        props = {};
+                    });
                 } catch (e) {
                     console.log(e);
                 }
             }
         });
-    }
-
-    async function handleScrubbing(v) {
-        if (isFinite(v)) {
-            audioElement.currentTime = v;
-            // Update Redux State
-            //store.dispatch(setCurrentSongState(audioElement, store.getState().currentSong.videoElement, {...store.getState().currentSong.componentState}));
-        }
     }
     return (
         <div className="Player">
@@ -227,11 +175,7 @@ const Player = (props) => {
                                 </Typography>
                             </Typography>
                             <div style={{flex: '1 1 auto'}}/>
-                            <>
-                                {
-                                    downloadButton
-                                }
-                            </>
+                            {downloadButton}
                         </Toolbar>
                     </AppBar>
                     <div style={{backgroundColor: 'primary.dark', height: '100%', width: '100%'}}>
@@ -257,10 +201,6 @@ const Player = (props) => {
                         backgroundColor: 'light'
                     }} component={'div'}>
                         <CustomSlider/>
-
-                        {/* Custom SLIDER
-                        <CustomSlider classnames={'container'} getAudioPosition={getAudioPosition}
-                                      audioElement={audioElement} handleScrubbing={handleScrubbing}/> */}
                         <div className={'container mb-2'} style={{
                             width: '70%',
                             display: 'inline-flex',
@@ -282,7 +222,6 @@ const Player = (props) => {
                             }}><SkipNext/></IconButton> : <IconButton disabled={true}><SkipNext/></IconButton>}
 
                         </div>
-
                         <ComingNext/>
                     </AppBar>
                 </Dialog>
@@ -301,29 +240,3 @@ const mapStateToProps = state => ({
     playList: state.currentSong.playList
 });
 export default connect(mapStateToProps)(Player);
-/*
-
-                            {props.playList.list.items[props.index - 1] ? <IconButton><SkipPrevious onClick={() => {
-                                const item = props.playList.list.items[props.playList.index - 1];
-                                SkipSong({video: item, index: props.playList.index - 1});
-                            }}/></IconButton> : <IconButton disabled={true}><SkipPrevious/></IconButton>}
-                            <div className={'ExpandedPlayButtonContainer'}>
-                                {button}
-                            </div>
-                            {props.playList.list.items[props.index + 1] ? <IconButton onClick={() => {
-                                const item = props.playList.list.items[props.playList.index + 1];
-                                SkipSong({video: item, index: props.playList.index + 1});
-                            }}><SkipNext/></IconButton> : <IconButton disabled={true}><SkipNext/></IconButton>}
-
-
-                            <Slider
-                                defaultValue={1.0}
-                                aria-labelledby="discrete-slider-small-steps"
-                                step={0.001}
-                                marks
-                                min={0.0}
-                                max={1.0}
-                                getAriaValueText={handleVolume}
-                                valueLabelDisplay="auto"
-                            />
- */

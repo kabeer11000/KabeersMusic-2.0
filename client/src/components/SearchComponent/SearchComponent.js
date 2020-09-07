@@ -124,18 +124,16 @@ const SearchComponent = (props) => {
 
                                 }}
                                 onBlur={() => {
-                                    // search_iconChange('visible');
-                                    // toolbar_colorChange('#CCC')
+
                                 }}
                                 className={`${classes.input} text-light`}
                                 placeholder="Search Kabeers Music"
                                 inputProps={{'aria-label': 'Search Kabeers Music'}}
                             />
-                            <SearchOutlined visibility={false}/>
                         </Toolbar>
                     </AppBar>
-                    <div class="container px-3" style={{marginTop: "4rem"}}>
-                        <div class="row">
+                    <div className="container px-3" style={{marginTop: "4rem"}}>
+                        <div className="row">
                             {listItems}
                             {listItems ? null : <Preloader/>}
                         </div>

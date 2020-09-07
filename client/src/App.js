@@ -21,9 +21,10 @@ import Settings from "./components/Settings/Settings.lazy";
 import BackDropLoader from "./components/BackDropLoader/BackDropLoader.lazy";
 import "swiped-events";
 import Liked from "./components/Liked/Liked.lazy";
+import 'bootstrap/dist/css/bootstrap-utilities.css';
 
 const App = () => {
-    let audio = new Audio('');
+    //let audio = document.getElementById('MainAudio-KabeersMusic');
     const [darkState, setDarkState] = React.useState(localStorage.getItem('darkmode') === null ? false : JSON.parse(localStorage.getItem('darkmode')));
     const [Player__, SetPlayer] = React.useState(true);
     const [backdrop, SetBackdrop] = React.useState(false);
@@ -75,19 +76,14 @@ const App = () => {
     };
 
     async function changeStates(state) {
+        const audio = document.getElementById('MainAudio-KabeersMusic');
         try {
             audio.pause();
             audio.src = "";
             state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
             audio.src = state.uri;
-            store.dispatch(setCurrentSongState(audio, state.video, {
-                Dialog: true,
-                MiniPlayer: false
-            }, () => {
-            }, {
-                list: state.list,
-                index: state.index
-            }));
+            store.dispatch(setCurrentSongState(audio, state.video, {Dialog: !0, MiniPlayer: !1}, () => {
+            }, {list: state.list, index: state.index}));
             SetPlayer(true);
             SetPlayer(false);
         } catch (e) {
@@ -129,6 +125,7 @@ const App = () => {
                                 <Route exact={true} path={'/search'} component={SearchComponent}/>
                                 <Route exact={true} path={'/liked'} component={Liked}/>
                                 <Route exact={true} path={'/settings'} render={() => {
+                                    let audio = document.getElementById('MainAudio-KabeersMusic');
                                     if (!audio.paused) audio.pause();
                                     return <Settings handleTheme={handleThemeChange}/>
                                 }}/>

@@ -29,10 +29,17 @@
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Get Rid of Link Element Style */
+a {
+    color: inherit;
+    text-decoration: none !important;
+    text-underline: none !important;
 }

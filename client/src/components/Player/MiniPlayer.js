@@ -29,6 +29,7 @@ const MiniPlayer = (props) => {
             Dialog: false,
             MiniPlayer: false
         }, props.reOpenDialog, props.playList));
+        audioElement.src = '#';
     }
 
     function pauseAudio() {

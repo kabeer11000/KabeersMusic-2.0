@@ -4,7 +4,7 @@ import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
 import userid from "./userid";
 import {initAuth} from "./auth";
-import fetch from "./fetchWithTimeOut";
+//import fetch from "./fetchWithTimeOut";
 import Fuse from "fuse.js";
 
 const db_version = 10;
@@ -90,7 +90,7 @@ export async function getSong(id) {
             headers: new Headers({
                 'Authorization': `Bearer ${token}`
             })
-        }, 5000).then(value => {
+        }).then(value => {
             if (!value.ok) return null;
             return value.json();
         }).catch(e => e);
