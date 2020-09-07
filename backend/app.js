@@ -53,11 +53,18 @@ app.use('/files/yt-fake/sample-response-master/yt-api/suggested-cardib.json', (r
     })
   }
 });
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, 'public/build')));
+app.use(['/home', '/downloads', '/liked', '/history'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/build', 'index.html'));
+});
+
+/*
 app.get(['/', '/Home', '/downloads', '/liked', '/history'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public/build', 'index.html'));
 });
 
+
+ */
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

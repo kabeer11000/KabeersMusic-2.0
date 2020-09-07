@@ -12,13 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import {connect} from "react-redux";
 import fetch from "../../functions/fetchWithTimeOut";
 import Preloader from "../Preloader/Preloader";
-
-/*
-
-    if (popular && other) {
-        store.dispatch(setHomeScreen(<div>{popular}{other}</div>));
-    }
- */
+import uniqid from "../../functions/Helper/randomKey";
 const HomeComponent = (props) => {
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
     const [other, setOther] = React.useState(() => {
@@ -47,7 +41,7 @@ const HomeComponent = (props) => {
                         <React.Fragment>
                             {
                                 value.items.map(value1 => (
-                                    <div>
+                                    <div key={uniqid()}>
                                         <Typography variant={'h5'} className={'pl-3 text-left'}>
                                             {value1.title}
                                         </Typography>

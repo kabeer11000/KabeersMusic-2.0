@@ -51,6 +51,7 @@ router.get('/callback', function (req, res, next) {
 });
 
 router.get('/redirect', (req, res) => {
+    // AStroWorld_Cn9OuUNTZRfuaCnwc6:username|AStroWorld_Cn9OuUNTZRfuaCnwc6:email|AStroWorld_Cn9OuUNTZRfuaCnwc6:user_id
     const info = {
         clientId: 'S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD',
         scopes: ['s564d68a34dCn9OuUNTZRfuaCnwc6:feed', 's564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite'].join('|'),

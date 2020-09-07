@@ -1,5 +1,5 @@
 import Dexie from "dexie";
-import "dexie-observable";
+//import "dexie-observable";
 import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
 import userid from "./userid";

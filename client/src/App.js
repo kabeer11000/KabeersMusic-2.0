@@ -13,9 +13,9 @@ import {Provider} from "react-redux";
 import store from "./Redux/store/store";
 import {setCurrentSongState} from "./Redux/actions/actions";
 import MiniPlayer from "./components/Player/MiniPlayer.lazy";
-import SearchResultComponent from "./components/SearchComponent/SearchResultComponent";
+import SearchResultComponent from "./components/SearchComponent/SearchResultComponent.lazy";
 import HistoryComponent from "./components/History/History.lazy";
-import {SnackbarProvider} from "notistack";
+import {SnackbarProvider, useSnackbar} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
 import BackDropLoader from "./components/BackDropLoader/BackDropLoader.lazy";
@@ -24,7 +24,6 @@ import Liked from "./components/Liked/Liked.lazy";
 import 'bootstrap/dist/css/bootstrap-utilities.css';
 
 const App = () => {
-    //let audio = document.getElementById('MainAudio-KabeersMusic');
     const [darkState, setDarkState] = React.useState(localStorage.getItem('darkmode') === null ? false : JSON.parse(localStorage.getItem('darkmode')));
     const [Player__, SetPlayer] = React.useState(true);
     const [backdrop, SetBackdrop] = React.useState(false);
