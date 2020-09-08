@@ -62,7 +62,6 @@ app.use(['/home', '/downloads', '/liked', '/history'], (req, res) => {
 */
 
 app.use(express.static('public/build'));
-
 app.get(['/home', '/downloads', '/liked', '/history', '/settings'], (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'build', 'index.html'));
 });
