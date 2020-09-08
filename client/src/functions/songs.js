@@ -48,7 +48,6 @@ export function login() {
 
 export async function downloadSong(data = {videoId: null, rating: 0, title: '', channelTitle: '', tags: ''}) {
     try {
-
         console.log('Download Started');
         const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
         const url = await fetch(endPoints.getProxyfiedURI(data.videoId)).then(value => value.json()).catch(e => e);
@@ -71,7 +70,7 @@ export async function downloadSong(data = {videoId: null, rating: 0, title: '', 
             videoElement: data.videoElement
         }).then((v) => {
             console.log(v);
-        });
+        }).catch(e => console.log(e));
         return true;
 
     } catch (error) {

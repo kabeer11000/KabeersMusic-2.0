@@ -1,5 +1,5 @@
-const hostName = `${window.location.protocol}//${window.location.host}`;
-//const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
+//const hostName = `${window.location.protocol}//${window.location.host}`;
+const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
 
 const endPoints = {
     mostPopular: key => `https://www.googleapis.com/youtube/v3/videos?part=snippet&videoCategoryId=10&type=video&key=${key}&chart=mostPopular`,
