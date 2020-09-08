@@ -48,31 +48,36 @@ export function login() {
 
 export async function downloadSong(data = {videoId: null, rating: 0, title: '', channelTitle: '', tags: ''}) {
     try {
-        console.log('Download Started');
-        const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
-        const url = await fetch(endPoints.getProxyfiedURI(data.videoId)).then(value => value.json()).catch(e => e);
-        const [thumbnailBlob, songBlob] = await Promise.all([
-            fetchProxiedBlob(thumbURL),
-            fetchProxiedBlob(url)
-        ]);
-        db.songs.put({
-            id: data.videoId,
-            state: "downloaded",
-            thumbnail: thumbnailBlob,
-            blob: songBlob,
-            valid: true,
-            time: Date.now(),
-            videoId: data.videoId,
-            rating: data.rating,
-            tags: data.tags || [],
-            title: data.title,
-            channelTitle: data.channelTitle,
-            videoElement: data.videoElement
-        }).then((v) => {
-            console.log(v);
-        }).catch(e => console.log(e));
-        return true;
-
+        initAuth().then(async token => {
+            console.log('Download Started');
+            const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
+            const url = await fetch(endPoints.getProxyfiedURI(data.videoId), {
+                headers: new Headers({
+                    'Authorization': `Bearer ${token}`
+                })
+            }).then(value => value.json()).catch(e => e);
+            const [thumbnailBlob, songBlob] = await Promise.all([
+                fetchProxiedBlob(thumbURL),
+                fetchProxiedBlob(url)
+            ]);
+            db.songs.put({
+                id: data.videoId,
+                state: "downloaded",
+                thumbnail: thumbnailBlob,
+                blob: songBlob,
+                valid: true,
+                time: Date.now(),
+                videoId: data.videoId,
+                rating: data.rating,
+                tags: data.tags || [],
+                title: data.title,
+                channelTitle: data.channelTitle,
+                videoElement: data.videoElement
+            }).then((v) => {
+                console.log(v);
+            }).catch(e => console.log(e));
+            return true;
+        });
     } catch (error) {
         return error;
     }
