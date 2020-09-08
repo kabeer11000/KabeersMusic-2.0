@@ -4,7 +4,7 @@ import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
 import userid from "./userid";
 import {initAuth} from "./auth";
-//import fetch from "./fetchWithTimeOut";
+import fetch from "./fetchWithTimeOut";
 import Fuse from "fuse.js";
 
 const db_version = 10;
@@ -46,41 +46,60 @@ export function login() {
     }
 }
 
-export async function downloadSong(data = {videoId: null, rating: 0, title: '', channelTitle: '', tags: ''}) {
+export async function downloadSong(data = {
+    videoId: null,
+    rating: 0,
+    title: '',
+    channelTitle: '',
+    tags: '',
+    success: () => {
+    },
+    error: () => {
+    }
+}) {
     try {
         initAuth().then(async token => {
             console.log('Download Started');
             const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
-            const url = await fetch(endPoints.getProxyfiedURI(data.videoId), {
+            fetch(endPoints.getProxyfiedURI(data.videoId), {
                 headers: new Headers({
                     'Authorization': `Bearer ${token}`
                 })
-            }).then(value => value.json()).catch(e => e);
-            const [thumbnailBlob, songBlob] = await Promise.all([
-                fetchProxiedBlob(thumbURL),
-                fetchProxiedBlob(url)
-            ]);
-            db.songs.put({
-                id: data.videoId,
-                state: "downloaded",
-                thumbnail: thumbnailBlob,
-                blob: songBlob,
-                valid: true,
-                time: Date.now(),
-                videoId: data.videoId,
-                rating: data.rating,
-                tags: data.tags || [],
-                title: data.title,
-                channelTitle: data.channelTitle,
-                videoElement: data.videoElement
-            }).then((v) => {
-                console.log(v);
-            }).catch(e => console.log(e));
-            return true;
+            })
+                .then(value => value.json())
+                .then(async url => {
+
+                    const [thumbnailBlob, songBlob] = await Promise.all([
+                        fetchProxiedBlob(thumbURL),
+                        fetchProxiedBlob(url)
+                    ]);
+                    db.songs.put({
+                        id: data.videoId,
+                        state: "downloaded",
+                        thumbnail: thumbnailBlob,
+                        blob: songBlob,
+                        valid: true,
+                        time: Date.now(),
+                        videoId: data.videoId,
+                        rating: data.rating,
+                        tags: data.tags || [],
+                        title: data.title,
+                        channelTitle: data.channelTitle,
+                        videoElement: data.videoElement
+                    }).then((v) => {
+                        data.success();
+                    }).catch(e => {
+                        data.error();
+                    });
+                });
         });
     } catch (error) {
         return error;
     }
+}
+
+export async function deleteDownloadedSong(videoId) {
+    return await db.songs.delete(videoId);
 }
 
 export async function getBlob(key) {
@@ -94,7 +113,7 @@ export async function getSong(id) {
             headers: new Headers({
                 'Authorization': `Bearer ${token}`
             })
-        }).then(value => {
+        }, 5000).then(value => {
             if (!value.ok) return null;
             return value.json();
         }).catch(e => e);

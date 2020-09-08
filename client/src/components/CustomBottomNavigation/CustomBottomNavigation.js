@@ -9,13 +9,14 @@ import {Link} from "react-router-dom";
 import Slide from "@material-ui/core/Slide";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import * as PropTypes from "prop-types";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles({
     root: {
         width: '100%',
     },
 });
-const CustomBottomNavigation = () => {
+const CustomBottomNavigation = (props) => {
     const classes = useStyles();
     const [value, setValue] = React.useState('recents');
 
@@ -41,6 +42,9 @@ const CustomBottomNavigation = () => {
     return (
         <AppBar color="primary" style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}}
                 component={'div'}>
+            <div style={{zIndex: '99999'}} hidden={props.progress_hidden} className={'fixed-top'}>
+                <LinearProgress/>
+            </div>
             <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
                 <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/home'} label="Home"
                                         value="recents" icon={<Home/>}/>

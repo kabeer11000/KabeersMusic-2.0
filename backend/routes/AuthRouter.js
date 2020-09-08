@@ -44,7 +44,7 @@ router.get('/callback', function (req, res, next) {
                 expire: '2h',
                 exp: Date.now(),
                 token: response.data[0]['s564d68a34dCn9OuUNTZRfuaCnwc6'].access_token
-            }));
+            }), {maxAge: 7.2e+6});
             res.cookie('oauth_refresh_token', response.data[0]['s564d68a34dCn9OuUNTZRfuaCnwc6'].refresh_token, {maxAge: 8.64e+8,});
             //res.status(200).json({ expire: '2h', exp: Date.now(), token: response.data[0]['s564d68a34dCn9OuUNTZRfuaCnwc6'].access_token });
             res.redirect('/');

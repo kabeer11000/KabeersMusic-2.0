@@ -84,6 +84,7 @@ const HomeComponent = (props) => {
     );
 
     function PlaySong(data, index, list) {
+        props.misc.showBackdrop();
         getSong(typeof data.id === 'object' ? data.id.videoId : data.id).then(value => {
             if (value) {
                 //Avoid the Promise Error

@@ -18,15 +18,15 @@ import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
-import BackDropLoader from "./components/BackDropLoader/BackDropLoader.lazy";
 import "swiped-events";
 import Liked from "./components/Liked/Liked.lazy";
 import 'bootstrap/dist/css/bootstrap-utilities.css';
+import {DialogProvider} from 'muibox';
 
 const App = () => {
     const [darkState, setDarkState] = React.useState(localStorage.getItem('darkmode') === null ? false : JSON.parse(localStorage.getItem('darkmode')));
     const [Player__, SetPlayer] = React.useState(true);
-    const [backdrop, SetBackdrop] = React.useState(false);
+    const [backdrop, SetBackdrop] = React.useState(true);
     const palletType = darkState ? "dark" : "light";
     const colors = {
         primary: {
@@ -85,6 +85,7 @@ const App = () => {
             }, {list: state.list, index: state.index}));
             SetPlayer(true);
             SetPlayer(false);
+            SetBackdrop(true);
         } catch (e) {
             console.log(e);
         }
@@ -92,11 +93,11 @@ const App = () => {
 
     const misc_functions = {
         hideBackdrop() {
-            SetBackdrop(false);
+            SetBackdrop(true);
         },
         showBackdrop() {
-            SetBackdrop(true)
-        }
+            SetBackdrop(false)
+        },
     };
 
 
@@ -104,41 +105,45 @@ const App = () => {
         <Provider store={store}>
             <MuiThemeProvider theme={darkTheme}>
                 <Router>
-                    <SnackbarProvider maxSnack={1}>
-                        <CssBaseline/>
-                        <div className="App">
-                            <DrawerComponent>
-                                <Route exact={true} path={['/', '/home', '/search', '/downloads', '/history', '/liked']}
-                                       render={() => (
-                                           <React.Fragment>
-                                               <CustomAppBar/>
-                                               <BackDropLoader hidden={backdrop}/>
-                                           </React.Fragment>
-                                       )}/>
-                                <Player misc_func={misc_functions} hidden={Player__} changes={changeStates}/>
-                                <MiniPlayer hidden={Player__}/>
-                                <Route exact={true} path={'/home'}
-                                       render={() => <HomeComponent appState={changeStates}/>}/>
-                                <Route exact={true} path={'/downloads'}
-                                       render={() => <Downloads appState={changeStates}/>}/>
-                                <Route exact={true} path={'/search'} component={SearchComponent}/>
-                                <Route exact={true} path={'/liked'} component={Liked}/>
-                                <Route exact={true} path={'/settings'} render={() => {
-                                    let audio = document.getElementById('MainAudio-KabeersMusic');
-                                    if (!audio.paused) audio.pause();
-                                    return <Settings handleTheme={handleThemeChange}/>
-                                }}/>
-                                <Route exact={true} path={'/history'} component={HistoryComponent}/>
-                                <Route exact={true} path={'/*'} render={() => {
-                                    return <Redirect to={'/home'}/>
-                                }}/>
-                                <Route exact={true} path={'/search/results'} render={() => {
-                                    return <SearchResultComponent appState={changeStates}/>
-                                }}/>
-                                <CustomBottomNavigation/>
-                            </DrawerComponent>
-                        </div>
-                    </SnackbarProvider>
+                    <DialogProvider>
+                        <SnackbarProvider maxSnack={1}>
+                            <CssBaseline/>
+                            <div className="App">
+                                <DrawerComponent>
+                                    <Route exact={true}
+                                           path={['/', '/home', '/search', '/downloads', '/history', '/liked']}
+                                           render={() => (
+                                               <React.Fragment>
+                                                   <CustomAppBar/>
+                                                   {/*<BackDropLoader hidden={backdrop}/>*/}
+                                               </React.Fragment>
+                                           )}/>
+                                    <Player misc_func={misc_functions} hidden={Player__} changes={changeStates}/>
+                                    <MiniPlayer hidden={Player__}/>
+                                    <Route exact={true} path={'/home'}
+                                           render={() => <HomeComponent misc={misc_functions}
+                                                                        appState={changeStates}/>}/>
+                                    <Route exact={true} path={'/downloads'}
+                                           render={() => <Downloads appState={changeStates}/>}/>
+                                    <Route exact={true} path={'/search'} component={SearchComponent}/>
+                                    <Route exact={true} path={'/liked'} component={Liked}/>
+                                    <Route exact={true} path={'/settings'} render={() => {
+                                        let audio = document.getElementById('MainAudio-KabeersMusic');
+                                        if (!audio.paused) audio.pause();
+                                        return <Settings handleTheme={handleThemeChange}/>
+                                    }}/>
+                                    <Route exact={true} path={'/history'} component={HistoryComponent}/>
+                                    <Route exact={true} path={'/*'} render={() => {
+                                        return <Redirect to={'/home'}/>
+                                    }}/>
+                                    <Route exact={true} path={'/search/results'} render={() => {
+                                        return <SearchResultComponent appState={changeStates}/>
+                                    }}/>
+                                    <CustomBottomNavigation progress_hidden={backdrop}/>
+                                </DrawerComponent>
+                            </div>
+                        </SnackbarProvider>
+                    </DialogProvider>
                 </Router>
             </MuiThemeProvider>
         </Provider>

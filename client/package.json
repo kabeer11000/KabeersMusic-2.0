@@ -13,6 +13,7 @@
     "dexie": "^3.0.2",
     "fuse.js": "^6.4.1",
     "mui-feedback-dialog": "^1.2.0",
+    "muibox": "^1.4.1",
     "notistack": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

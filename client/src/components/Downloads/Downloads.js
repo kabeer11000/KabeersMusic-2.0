@@ -3,9 +3,11 @@ import './Downloads.css';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import {getAllDownloadedSongs, getSongFromStorage} from "../../functions/songs";
+import {deleteDownloadedSong, getAllDownloadedSongs, getSongFromStorage} from "../../functions/songs";
 import DownloadListItem from "./DownloadListItem";
 import Container from "@material-ui/core/Container";
+import {Avatar} from "@material-ui/core";
+import {useDialog} from "muibox";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const Downloads = (props) => {
     const classes = useStyles();
     const [HistoryItems, setHistoryItems] = React.useState(<></>);
+    const dialog = useDialog();
 
     function PlaySong(data, index) {
         let videoID = '';
@@ -43,13 +46,40 @@ const Downloads = (props) => {
         });
     }
 
+    async function deleteDownload(data) {
+        const config = {
+            title: (
+                <div className={'k-dialog-body-title text-truncate'}>Delete From Downloads</div>) || 'Nothing Here!',
+            message: (<div className={'k-dialog-body-inner'}>
+                <div className={'d-flex justify-content-center mb-3'}>
+                    <Avatar src={data.thumbnail} alt={'Song Thumbnail'}/>
+                </div>
+                Do You want to delete {data.title} from downloads?
+                <br/>
+            </div>) || 'Nothing Here!',
+        };
+        dialog.confirm(config)
+            .then(() => {
+                deleteDownloadedSong(data.id).then(() => {
+                    createList();
+                    // enqueueSnackbar('Deleted From Downloads');
+                })
+            })
+            .catch(() => {
+            });
+    }
+
     function createList() {
         getAllDownloadedSongs().then(value => {
             setHistoryItems(() => {
                 const listItems = value.map((v, i) => {
                     const thumbnail = URL.createObjectURL(v.thumbnail);
                     // const songURL = URL.createObjectURL(v.blob);
-                    return <DownloadListItem onClick={() => {
+                    return <DownloadListItem onMouseLeave={
+                        () => {
+                            deleteDownload({id: v.id, thumbnail: thumbnail, title: v.title})
+                        }
+                    } onClick={() => {
                         PlaySong(v, i);
                     }} className={'text-truncate'} key={i} title={v.title} channelTitle={v.channelTitle}
                                              thumbnail={thumbnail} tags={v.tags}/>;

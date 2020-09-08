@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import "./Player.css";
-import {AppBar, Dialog, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, Avatar, CircularProgress, Dialog, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
 import {ArrowBack, Done, GetApp, Loop, Pause, PlayCircleOutline, SkipNext, SkipPrevious} from "@material-ui/icons";
-import {downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
+import {deleteDownloadedSong, downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
 import CustomSlider from "./CustomSlider";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import store from "../../Redux/store/store";
@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import {useSnackbar} from "notistack";
 import ComingNext from "./ComingNext/ComingNext";
 import {saveHistoryToServer} from "../../functions/Helper/history";
+import {useDialog} from 'muibox'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -17,7 +18,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const Player = (props) => {
     if (props.hidden) return null;
-
+    const dialog = useDialog();
     const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
     const [button, setButton] = React.useState(<IconButton color={'#60B18A'} colorSecondary={'#60B18A'}
                                                            onClick={pauseAudio}><Pause color={'#fff'}/></IconButton>);
@@ -32,7 +33,7 @@ const Player = (props) => {
                                                                      }}
                                                                      style={{backgroundColor: "primary.player.invertButtons.invert"}}><Loop/></IconButton>)
                                                              }}><Loop/></IconButton>);
-    const audioElement = props.audioElement;
+    const audioElement = props.audioElement;//deleteDownload
     const [downloadButton, setDownloadButton] = React.useState(<div/>);
     const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 
@@ -72,9 +73,10 @@ const Player = (props) => {
     }
 
     function downloadAudio() {
+        if (!navigator.onLine) return enqueueSnackbar('No Connection, Download Failed');
         let videoID = '';
         if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
-        if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
+        else if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
 
         downloadSong({
             videoId: videoID,
@@ -82,11 +84,20 @@ const Player = (props) => {
             title: props.videoElement.snippet.title,
             channelTitle: props.videoElement.snippet.channelTitle,
             tags: props.videoElement.snippet.tags,
-            videoElement: props.videoElement
-        }).then(() => {
-            enqueueSnackbar('Download Complete');
+            videoElement: props.videoElement,
+            success: () => {
+                //enqueueSnackbar('Download Complete');
+                setDownloadButton(<IconButton onClick={deleteDownload}><Done/></IconButton>)
+            },
+            error: () => {
+                enqueueSnackbar('Download Failed');
+                setDownloadButton(<IconButton onClick={downloadAudio}><GetApp/></IconButton>)
+            }
         });
-        enqueueSnackbar('Download Started');
+        // enqueueSnackbar('Download Started');
+        setDownloadButton(<IconButton onClick={deleteDownload}
+                                      style={{width: '2rem!important', height: '2rem!important'}}><CircularProgress
+            color={"primary.light"}/></IconButton>)
     }
 
     function pauseAudio() {
@@ -113,8 +124,8 @@ const Player = (props) => {
         if (!audioElement.paused) return;
         audioElement.play();
         addMediaSession({
-            artist: props.videoElement.channelTitle,
-            title: props.videoElement.title,
+            artist: props.videoElement.snippet.channelTitle,
+            title: props.videoElement.snippet.title,
             artwork: [{
                 src: props.videoElement.snippet.thumbnails.high.url,
                 sizes: '96x96',
@@ -129,7 +140,7 @@ const Player = (props) => {
         if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
 
         isOfflineAvailable(videoID).then((v) => {
-            setDownloadButton(v ? <IconButton><Done/></IconButton> :
+            setDownloadButton(v ? <IconButton onClick={deleteDownload}><Done/></IconButton> :
                 <IconButton onClick={downloadAudio}><GetApp/></IconButton>);
             console.log(v)
         });
@@ -159,6 +170,34 @@ const Player = (props) => {
             }
         });
     }
+
+    async function deleteDownload() {
+        const config = {
+            title: (
+                <div className={'k-dialog-body-title text-truncate'}>Delete From Downloads</div>) || 'Nothing Here!',
+            message: (<div className={'k-dialog-body-inner'}>
+                <div className={'d-flex justify-content-center mb-3'}>
+                    <Avatar src={props.videoElement.snippet.thumbnails.high.url} alt={'Song Thumbnail'}/>
+                </div>
+
+                Do You want to delete {props.videoElement.snippet.title} from downloads?
+                <br/>
+            </div>) || 'Nothing Here!',
+        };
+        dialog.confirm(config)
+            .then(() => {
+                let videoID = '';
+                if (typeof props.videoElement.id === 'object') videoID = props.videoElement.id.videoId;
+                if (typeof props.videoElement.id === 'string') videoID = props.videoElement.id;
+                deleteDownloadedSong(videoID).then(() => {
+                    setDownloadButton(<IconButton onClick={downloadAudio}><GetApp/></IconButton>);
+                    // enqueueSnackbar('Deleted From Downloads');
+                })
+            })
+            .catch(() => {
+            });
+    }
+
     return (
         <div className="Player">
             <div className={'container'}>
@@ -177,6 +216,13 @@ const Player = (props) => {
                             <div style={{flex: '1 1 auto'}}/>
                             {downloadButton}
                         </Toolbar>
+                        {
+                            /*
+                        <div style={{zIndex:'99999'}} hidden={false} className={'fixed-top'}>
+                            <LinearProgress variant={"buffer"} value={audioElement.currentTime} valueBuffer={audioElement.buffered}/>
+                        </div>
+                            */
+                        }
                     </AppBar>
                     <div style={{backgroundColor: 'primary.dark', height: '100%', width: '100%'}}>
                         <div
