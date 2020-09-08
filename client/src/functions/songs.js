@@ -26,20 +26,21 @@ db.version(db_version).stores({
     songs:
         "id, &videoId, valid, time, rating, blob, state, thumbnail"
 });
-const historydb = new Dexie('KabeersMusic_History');
+const historydb = new Dexie("KabeersMusic_History");
 historydb.version(db_version).stores({
     songs:
         "id, time, rating, thumbnail, channelTitle, title, tags"
 });
 
 export function login() {
-    const tokens = localStorage.getItem('tokens');
+    const tokens = localStorage.getItem("tokens");
     if (!tokens) {
         const info = {
-            clientId: 'S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD',
-            scopes: ['s564d68a34dCn9OuUNTZRfuaCnwc6:feed', 's564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite'].join('|'),
-            callback: encodeURI('http://localhost:3000/auth/callback')
+            clientId: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
+            scopes: ["s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|"),
+            callback: encodeURI("http://localhost:3000/auth/callback")
         };
+        // eslint-disable-next-line no-unused-vars
         const authUrl = `https://kabeers-auth.herokuapp.com/auth/authorize?client_id=${info.clientId}&scope=${info.scopes}&response_type=code&redirect_uri=${info.callback}&state=L8eEgLQZ&nonce=saPP_xyt&prompt=none`;
 
 
@@ -49,9 +50,9 @@ export function login() {
 export async function downloadSong(data = {
     videoId: null,
     rating: 0,
-    title: '',
-    channelTitle: '',
-    tags: '',
+    title: "",
+    channelTitle: "",
+    tags: "",
     success: () => {
     },
     error: () => {
@@ -59,11 +60,11 @@ export async function downloadSong(data = {
 }) {
     try {
         initAuth().then(async token => {
-            console.log('Download Started');
+            console.log("Download Started");
             const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
             fetch(endPoints.getProxyfiedURI(data.videoId), {
                 headers: new Headers({
-                    'Authorization': `Bearer ${token}`
+                    "Authorization": `Bearer ${token}`
                 })
             })
                 .then(value => value.json())
@@ -108,10 +109,10 @@ export async function getBlob(key) {
 
 export async function getSong(id) {
     return initAuth().then(token => {
-        if (!navigator.onLine) return new Error('No Connection');
+        if (!navigator.onLine) return new Error("No Connection");
         return fetch(endPoints.getProxyfiedURI(id), {
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                "Authorization": `Bearer ${token}`
             })
         }, 5000).then(value => {
             if (!value.ok) return null;
@@ -151,7 +152,7 @@ export async function getSongFromStorage(id) {
     return initAuth().then(token => {
         fetch(endPoints.getProxyfiedURI(id), {
             headers: new Headers({
-                'Authorization': `Bearer ${token}`
+                "Authorization": `Bearer ${token}`
             })
         }).then(value => {
             if (!value.ok) return null;
@@ -168,7 +169,7 @@ export async function getFeed() {
     return initAuth().then(token => {
         fetch(endPoints.getFeed(userid), {
             headers: {
-                'Authorization': `Bearer ${token}`
+                "Authorization": `Bearer ${token}`
             }
         }).then(value => value.json()).catch(err => err);
     });
@@ -183,14 +184,14 @@ const options = {
     useExtendedSearch: true,
     findAllMatches: true,
     keys: [
-        'title',
-        'channelTitle',
+        "title",
+        "channelTitle",
         {
-            name: 'title',
+            name: "title",
             weight: 1.5
         },
         {
-            name: 'channelTitle',
+            name: "channelTitle",
             weight: 1.0
         },
     ]
@@ -203,7 +204,7 @@ export async function SuggestOfflineSongs(s) {
     return search_data.fuse.search(s);
 }
 
-console.log('%20 SongJS Loaded');
+console.log("%20 SongJS Loaded");
 //downloadSong({rating: 0, videoId:'iYKXdt0LRs8'});
 
 
@@ -287,7 +288,7 @@ export async function saveToHistory(object) {
 }
 
 export async function createdbifnotexists() {
-    const historydb = new Dexie('KabeersMusic_History');
+    const historydb = new Dexie("KabeersMusic_History");
     historydb.version(db_version).stores({
         songs:
             "id, time, rating, thumbnail, channelTitle, title, tags"

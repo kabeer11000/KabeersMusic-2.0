@@ -1,5 +1,5 @@
-import React from 'react';
-import './CustomBottomNavigation.css';
+import React from "react";
+import "./CustomBottomNavigation.css";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import {Favorite, GetApp, History, Home} from "@material-ui/icons";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -13,12 +13,12 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles({
     root: {
-        width: '100%',
+        width: "100%",
     },
 });
 const CustomBottomNavigation = (props) => {
     const classes = useStyles();
-    const [value, setValue] = React.useState('recents');
+    const [value, setValue] = React.useState("recents");
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -40,21 +40,21 @@ const CustomBottomNavigation = (props) => {
     };
 
     return (
-        <AppBar color="primary" style={{position: 'fixed', top: "auto", bottom: 0, width: '100%',}}
-                component={'div'}>
-            <div style={{zIndex: '99999'}} hidden={props.progress_hidden} className={'fixed-top'}>
+        <AppBar color="primary" style={{position: "fixed", top: "auto", bottom: 0, width: "100%",}}
+                component={"div"}>
+            <div style={{zIndex: "99999"}} hidden={props.progress_hidden} className={"fixed-top"}>
                 <LinearProgress/>
             </div>
             <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
-                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/home'} label="Home"
+                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/home"} label="Home"
                                         value="recents" icon={<Home/>}/>
-                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/downloads'}
+                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/downloads"}
                                         label="Downloads" value="downloads"
                                         icon={<GetApp/>}/>
-                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/history'}
+                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/history"}
                                         label="History" value="history"
                                         icon={<History/>}/>
-                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={'/liked'}
+                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/liked"}
                                         label="Liked" value="favorites"
                                         icon={<Favorite/>}/>
             </BottomNavigation>
@@ -62,7 +62,9 @@ const CustomBottomNavigation = (props) => {
     );
 };
 
-CustomBottomNavigation.propTypes = {};
+CustomBottomNavigation.propTypes = {
+    progress_hidden: PropTypes.bool
+};
 
 CustomBottomNavigation.defaultProps = {};
 
