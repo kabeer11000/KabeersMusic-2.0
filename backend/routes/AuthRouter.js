@@ -59,7 +59,7 @@ router.get('/redirect', (req, res) => {
     const info = {
         clientId: 'S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD',
         scopes: ['s564d68a34dCn9OuUNTZRfuaCnwc6:feed', 's564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite'].join('|'),
-        callback: encodeURI(endPoints.callbackURLFAKE)
+        callback: encodeURI(endPoints.callbackURL)
     };
     const id = makeid(10);
     req.session.state = id;

@@ -18,10 +18,11 @@ import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
-import "swiped-events";
+//import "swiped-events";
 import Liked from "./components/Liked/Liked.lazy";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import {DialogProvider} from "muibox";
+import endPoints from "./api/endpoints/endpoints";
 
 const App = () => {
 	const [darkState, setDarkState] = React.useState(localStorage.getItem("darkmode") === null ? false : JSON.parse(localStorage.getItem("darkmode")));
@@ -80,7 +81,7 @@ const App = () => {
 			audio.pause();
 			audio.src = "";
 			state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
-			audio.src = state.uri;
+			audio.src = endPoints.proxyURI(state.uri);
 			store.dispatch(setCurrentSongState(audio, state.video, {Dialog: !0, MiniPlayer: !1}, () => {
 			}, {list: state.list, index: state.index}));
 			SetPlayer(true);

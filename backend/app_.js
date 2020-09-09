@@ -14,7 +14,7 @@ const limiter = rateLimit({
 });
 
 //  apply to all requests
-app.use('/api/', limiter);
+// app.use('/api/', limiter);
 
 var allowedOrigins = ['http://localhost:3000',
     'https://ylight.xyz'];

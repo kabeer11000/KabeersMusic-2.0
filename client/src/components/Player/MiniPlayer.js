@@ -50,6 +50,7 @@ const MiniPlayer = (props) => {
         // Search Yt for artist name
         // Show Because You Listened to travis scott
 
+        /*
         const Mounted = true;
         if (!Mounted) return null;
         document.addEventListener('swiped-up', function (e) {
@@ -63,6 +64,7 @@ const MiniPlayer = (props) => {
                 store.getState().currentSong.reOpenDialog();
             }
         });
+         */
     });
 
     if (!ComponentStates.dialog && ComponentStates.MiniPlayer && audioElement !== null || '' || undefined) {
