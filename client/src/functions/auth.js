@@ -26,7 +26,7 @@ const cookies = {
 };
 
 export async function initAuth() {
-    let token = cookies.getCookie('token');
+    let token = cookies.getCookie("token");
     if (!token) return window.location.href = endPoints.authRedirect;
     token = JSON.parse(token);
     if (Math.floor(((Date.now() - token.exp) / 1000) / 60) > 30) { // Half Hour
@@ -34,3 +34,8 @@ export async function initAuth() {
     } // Expired
     return token.token; // Return Token
 }
+
+//export async function initAuth() {
+//     let a = cookies.getCookie("token");
+//     return a ? ((a = JSON.parse(a)), 30 < Math.floor((Date.now() - a.exp) / 1e3 / 60) ? await fetch(endPoints.refreshToken, {}, 5e3).then((a) => (a.ok ? a.json() : null)) : a.token) : (window.location.href = endPoints.authRedirect);
+// }

@@ -12,6 +12,7 @@ import ComingNext from "./ComingNext/ComingNext";
 import {saveHistoryToServer} from "../../functions/Helper/history";
 import {useDialog} from "muibox";
 import PropTypes from "prop-types";
+import addMediaSession from "../../functions/Helper/addMediaSession";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -67,20 +68,11 @@ const Player = (props) => {
 		});
 	}
 
-	function playAudio() {
-		audioElement.play();
-		setButton(<IconButton onClick={pauseAudio}><Pause
-			color={"#fff"}/></IconButton>);
-	}
 
 	function downloadAudio() {
 		if (!navigator.onLine) return enqueueSnackbar("No Connection, Download Failed");
-		let videoID = "";
-		if (typeof props.videoElement.id === "object") videoID = props.videoElement.id.videoId;
-		else if (typeof props.videoElement.id === "string") videoID = props.videoElement.id;
-
 		downloadSong({
-			videoId: videoID,
+			videoId: "object" == typeof props.videoElement.id ? props.videoElement.id.videoId : "string" == typeof props.videoElement.id && (props.videoElement.id),
 			rating: 0,
 			title: props.videoElement.snippet.title,
 			channelTitle: props.videoElement.snippet.channelTitle,
@@ -96,9 +88,14 @@ const Player = (props) => {
 			}
 		});
 		// enqueueSnackbar('Download Started');
-		setDownloadButton(<IconButton onClick={deleteDownload}
-									  style={{width: "2rem!important", height: "2rem!important"}}><CircularProgress
+		setDownloadButton(<IconButton onClick={deleteDownload}><CircularProgress
 			color={"primary.light"}/></IconButton>);
+	}
+
+	function playAudio() {
+		audioElement.play();
+		setButton(<IconButton onClick={pauseAudio}><Pause
+			color={"#fff"}/></IconButton>);
 	}
 
 	function pauseAudio() {
@@ -107,44 +104,32 @@ const Player = (props) => {
 			color={"#fff"}/></IconButton>);
 	}
 
-	function addMediaSession(data) {
-		if ("mediaSession" in navigator) {
-			navigator.mediaSession.metadata = new window.MediaMetadata({
-				title: data.title,
-				artist: data.artist,
-				album: data.album,
-				artwork: data.artwork
-			});
-			navigator.mediaSession.setActionHandler("play", playAudio);
-			navigator.mediaSession.setActionHandler("pause", pauseAudio);
-		}
-	}
-
 
 	useEffect(() => {
-		if (!audioElement.paused) return;
-		audioElement.play();
-		addMediaSession({
-			artist: props.videoElement.snippet.channelTitle,
-			title: props.videoElement.snippet.title,
-			artwork: [{
-				src: props.videoElement.snippet.thumbnails.high.url,
-				sizes: "96x96",
-				type: "image/png"
-			}]
-		});
-		addToHistory();
-		saveHistoryToServer(props.videoElement);
-		addToReduxState([true, false]);
+		addToHistory()
+			.then(saveHistoryToServer(props.videoElement))
+			.then(addToReduxState([true, false]))
+			.then(() => {
+				audioElement.play();
+				addMediaSession({
+					artist: props.videoElement.snippet.channelTitle,
+					title: props.videoElement.snippet.title,
+					artwork: [{
+						src: props.videoElement.snippet.thumbnails.high.url,
+						sizes: "96x96",
+						type: "image/png"
+					}]
+				}, {playAudio: playAudio, pauseAudio: pauseAudio}, audioElement);
+			});
 		let videoID = "";
-		if (typeof props.videoElement.id === "object") videoID = props.videoElement.id.videoId;
-		if (typeof props.videoElement.id === "string") videoID = props.videoElement.id;
+		"object" === typeof props.videoElement.id && (videoID = props.videoElement.id.videoId);
+		"string" === typeof props.videoElement.id && (videoID = props.videoElement.id);
 
 		isOfflineAvailable(videoID).then((v) => {
 			setDownloadButton(v ? <IconButton onClick={deleteDownload}><Done/></IconButton> :
 				<IconButton onClick={downloadAudio}><GetApp/></IconButton>);
-			console.log(v);
 		});
+
 	}, []);
 
 	function SkipSong(data) {

@@ -2,123 +2,125 @@ import Dexie from "dexie";
 //import "dexie-observable";
 import {fetchProxiedBlob} from "./getBlob";
 import endPoints from "../api/endpoints/endpoints";
-import userid from "./userid";
 import {initAuth} from "./auth";
 import fetch from "./fetchWithTimeOut";
 import Fuse from "fuse.js";
+import {dictionary} from "./Worker/dict";
+import {work} from "worka";
+
 
 const db_version = 10;
 
 function uniqid(a = "", b = false) {
-    const c = Date.now() / 1000;
-    let d = c.toString(16).split(".").join("");
-    while (d.length < 14) d += "0";
-    let e = "";
-    if (b) {
-        e = ".";
-        e += Math.round(Math.random() * 100000000);
-    }
-    return a + d + e;
+	const c = Date.now() / 1000;
+	let d = c.toString(16).split(".").join("");
+	while (d.length < 14) d += "0";
+	let e = "";
+	if (b) {
+		e = ".";
+		e += Math.round(Math.random() * 100000000);
+	}
+	return a + d + e;
 }
 
 export const db = new Dexie("KabeersMusic_Songs");
 db.version(db_version).stores({
-    songs:
-        "id, &videoId, valid, time, rating, blob, state, thumbnail"
+	songs:
+		"id, &videoId, valid, time, rating, blob, state, thumbnail"
 });
 const historydb = new Dexie("KabeersMusic_History");
 historydb.version(db_version).stores({
-    songs:
-        "id, time, rating, thumbnail, channelTitle, title, tags"
+	songs:
+		"id, time, rating, thumbnail, channelTitle, title, tags"
 });
 
 export function login() {
-    const tokens = localStorage.getItem("tokens");
-    if (!tokens) {
-        const info = {
-            clientId: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
-            scopes: ["s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|"),
-            callback: encodeURI("http://localhost:3000/auth/callback")
-        };
-        // eslint-disable-next-line no-unused-vars
-        const authUrl = `https://kabeers-auth.herokuapp.com/auth/authorize?client_id=${info.clientId}&scope=${info.scopes}&response_type=code&redirect_uri=${info.callback}&state=L8eEgLQZ&nonce=saPP_xyt&prompt=none`;
+	const tokens = localStorage.getItem("tokens");
+	if (!tokens) {
+		const info = {
+			clientId: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
+			scopes: ["s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|"),
+			callback: encodeURI("http://localhost:3000/auth/callback")
+		};
+		// eslint-disable-next-line no-unused-vars
+		const authUrl = `https://kabeers-auth.herokuapp.com/auth/authorize?client_id=${info.clientId}&scope=${info.scopes}&response_type=code&redirect_uri=${info.callback}&state=L8eEgLQZ&nonce=saPP_xyt&prompt=none`;
 
 
-    }
+	}
 }
 
 export async function downloadSong(data = {
-    videoId: null,
-    rating: 0,
-    title: "",
-    channelTitle: "",
-    tags: "",
-    success: () => {
-    },
-    error: () => {
-    }
+	videoId: null,
+	rating: 0,
+	title: "",
+	channelTitle: "",
+	tags: "",
+	success: () => {
+	},
+	error: () => {
+	}
 }) {
-    try {
-        initAuth().then(async token => {
-            console.log("Download Started");
-            const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
-            fetch(endPoints.getProxyfiedURI(data.videoId), {
-                headers: new Headers({
-                    "Authorization": `Bearer ${token}`
-                })
-            })
-                .then(value => value.json())
-                .then(async url => {
+	try {
+		initAuth().then(async token => {
+			console.log("Download Started");
+			const thumbURL = `https://i.ytimg.com/vi/${data.videoId}/hqdefault.jpg`;
+			fetch(endPoints.getProxyfiedURI(data.videoId), {
+				headers: new Headers({
+					"Authorization": `Bearer ${token}`
+				})
+			})
+				.then(value => value.json())
+				.then(async url => {
 
-                    const [thumbnailBlob, songBlob] = await Promise.all([
-                        fetchProxiedBlob(thumbURL),
-                        fetchProxiedBlob(url)
-                    ]);
-                    db.songs.put({
-                        id: data.videoId,
-                        state: "downloaded",
-                        thumbnail: thumbnailBlob,
-                        blob: songBlob,
-                        valid: true,
-                        time: Date.now(),
-                        videoId: data.videoId,
-                        rating: data.rating,
-                        tags: data.tags || [],
-                        title: data.title,
-                        channelTitle: data.channelTitle,
-                        videoElement: data.videoElement
-                    }).then((v) => {
-                        data.success();
-                    }).catch(e => {
-                        data.error();
-                    });
-                });
-        });
-    } catch (error) {
-        return error;
-    }
+					const [thumbnailBlob, songBlob] = await Promise.all([
+						fetchProxiedBlob(thumbURL),
+						fetchProxiedBlob(url)
+					]);
+					db.songs.put({
+						id: data.videoId,
+						state: "downloaded",
+						thumbnail: thumbnailBlob,
+						blob: songBlob,
+						valid: true,
+						time: Date.now(),
+						videoId: data.videoId,
+						rating: data.rating,
+						tags: data.tags || [],
+						title: data.title,
+						channelTitle: data.channelTitle,
+						videoElement: data.videoElement
+					}).then((v) => {
+						data.success();
+					}).catch(e => {
+						data.error();
+					});
+				});
+		});
+	} catch (error) {
+		return error;
+	}
 }
 
 export async function deleteDownloadedSong(videoId) {
-    return await db.songs.delete(videoId);
+	return await db.songs.delete(videoId);
 }
 
 export async function getBlob(key) {
-    return await db.songs.get(key);
+	return await db.songs.get(key);
 }
 
 export async function getSong(id) {
-    return initAuth().then(token => {
-        if (!navigator.onLine) return new Error("No Connection");
-        return fetch(endPoints.getProxyfiedURI(id), {
-            headers: new Headers({
-                "Authorization": `Bearer ${token}`
-            })
-        }, 5000).then(value => {
-            if (!value.ok) return null;
-            return value.json();
-        }).catch(e => e);
-    });
+	return initAuth().then(token => {
+		if (!navigator.onLine) return new Error("No Connection");
+		return fetch(endPoints.getProxyfiedURI(id), {
+			headers: new Headers({
+				"Authorization": `Bearer ${token}`
+			})
+		}, 10000).then(value => {
+			if (!value.ok) return null;
+			return value.json();
+		}).catch(e => e);
+	});
 }
 
 /*
@@ -145,63 +147,64 @@ initAuth().then(token => {
 */
 
 export async function getSongFromStorage(id) {
-    const
-        allSongs = await db.songs.toArray();
+	const
+		allSongs = await db.songs.toArray();
 
-    if (allSongs.some(value => value.id === id)) return allSongs.find(value => value.videoId === id);
-    return initAuth().then(token => {
-        fetch(endPoints.getProxyfiedURI(id), {
-            headers: new Headers({
-                "Authorization": `Bearer ${token}`
-            })
-        }).then(value => {
-            if (!value.ok) return null;
-            return value.json();
-        });
-    });
+	if (allSongs.some(value => value.id === id)) return allSongs.find(value => value.videoId === id);
+	return initAuth().then(token => {
+		fetch(endPoints.getProxyfiedURI(id), {
+			headers: new Headers({
+				"Authorization": `Bearer ${token}`
+			})
+		}).then(value => {
+			if (!value.ok) return null;
+			return value.json();
+		});
+	});
 }
 
 export async function getAllDownloadedSongs() {
-    return db.songs.toArray();
+	return db.songs.toArray();
 }
 
+/*
 export async function getFeed() {
-    return initAuth().then(token => {
-        fetch(endPoints.getFeed(userid), {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        }).then(value => value.json()).catch(err => err);
-    });
+	return initAuth().then(token => {
+		fetch(endPoints.getFeed(userid), {
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
+		}).then(value => value.json()).catch(err => err);
+	});
 }
-
+*/
 const search_data = {};
 const options = {
-    isCaseSensitive: false,
-    shouldSort: false,
-    threshold: 0.6,
-    ignoreLocation: true,
-    useExtendedSearch: true,
-    findAllMatches: true,
-    keys: [
-        "title",
-        "channelTitle",
-        {
-            name: "title",
-            weight: 1.5
-        },
-        {
-            name: "channelTitle",
-            weight: 1.0
-        },
-    ]
+	isCaseSensitive: false,
+	shouldSort: false,
+	threshold: 0.6,
+	ignoreLocation: true,
+	useExtendedSearch: true,
+	findAllMatches: true,
+	keys: [
+		"title",
+		"channelTitle",
+		{
+			name: "title",
+			weight: 1.5
+		},
+		{
+			name: "channelTitle",
+			weight: 1.0
+		},
+	]
 };
 db.songs.toArray().then(v => {
-    search_data.fuse = new Fuse(v, options);
+	search_data.fuse = new Fuse(v, options);
 });
 
 export async function SuggestOfflineSongs(s) {
-    return search_data.fuse.search(s);
+	return search_data.fuse.search(s);
 }
 
 console.log("%20 SongJS Loaded");
@@ -268,33 +271,49 @@ db.songs.put({videoId: "Porno", time: Date.now(), rating:0, valid:1, blob:new Bl
 
 */
 export async function isOfflineAvailable(videoId) {
-    let songs = await db.songs.toArray();
-    return songs && songs.some(song => song.id === videoId);
+	let songs = await db.songs.toArray();
+	return songs && songs.some(song => song.id === videoId);
 }
 
 
 export async function saveToHistory(object) {
-    historydb.songs.put({
-        id: uniqid() + uniqid(),
-        title: object.title,
-        channelTitle: object.ChannelTitle,
-        tags: object.tags,
-        thumbnail: object.thumbnail,
-        time: Date.now(),
-        rating: object.rating,
-    }).then((v) => {
-        console.log(v);
-    });
+	historydb.songs.put({
+		id: uniqid() + uniqid(),
+		title: object.title,
+		channelTitle: object.ChannelTitle,
+		tags: object.tags,
+		thumbnail: object.thumbnail,
+		time: Date.now(),
+		rating: object.rating,
+	}).then((v) => {
+		console.log(v);
+	});
 }
 
 export async function createdbifnotexists() {
-    const historydb = new Dexie("KabeersMusic_History");
-    historydb.version(db_version).stores({
-        songs:
-            "id, time, rating, thumbnail, channelTitle, title, tags"
-    });
+	const historydb = new Dexie("KabeersMusic_History");
+	historydb.version(db_version).stores({
+		songs:
+			"id, time, rating, thumbnail, channelTitle, title, tags"
+	});
 }
 
 export async function getHistory() {
-    return historydb.songs.toArray() || [];
+	return historydb.songs.toArray() || [];
+}
+
+export async function getFeed() {
+	return await work({
+		name: "MainWorker", input: {
+			method: dictionary.FETCH_DATA,
+			url: "https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/yt.json",
+			options: {
+				method: "GET",
+				headers: {
+					"Authorization": "Bearer file:///E:/Projects/phpstormprojects/music_react/backend/public/files/yt.json"
+				}
+			},
+			timeout: 5000,
+		}
+	});
 }

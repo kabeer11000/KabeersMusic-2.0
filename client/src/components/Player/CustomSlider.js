@@ -5,43 +5,44 @@ import {setCurrentSongState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
 
 const CustomSlider = (props) => {
-    if (!props.componentState.Dialog) return <></>;
-    const [scrubbing, setScrubbing] = React.useState(0);
+	if (!props.componentState.Dialog) return <></>;
+	const [scrubbing, setScrubbing] = React.useState(0);
 
-    useEffect(() => {
-        if (props.componentState.Dialog) {
-            setInterval(() => !props.audioElement.paused && props.componentState.Dialog ? setScrubbing(props.audioElement.currentTime) : null, 1000);
-        }
-    }, []);
+	useEffect(() => {
+		if (props.componentState.Dialog) {
+			setInterval(() => !props.audioElement.paused && props.componentState.Dialog ? setScrubbing(props.audioElement.currentTime) : null, 1000);
+		}
+	}, []);
 
-    async function handleScrubbing(v) {
-        if (isFinite(v)) {
-            setScrubbing(v);
-            props.audioElement.currentTime = v;
-            // Update Redux State
-            const store_state = store.getState().currentSong;
-            store.dispatch(setCurrentSongState(
-                props.audioElement,
-                store_state.videoElement,
-                store_state.componentState,
-                store_state.reOpenDialog,
-                store_state.playList));
+	async function handleScrubbing(v) {
+		if (isFinite(v)) {
+			setScrubbing(v);
+			props.audioElement.currentTime = v;
+			// Update Redux State
+			const store_state = store.getState().currentSong;
+			store.dispatch(setCurrentSongState(
+				props.audioElement,
+				store_state.videoElement,
+				store_state.componentState,
+				store_state.reOpenDialog,
+				store_state.playList));
 
-        }
-    }
+		}
+	}
 
-    return (<Slider
-        className={'container PlayerSlider'}
-        defaultValue={0}
-        value={scrubbing}
-        min={0.0}
-        color={'primary.player.slider'}
-        max={props.audioElement.duration}
-        onChange={async (v, x) => handleScrubbing(x)}
-    />);
+	return (<Slider
+		className={"container PlayerSlider"}
+		defaultValue={0}
+		value={scrubbing}
+		min={0.0}
+		color={"primary.player.slider"}
+		max={props.audioElement.duration}
+		onChange={async (v, x) => handleScrubbing(x)}
+	/>);
 };
+
 const mapStateToProps = state => ({
-    componentState: state.currentSong.componentState,
-    audioElement: state.currentSong.audioElement,
+	componentState: state.currentSong.componentState,
+	audioElement: state.currentSong.audioElement,
 });
 export default connect(mapStateToProps)(CustomSlider);

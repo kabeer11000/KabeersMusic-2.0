@@ -79,24 +79,24 @@ const MiniPlayer = (props) => {
                             props.reOpenDialog();
                             // Update Redux State
                             store.dispatch(setCurrentSongState(audioElement, videoElement, {
-                            Dialog: true,
-                            MiniPlayer: false
-                        }, props.reOpenDialog, props.playList));
-                        if (props.componentState.Dialog) {
-                            store.getState().currentSong.reOpenDialog();
-                        }
-                    }} className={'d-inline-flex'}>
-                        <img src={videoElement.snippet.thumbnails.high.url} style={{
-                            width: '4rem',
-                            height: '3rem',
-                            maxWidth: '5rem!important',
-                            maxHeight: '4rem!important'
-                        }}
-                             alt={'Song Image'} className={'KabeersMiniPlayerImage'}/>
-                        <Typography component={'span'} className={'text-truncate p-2 KabeersMiniPlayerText'}
-                                    color={'#000'} style={{
-                            width: '10em',
-                            color: 'primary.miniPlayer.text'
+                                Dialog: true,
+                                MiniPlayer: false
+                            }, props.reOpenDialog, props.playList));
+                            if (props.componentState.Dialog) store.getState().currentSong.reOpenDialog();
+                        }} className={"d-inline-flex"}>
+                            <img
+                                onError="this.onerror=null;this.src='http://docs-kabeersnetwork-kview-app-sta.rf.gd/Private/uploads/5f58af5918860unnamed.jpg';"
+                                src={videoElement.snippet.thumbnails.high.url} style={{
+                                width: "4rem",
+                                height: "3rem",
+                                maxWidth: "5rem!important",
+                                maxHeight: "4rem!important"
+                            }}
+                                alt={"Song Image"} className={"KabeersMiniPlayerImage"}/>
+                            <Typography component={"span"} className={"text-truncate p-2 KabeersMiniPlayerText"}
+                                        color={"#000"} style={{
+                                width: "10em",
+                                color: "primary.miniPlayer.text"
                         }}>{videoElement.snippet.title || 'Untitled'}
                         </Typography>
                         </div>
@@ -110,7 +110,7 @@ const MiniPlayer = (props) => {
             </Grow>
         );
     }
-    return (<></>)
+    return (<React.Fragment/>);
 };
 
 const mapStateToProps = state => ({
