@@ -50,3 +50,14 @@
     "defaultAudioLanguage": "en"
   }
 }
+
+"-----------------------------------------------"
+
+{
+  "id": "cb1cb94164a10fa702c09aa0f3e2fd3f8e77a73e",
+  "perms": {
+    "history.ReadWrite": true,
+    "deleteAccount": false
+  }
+}
+//["cb1cb94164a10fa702c09aa0f3e2fd3f8e77a73e", "cascb94164a10fa702c09aa0f3e2fd3f8e77a73e", "as4cb94164a10fa702c09aa0f3e2fd3f8e77a73e", "HlgpBwchUuns80ak3kYaEP8IOiDWxRXS840lnnmD", "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD"]

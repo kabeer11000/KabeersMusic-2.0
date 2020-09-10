@@ -41,7 +41,7 @@ const Downloads = (props) => {
                     video: data.videoElement,
                     list: {items: [data.videoElement]},
                     index: index
-                });
+                }, false);
             }
         });
     }

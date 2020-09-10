@@ -75,13 +75,13 @@ const App = () => {
 		localStorage.setItem("darkmode", JSON.stringify(!darkState));
 	};
 
-	async function changeStates(state) {
+	async function changeStates(state, proxy = true) {
 		const audio = document.getElementById("MainAudio-KabeersMusic");
 		try {
 			audio.pause();
 			audio.src = "";
 			state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
-			audio.src = endPoints.proxyURI(state.uri);
+			audio.src = proxy ? endPoints.proxyURI(state.uri) : state.uri;
 			store.dispatch(setCurrentSongState(audio, state.video, {Dialog: !0, MiniPlayer: !1}, () => {
 			}, {list: state.list, index: state.index}));
 			SetPlayer(true);
