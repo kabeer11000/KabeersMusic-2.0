@@ -12,8 +12,13 @@
     width: 100%;
 }
 
+
 @media only screen and (min-width: 768px) {
     .KabeersMiniPlayerContainer {
+        width: 50% !important;
+    }
+
+    .smallOnDesktop {
         width: 50% !important;
     }
 }
@@ -22,4 +27,12 @@
     .KabeersMiniPlayerContainer {
         width: 30% !important;
     }
+
+    .smallOnDesktop {
+        width: 30% !important;
+    }
+}
+
+.PlayerDialog {
+    backdrop-filter: blur(10px);
 }

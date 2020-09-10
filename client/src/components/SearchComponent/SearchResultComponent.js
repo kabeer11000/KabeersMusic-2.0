@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import './SearchComponent.css';
+import React, {useEffect} from "react";
+import "./SearchComponent.css";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,7 +15,7 @@ import {Link, useHistory} from "react-router-dom";
 import {connect} from "react-redux";
 import Avatar from "@material-ui/core/Avatar";
 import {getSong, getSongFromStorage, SuggestOfflineSongs} from "../../functions/songs";
-import {Button} from "@material-ui/core";
+import {Button, Slide} from "@material-ui/core";
 import SkeletonList from "../SkeletonList/SkeletonList";
 
 
@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
         margin: 4,
     },
 }));
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="left" ref={ref} {...props} />;
+});
+
 const SearchResultComponent = (props) => {
     let history = useHistory();
     const [open, setOpen] = React.useState(true);
@@ -46,8 +50,8 @@ const SearchResultComponent = (props) => {
     const [listItems, setListItems] = React.useState(<SkeletonList length={5}/>);
     const classes = useStyles();
 
-    const errorPage = (message = 'No Internet Connection', button = <Button component={Link}
-                                                                            to={'/search'}>Retry</Button>) => (
+    const errorPage = (message = "No Internet Connection", button = <Button component={Link}
+                                                                            to={"/search"}>Retry</Button>) => (
         <div className={'errorPage text-center'}
              style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
             <img src={'/./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}

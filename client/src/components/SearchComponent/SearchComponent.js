@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import './SearchComponent.css';
+import React, {useEffect} from "react";
+import "./SearchComponent.css";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,8 +17,11 @@ import {connect} from "react-redux";
 import {setQueryParams} from "../../Redux/actions/actions";
 import {SuggestOfflineSongs} from "../../functions/songs";
 import Preloader from "../Preloader/Preloader";
+import {Slide} from "@material-ui/core";
 
-//const {useRef} = require("react");
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="left" ref={ref} {...props} />;
+});
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -107,12 +110,12 @@ const SearchComponent = (props) => {
         return (
             <div className="SearchComponent">
                 <Dialog fullScreen open={open} onClose={() => {
-                }}>
+                }} TransitionComponent={Transition}>
                     <AppBar className={`fixed-top`}>
                         <Toolbar>
                             {window.history ? <IconButton onClick={() => {
                                 setOpen(false);
-                            }} component={Link} to={'/home'} color="primary.light" visibility={false}>
+                            }} component={Link} to={"/home"} color="primary.light" visibility={false}>
                                 <ArrowBack color="#FFF"/>
                             </IconButton> : <></>}
                             <InputBase

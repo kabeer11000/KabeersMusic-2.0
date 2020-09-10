@@ -50,6 +50,9 @@ const App = () => {
 				invertButtons: {
 					main: "#E14A58",
 					invert: "#FFFFFF"
+				},
+				volumeSlider: {
+					main: "#000"
 				}
 			}
 		},
@@ -59,14 +62,35 @@ const App = () => {
 			dark: darkState ? "#303030" : "#FFFFFF"
 		},
 		background: {},
+
 	};
 	const darkTheme = createMuiTheme({
 		palette: {
 			type: palletType,
 			...colors,
-			slider: {
-				trackColor: "yellow",
-				selectionColor: "red"
+			Slider: {
+				root: {
+					color: "#6f8eff",
+					height: 3,
+					padding: "13px 0",
+				},
+				track: {
+					height: 4,
+					borderRadius: 2,
+				},
+				thumb: {
+					height: 20,
+					width: 20,
+					backgroundColor: "#000",
+					border: "1px solid currentColor",
+					marginTop: -9,
+					marginLeft: -11,
+					boxShadow: "#ebebeb 0 2px 2px",
+					"&:focus, &:hover, &$active": {
+						boxShadow: "#ccc 0 2px 3px 1px",
+					},
+					color: "#000",
+				}
 			}
 		}
 	});

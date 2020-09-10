@@ -1,7 +1,21 @@
 import React, {useEffect} from "react";
 import "./Player.css";
 import {AppBar, Avatar, CircularProgress, Dialog, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
-import {ArrowBack, Done, GetApp, Loop, Pause, PlayCircleOutline, SkipNext, SkipPrevious} from "@material-ui/icons";
+import {
+	ArrowBack,
+	Done,
+	GetApp,
+	Loop,
+	Pause,
+	PlayCircleOutline,
+	Repeat,
+	RepeatOne,
+	SkipNext,
+	SkipPrevious,
+	Toc,
+	VolumeDown,
+	VolumeUp
+} from "@material-ui/icons";
 import {deleteDownloadedSong, downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
 import CustomSlider from "./CustomSlider";
 import {setCurrentSongState} from "../../Redux/actions/actions";
@@ -9,10 +23,13 @@ import store from "../../Redux/store/store";
 import {connect} from "react-redux";
 import {useSnackbar} from "notistack";
 import ComingNext from "./ComingNext/ComingNext";
-import {saveHistoryToServer} from "../../functions/Helper/history";
 import {useDialog} from "muibox";
 import PropTypes from "prop-types";
 import addMediaSession from "../../functions/Helper/addMediaSession";
+import CustomVolumeSlider from "./CustomVolumeSlider";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
+import Grow from "@material-ui/core/Grow";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -23,7 +40,7 @@ const Player = (props) => {
 	const dialog = useDialog();
 	const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
 	const [button, setButton] = React.useState(<IconButton color={"#60B18A"} colorSecondary={"#60B18A"}
-														   onClick={pauseAudio}><Pause color={"#fff"}/></IconButton>);
+														   onClick={pauseAudio}><Pause/></IconButton>);
 	const [looping, setLooping] = React.useState(<IconButton color={"primary.player.invertButtons.main"}
 															 style={{backgroundColor: "primary.player.invertButtons.main"}}
 															 onClick={() => {
@@ -35,9 +52,10 @@ const Player = (props) => {
 																	 }}
 																	 style={{backgroundColor: "primary.player.invertButtons.invert"}}><Loop/></IconButton>);
 															 }}><Loop/></IconButton>);
-	const audioElement = props.audioElement;//deleteDownload
+	const audioElement = props.audioElement; //deleteDownload
 	const [downloadButton, setDownloadButton] = React.useState(<div/>);
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const [PlayList, setPlayList] = React.useState(false);
 
 	const handleClose = () => {
 		addToReduxState([false, true]);
@@ -84,30 +102,28 @@ const Player = (props) => {
 			},
 			error: () => {
 				enqueueSnackbar("Download Failed");
-				setDownloadButton(<IconButton onClick={downloadAudio}><GetApp/></IconButton>);
+				setDownloadButton(<Grow in={true}><IconButton onClick={downloadAudio}><GetApp/></IconButton></Grow>);
 			}
 		});
 		// enqueueSnackbar('Download Started');
-		setDownloadButton(<IconButton onClick={deleteDownload}><CircularProgress
-			color={"primary.light"}/></IconButton>);
+		setDownloadButton(<Grow in={true}><IconButton onClick={deleteDownload}><CircularProgress
+			color={"primary.light"} size={25}/></IconButton></Grow>);
 	}
 
 	function playAudio() {
 		audioElement.play();
-		setButton(<IconButton onClick={pauseAudio}><Pause
-			color={"#fff"}/></IconButton>);
+		setButton(<IconButton onClick={pauseAudio}><Pause/></IconButton>);
 	}
 
 	function pauseAudio() {
 		audioElement.pause();
-		setButton(<IconButton className={"PlayerPlayPauseBtn"} onClick={playAudio}><PlayCircleOutline
-			color={"#fff"}/></IconButton>);
+		setButton(<IconButton className={"PlayerPlayPauseBtn"} onClick={playAudio}><PlayCircleOutline/></IconButton>);
 	}
 
 
 	useEffect(() => {
 		addToHistory()
-			.then(saveHistoryToServer(props.videoElement))
+			//.then(saveHistoryToServer(props.videoElement))
 			.then(addToReduxState([true, false]))
 			.then(() => {
 				audioElement.play();
@@ -186,78 +202,100 @@ const Player = (props) => {
 
 	return (
 		<div className="Player">
-			<div className={"container"}>
-				<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-					<AppBar>
-						<Toolbar color={"#FFF"} style={{color: "#FFFFFF"}}>
-							<IconButton edge="start" onClick={handleClose} aria-label="close">
-								<ArrowBack/>
-							</IconButton>
-							<Typography variant={"h6"} component={"div"} className={"py-1 text-truncate"}>
-								{props.videoElement.snippet.title || "Untitled"}
-								<Typography variant={"body2"} style={{opacity: "50%"}}>
-									{props.videoElement.snippet.channelTitle || "Unavailable"}
-								</Typography>
-							</Typography>
-							<div style={{flex: "1 1 auto"}}/>
-							{downloadButton}
-						</Toolbar>
-						{
-							/*
-						<div style={{zIndex:'99999'}} hidden={false} className={'fixed-top'}>
-							<LinearProgress variant={"buffer"} value={audioElement.currentTime} valueBuffer={audioElement.buffered}/>
-						</div>
-							*/
-						}
-					</AppBar>
-					<div style={{backgroundColor: "primary.dark", height: "100%", width: "100%"}}>
-						<div
-							className={"ImageCircle rounded-circle thumbnail"}>
-							<img src={props.videoElement.snippet.thumbnails.high.url}
-								 className={"image img-fluid rounded-circle border shadow"}
-								 style={{
-									 width: "10rem",
-									 height: "10rem",
-									 position: "absolute",
-									 top: "42%",
-									 left: "50%",
-									 transform: "translate(-50%, -50%)"
-								 }} alt={"Thumbnail"}/>
-						</div>
+			<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+				<AppBar color={"transparent"} elevation={0} style={{position: "relative"}}>
+					<Toolbar color={"#BBBBBB"} style={{color: "#BBBBBB"}}>
+						<IconButton edge="start" onClick={handleClose} aria-label="close">
+							<ArrowBack/>
+						</IconButton>
+						<div style={{flex: "1 1 auto"}}/>
+					</Toolbar>
+					{
+						/*
+						max-height:100vh!important
+					<div style={{zIndex:'99999'}} hidden={false} className={'fixed-top'}>
+						<LinearProgress variant={"buffer"} value={audioElement.currentTime} valueBuffer={audioElement.buffered}/>
 					</div>
-					<AppBar color="primary" style={{
-						position: "fixed",
-						top: "auto",
-						bottom: 0,
-						width: "100%",
-						backgroundColor: "light"
-					}} component={"div"}>
-						<CustomSlider/>
-						<div className={"container mb-2"} style={{
-							width: "70%",
+						*/
+					}
+				</AppBar>
+				<div style={{backgroundColor: "primary.dark", height: "90vh", width: "100%", minHeight: "90vh"}}>
+					<div
+						className={" -ImageCircle thumbnail- text-center"} style={{
+						marginTop: "0rem"
+					}}>
+						<img src={props.videoElement.snippet.thumbnails.high.url}
+							 className={"image img-fluid rounded shadow"}
+							 style={{
+								 marginTop: "0",
+								 width: "15rem",
+								 height: "15rem",
+							 }} alt={"Thumbnail"}/>
+						<br/>
+						<Typography variant={"h6"} component={"div"} className={"mx-4 py-1 text-truncate text-left"}>
+							{props.videoElement.snippet.title || "Untitled"}
+							<Typography variant={"body2"} style={{opacity: "50%"}}>
+								{props.videoElement.snippet.channelTitle || "Unavailable"}
+							</Typography>
+						</Typography>
+						<div className={"mx-4"}><CustomSlider/></div>
+						<div className={"container mb-2 smallOnDesktop"} style={{
+							width: "100%",
 							display: "inline-flex",
 							justifyContent: "space-around",
 							transform: "translate(0%)"
 						}}>
-							{looping}
 							{props.playList.list.items[props.playList.index - 1] ?
 								<IconButton><SkipPrevious onClick={() => {
 									const item = props.playList.list.items[props.playList.index - 1];
 									SkipSong({video: item, index: props.playList.index - 1});
 								}}/></IconButton> : <IconButton disabled={true}><SkipPrevious/></IconButton>}
-							<div className={"ExpandedPlayButtonContainer"}>
+							<div className={"-ExpandedPlayButtonContainer"}>
 								{button}
 							</div>
 							{props.playList.list.items[props.playList.index + 1] ? <IconButton onClick={() => {
 								const item = props.playList.list.items[props.playList.index + 1];
 								SkipSong({video: item, index: props.playList.index + 1});
 							}}><SkipNext/></IconButton> : <IconButton disabled={true}><SkipNext/></IconButton>}
-
 						</div>
-						<ComingNext/>
-					</AppBar>
-				</Dialog>
-			</div>
+						<br/>
+						<div className={"px-4 w-100 smallOnDesktop d-inline-flex"}>
+							<CssBaseline/>
+							<IconButton><VolumeDown fontSize={"small"}/></IconButton>
+							<CustomVolumeSlider/>
+							<IconButton><VolumeUp fontSize={"small"}/></IconButton>
+						</div>
+						<br/>
+						<div className={"px-4 w-100 d-inline-flex smallOnDesktop"}
+							 style={{justifyContent: "space-around"}}>
+							{audioElement.loop ? (<IconButton onClick={() => {
+								setLooping(false);
+								audioElement.loop = false;
+							}}><RepeatOne/></IconButton>) : (<IconButton onClick={() => {
+								setLooping(true);
+								audioElement.loop = true;
+							}}><Repeat/></IconButton>)}
+							{downloadButton ? downloadButton : <IconButton><CircularProgress size={25}/></IconButton>}
+							<IconButton onClick={() => {
+								setPlayList(true);
+							}}><Toc/></IconButton>
+						</div>
+						<SwipeableDrawer
+							anchor={"bottom"}
+							open={PlayList}
+							onClose={() => {
+								setPlayList(false);
+							}}
+							onOpen={() => {
+								setPlayList(true);
+							}}
+						>
+							<ComingNext/>
+						</SwipeableDrawer>
+
+					</div>
+				</div>
+			</Dialog>
 		</div>
 	);
 };

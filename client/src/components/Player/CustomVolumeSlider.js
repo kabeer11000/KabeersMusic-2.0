@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import Slider from "@material-ui/core/Slider";
 import store from "../../Redux/store/store";
 import {setCurrentSongState} from "../../Redux/actions/actions";
@@ -6,18 +6,13 @@ import {connect} from "react-redux";
 
 const CustomSlider = (props) => {
 	if (!props.componentState.Dialog) return <></>;
-	const [scrubbing, setScrubbing] = React.useState(0);
+	const [scrubbing, setScrubbing] = React.useState(props.audioElement.volume * 100);
 
-	useEffect(() => {
-		if (props.componentState.Dialog) {
-			setInterval(() => !props.audioElement.paused && props.componentState.Dialog ? setScrubbing(props.audioElement.currentTime) : null, 1000);
-		}
-	}, []);
 
 	async function handleScrubbing(v) {
 		if (isFinite(v)) {
 			setScrubbing(v);
-			props.audioElement.currentTime = v;
+			props.audioElement.volume = v / 100;
 			// Update Redux State
 			const store_state = store.getState().currentSong;
 			store.dispatch(setCurrentSongState(
@@ -32,11 +27,10 @@ const CustomSlider = (props) => {
 
 	return (<Slider
 		className={"container -PlayerSlider"}
-		defaultValue={0}
+		defaultValue={props.audioElement.volume * 100}
 		value={scrubbing}
 		min={0.0}
-		color={"primary.player.slider"}
-		max={props.audioElement.duration}
+		max={100}
 		onChange={async (v, x) => handleScrubbing(x)}
 	/>);
 };

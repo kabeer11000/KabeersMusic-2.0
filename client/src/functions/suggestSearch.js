@@ -1,4 +1,4 @@
-import endPoints from '../api/endpoints/endpoints';
+import endPoints from "../api/endpoints/endpoints";
 import xml2json from "./Helper/XMLToJSON";
 import keys from "../api/keys/keys";
 
@@ -11,5 +11,5 @@ export async function SuggestSearch(q) {
 }
 
 export async function SearchYoutube(q) {
-    return fetch(endPoints.searchYoutubeFake(keys.youtube, q)).then(r => r.json());
+    return fetch(endPoints.searchYoutube(keys.youtube, q)).then(r => r.json());
 }

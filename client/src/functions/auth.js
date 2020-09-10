@@ -29,7 +29,7 @@ export async function initAuth() {
     let token = cookies.getCookie("token");
     if (!token) return window.location.href = endPoints.authRedirect;
     token = JSON.parse(token);
-    if (Math.floor(((Date.now() - token.exp) / 1000) / 60) > 30) { // Half Hour
+    if (Math.floor(((Date.now() - token.exp) / 1000) / 60) > 120) { // Two Hours
         return await fetch(endPoints.refreshToken, {}, 5000).then(res => res.ok ? res.json() : null);
     } // Expired
     return token.token; // Return Token
