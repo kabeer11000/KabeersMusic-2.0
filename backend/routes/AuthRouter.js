@@ -35,7 +35,7 @@ router.get('/callback', function (req, res, next) {
             client_secret: 'pojsd682jxp31accE3mHsMtBRGVtIk0AmTV0jU3g',
             client_public: 'S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD',
             auth_code: req.query.code,
-            grant_types: 's564d68a34dCn9OuUNTZRfuaCnwc6:feed|s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite'
+            grant_types: ["s564d68a34dCn9OuUNTZRfuaCnwc6:getSong", "s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|")
         })
     })
         .then(function (response) {
@@ -57,13 +57,13 @@ router.get('/callback', function (req, res, next) {
 router.get('/redirect', (req, res) => {
     // AStroWorld_Cn9OuUNTZRfuaCnwc6:username|AStroWorld_Cn9OuUNTZRfuaCnwc6:email|AStroWorld_Cn9OuUNTZRfuaCnwc6:user_id
     const info = {
-        clientId: 'S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD',
-        scopes: ['s564d68a34dCn9OuUNTZRfuaCnwc6:feed', 's564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite'].join('|'),
+        clientId: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
+        scopes: ["s564d68a34dCn9OuUNTZRfuaCnwc6:getSong", "s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|"),
         callback: encodeURI(endPoints.callbackURLFAKE)
     };
     const id = makeid(10);
     req.session.state = id;
-    const authUrl = `https://kabeers-auth.herokuapp.com/auth/authorize?client_id=${info.clientId}&scope=${info.scopes}&response_type=code&redirect_uri=${info.callback}&state=${id}&nonce=${makeid(5)}&prompt=none`;
+    const authUrl = `https://kabeers-auth.herokuapp.com/auth/authorize?client_id=${info.clientId}&scope=${info.scopes}&response_type=code&redirect_uri=${info.callback}&state=${id}&nonce=${makeid(5)}&prompt=consent`;
     res.redirect(authUrl);
 });
 

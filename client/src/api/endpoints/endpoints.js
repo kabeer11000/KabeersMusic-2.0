@@ -9,7 +9,7 @@ const endPoints = {
     getProxyfiedURI: (id) => `${hostName}/api/song?id=${id}`,
     getSuggestion: (q) => `https://suggestqueries.google.com/complete/search?`,
     getSuggestionFake: (q) => `https://cors-anywhere.herokuapp.com/http://clients1.google.com/complete/search?hl=en&output=toolbar&q=${q}`,
-    searchYoutube: (key, q, maxResults = 15) => `https://www.googleapis.com/youtube/v3/search?part=snippet&videoCategoryId=10&type=video&key=${key}&q=${q}&maxResults=${maxResults}`,
+    searchYoutube: (key, q) => `${hostName}/api/search?q=${q}`,
     searchYoutubeFake: (key, q) => `${hostName}/files/yt-fake/sample-response-master/yt-api/search-result.json`,
     proxyURI: (url) => `${hostName}/proxy/${url}`,
     saveWatchHistory: `${hostName}/api/history/save`,

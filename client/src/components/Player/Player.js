@@ -30,6 +30,7 @@ import CustomVolumeSlider from "./CustomVolumeSlider";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Grow from "@material-ui/core/Grow";
+import {saveHistoryToServer} from "../../functions/Helper/history";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -123,7 +124,7 @@ const Player = (props) => {
 
 	useEffect(() => {
 		addToHistory()
-			//.then(saveHistoryToServer(props.videoElement))
+			.then(saveHistoryToServer(props.videoElement))
 			.then(addToReduxState([true, false]))
 			.then(() => {
 				audioElement.play();

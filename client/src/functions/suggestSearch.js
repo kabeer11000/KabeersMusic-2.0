@@ -1,6 +1,7 @@
 import endPoints from "../api/endpoints/endpoints";
 import xml2json from "./Helper/XMLToJSON";
 import keys from "../api/keys/keys";
+import {initAuth} from "./auth";
 
 
 export async function SuggestSearch(q) {
@@ -11,5 +12,11 @@ export async function SuggestSearch(q) {
 }
 
 export async function SearchYoutube(q) {
-    return fetch(endPoints.searchYoutube(keys.youtube, q)).then(r => r.json());
+    return initAuth()
+        .then(token => fetch(endPoints.searchYoutube(keys.youtube, q), {
+            headers: new Headers({
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Authorization": `Bearer ${token}`
+            })
+        }).then(r => r.json())).catch(e => e);
 }
