@@ -1,0 +1,52 @@
+{
+  "kind": "youtube#video OR kabeersmusic#song",
+  "etag": "[UPDATES EACH TIME VIDEO UPDATES]",
+  "id": "[UNIQUE VIDEO ID]",
+  "snippet": {
+    "publishedAt": "2020-08-21T03:58:10Z => [Date.now()]",
+    "channelId": "[USER ID]",
+    "title": "[VIDEO TITLE]",
+    "description": "[VIDEO DESCRIPTION]",
+    "thumbnails": {
+      "IMPORTANT-FOR-KABEER-IN-FUTURE": "[NODE JS COMPRESS TO DIFFERENT SIZES, OR PHP]",
+      "default": {
+        "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/default.jpg",
+        "width": 120,
+        "height": 90
+      },
+      "medium": {
+        "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/mqdefault.jpg",
+        "width": 320,
+        "height": 180
+      },
+      "high": {
+        "url": "[High Is Necessary]",
+        "width": 480,
+        "height": 360
+      },
+      "standard": {
+        "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/sddefault.jpg",
+        "width": 640,
+        "height": 480
+      },
+      "maxres": {
+        "url": "https://i.ytimg.com/vi/gdZLi9oWNZg/maxresdefault.jpg",
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "channelTitle": "[USER NAME]",
+    "tags": [
+      "BIGHIT",
+      "빅히트",
+      "방탄소년단",
+      "BTS",
+      "BANGTAN",
+      "방탄"
+    ],
+    "categoryId": "10 => [MUSIC]",
+    "liveBroadcastContent": "none",
+    "defaultLanguage": "ko",
+    "defaultAudioLanguage": "en"
+  }
+}
