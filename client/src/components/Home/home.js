@@ -36,7 +36,7 @@ const HomeComponent = (props) => {
 		//getFeed().then(value => console.log(value)).catch(e => console.log(e));
 		initAuth().then(token => {
 
-			fetch(endPoints.getFeedFake(keys.youtube), {
+			fetch(endPoints.getFeed(keys.youtube), {
 				headers: new Headers({
 					"Authorization": `Bearer ${token}`
 				})

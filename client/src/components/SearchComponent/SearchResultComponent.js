@@ -103,6 +103,7 @@ const SearchResultComponent = (props) => {
         if (!props.query) return history.push("/search");
         if (navigator.onLine) {
             SearchYoutube(props.query)
+                .catch(setListItems(errorPage()))
                 .then(resultsArray => {
                     if (!resultsArray) return;
                     setListItems(() => resultsArray.items.map((value, index) => {
@@ -119,9 +120,7 @@ const SearchResultComponent = (props) => {
                             </ListItem>
                         );
                     }));
-                }).catch(e => {
-                setListItems(errorPage());
-            });
+                })
         } else {
             SuggestOfflineSongs(props.query)
                 .then(resultsArray => {

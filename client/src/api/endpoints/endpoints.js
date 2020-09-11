@@ -14,7 +14,7 @@ const endPoints = {
     proxyURI: (url) => `${hostName}/proxy/${url}`,
     saveWatchHistory: `${hostName}/api/history/save`,
     saveSearchHistory: `${hostName}/api/search/save`,
-    getFeed: `${hostName}/api/feed`,
+    getFeed: () => `${hostName}/api/feed`,
     getFeedFake: () => `${hostName}/files/yt-fake/sample-response-master/yt-api/suggested-cardib.json`,
     authRedirect: `${hostName}/auth/redirect`,
     refreshToken: `${hostName}/auth/store/tokens/refresh`

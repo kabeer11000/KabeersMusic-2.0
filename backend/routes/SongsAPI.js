@@ -15,7 +15,7 @@ const youtube_key = "AIzaSyAJkG5coTOfjTRgpYRvCUq0C0V0WFc7tZU";
 const endPoints = {
 	searchYoutubeMultipleIds: (ids) => `https://www.googleapis.com/youtube/v3/videos?key=${youtube_key}&part=snippet&id=${ids.join(",")}`,
 	searchYotubeMultipleIdsFake: (ids) => "https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/videoIdSearch.json",
-	searchYoutube: (q, maxResults = 10) => `https://www.googleapis.com/youtube/v3/search?part=snippet&videoCategoryId=10&type=video&key=${youtube_key}&q=${q}&maxResults=${maxResults}`,
+	searchYoutube: (q, maxResults = 5) => `https://www.googleapis.com/youtube/v3/search?part=snippet&videoCategoryId=10&type=video&key=${youtube_key}&q=${q}&maxResults=${maxResults}`,
 	searchYoutubeFake: (q) => `https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/search-result.json`,
 	ytPlaylist: (playListId, maxResults = 5) => `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&videoCategoryId=10&type=video&key=${youtube_key}&playlistId=${playListId}&maxResults=${maxResults}`
 };
@@ -74,18 +74,17 @@ router.get("/search", (req, res) => {
 			const required_prems = ["s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"];
 			const decoded_grantTypes = decoded.grant_types.split("|");
 			if (!required_prems.every(i => decoded_grantTypes.includes(i))) return res.status(400).json("Invalid Token Scope");
-			return axios.get(endPoints.searchYoutubeFake(req.query.q))
+			return axios.get(endPoints.searchYoutube(req.query.q))
 				.then(v => res.status(200).json(v.data))
 				.catch(e => res.status(400).json(e));
 		}
 	});
 });
-router.get("/feed", async (req, res) => {
+router.get("/feed55", async (req, res) => {
 	if (!req.headers.authorization) return res.status(402).json("Bad Request");
 	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
-		if (err || !decoded) return res.status(400).json(err.message);
+		if (err || !decoded) return res.status(400).json(err);
 		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
-
 		const user_id = decoded.user_id;
 
 		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -109,11 +108,18 @@ router.get("/feed", async (req, res) => {
 							.then(value => value.map((v, i) => videoIds.push(v.video_id)));
 						return videoIds.length ? {
 							title: `Based on Last Searches`,
-							url: endPoints.searchYoutubeMultipleIds(pickRandom(videoIds, 5)),
+							url: await axios.get(endPoints.searchYoutubeMultipleIds(pickRandom(videoIds, 5)))
+								.then(v => v.data)
+								.catch(e => ([])),
 						} : null;
 					};
 					const getTopBollywood = async () => {
-						return {title: "Top Bollywood", url: endPoints.ytPlaylist(playlistsIds.TopBolloywood)};
+						return {
+							title: "Top Bollywood",
+							url: await axios.get(endPoints.ytPlaylist(playlistsIds.TopBolloywood))
+								.then(v => v.data)
+								.catch(e => [])
+						};
 					};
 
 					const getByArtist = async () => {
@@ -124,7 +130,9 @@ router.get("/feed", async (req, res) => {
 						const ListenedMaximum = getMaximum(channelTitles);
 						return ListenedMaximum ? {
 							title: `Because You Listened to ${ListenedMaximum.name}`,
-							url: endPoints.searchYoutube(`${ListenedMaximum.name} music`),
+							url: await axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} music`))
+								.then(v => v.data)
+								.catch(e => []),
 						} : null;
 					};
 
@@ -146,7 +154,85 @@ router.get("/feed", async (req, res) => {
 			});
 	});
 });
+const getMaximum = (e) => {
+	let t, n = 1, l = 0;
+	for (let m = 0; m < e.length; m++) {
+		for (let r = m; r < e.length; r++) e[m] === e[r] && l++, n < l && (n = l, t = e[m]);
+		l = 0;
+	}
+	return {name: t, times: n};
+};
+router.get("/feed/search", (req, res) => {
+	if (!req.headers.authorization) return res.status(402).json("Bad Request");
+	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
+		if (err || !decoded) return res.status(400).json(err);
+		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
+		const user_id = decoded.user_id;
 
+		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
+			.then((db) => {
+				if (!db) return res.status(500).json("Error Connecting to Database");
+				const videoIds = [];
+				db.db("music").collection("history")
+					.find({user_id: user_id, type: "searchHistory"}).toArray()
+					.then(value => value.map((v, i) => videoIds.push(v.video_id)))
+					.then(() => {
+						axios.get(endPoints.searchYoutubeMultipleIds(pickRandom(videoIds, 5)))
+							.then(v => v.data)
+							.then((ytResponse) => {
+								return res.status(200).json({
+									title: `Based on Last Searches`,
+									songs: {...ytResponse}
+								});
+							})
+							.catch(e => res.json(e.message));
+					}).catch(e => res.json(e));
+			}).catch(e => res.json(e));
+	});
+});
+router.get("/feed/topartist", (req, res) => {
+	if (!req.headers.authorization) return res.status(402).json("Bad Request");
+	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
+		if (err || !decoded) return res.status(400).json(err);
+		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
+		const user_id = decoded.user_id;
+
+		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
+			.then((db) => {
+				if (!db) return res.status(500).json("Error Connecting to Database");
+				const channelTitles = [];
+				db.db("music").collection("history")
+					.find({user_id: user_id, type: "watchHistory"}).toArray()
+					.then(value => value.map((v, i) => channelTitles.push(v.artist_name)))
+					.then(() => {
+						const ListenedMaximum = getMaximum(channelTitles);
+						axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} music`, 5))
+							.then(v => v.data)
+							.then((ytResponse) => {
+								return res.status(200).json({
+									title: `Because You Listened to ${ListenedMaximum.name}`,
+									songs: {...ytResponse}
+								});
+							}).catch(e => res.json(e.message));
+					}).catch(e => res.json(e));
+			}).catch(e => res.json(e));
+	});
+});
+router.get("/feed/topartist", (req, res) => {
+	if (!req.headers.authorization) return res.status(402).json("Bad Request");
+	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
+		if (err || !decoded) return res.status(400).json(err);
+		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
+
+		axios.get(endPoints.ytPlaylist(playlistsIds.TopBolloywood, 5))
+			.then(v => v.data)
+			.then(ytPlaylist => res.json({
+				title: "Top Bollywood",
+				url: ytPlaylist
+			}))
+			.catch(e => res.json(e.message));
+	});
+});
 router.post("/history/save", async (req, res) => {
 	if (!req.body || !req.body.time || !req.headers.authorization) return res.status(400).json("402 Bad Request");
 	MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
