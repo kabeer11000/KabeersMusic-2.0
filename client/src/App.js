@@ -23,6 +23,7 @@ import Liked from "./components/Liked/Liked.lazy";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import {DialogProvider} from "muibox";
 import endPoints from "./api/endpoints/endpoints";
+import PlayLists from "./components/PlayLists/PlayLists.lazy";
 
 const App = () => {
 	const [darkState, setDarkState] = React.useState(localStorage.getItem("darkmode") === null ? false : JSON.parse(localStorage.getItem("darkmode")));
@@ -136,7 +137,7 @@ const App = () => {
 							<div className="App">
 								<DrawerComponent>
 									<Route exact={true}
-										   path={["/", "/home", "/search", "/downloads", "/history", "/liked"]}
+										   path={["/", "/home", "/search", "/downloads", "/history", "/liked", "/charts"]}
 										   render={() => (
 											   <React.Fragment>
 												   <CustomAppBar/>
@@ -158,7 +159,8 @@ const App = () => {
 										return <Settings handleTheme={handleThemeChange}/>;
 									}}/>
 									<Route exact={true} path={"/history"} component={HistoryComponent}/>
-									<Route exact={true} path={"/*"} render={() => {
+									<Route exact={true} path={"/charts"} component={PlayLists}/>
+									<Route exact={false} path={"/*"} render={() => {
 										return <Redirect to={"/home"}/>;
 									}}/>
 									<Route exact={true} path={"/search/results"} render={() => {

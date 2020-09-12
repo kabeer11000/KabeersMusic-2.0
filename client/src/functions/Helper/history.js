@@ -1,4 +1,4 @@
-import userId from '../userid';
+import userId from "../userid";
 import commonWords from "./commonWords/commonWords";
 import endPoints from "../../api/endpoints/endpoints";
 import {initAuth} from "../auth";
@@ -28,12 +28,12 @@ export function serialize(object) {
 export async function saveHistoryToServer(video, callback = () => {
 }) {
     initAuth().then(token => {
-        uniqueText(video.snippet.description.substring(0, 100)).then(desc => {
-            let videoID = '';
-            if (typeof video.id === 'object') videoID = video.id.videoId;
-            if (typeof video.id === 'string') videoID = video.id;
+        uniqueText(video.snippet.description ? video.snippet.description.substring(0, 100) : "").then(desc => {
+            let videoID = "";
+            if (typeof video.id === "object") videoID = video.id.videoId;
+            if (typeof video.id === "string") videoID = video.id;
             const options = {
-                method: 'POST',
+                method: "POST",
                 body: serialize({
                     time: new Date().getTime(),
                     user_id: userId,
@@ -44,7 +44,7 @@ export async function saveHistoryToServer(video, callback = () => {
                     video_title: video.snippet.title,
                     video_keywords: [...desc],
                     video_featuring_artists: video.snippet.title.split(/ft.|feat.|ft|feat/i) || '',
-                    video_description: video.snippet.description.substring(0, 100)
+                    video_description: video.snippet.description ? video.snippet.description.substring(0, 100) : ""
                 }),
                 headers: new Headers({
                     "Content-Type": "application/x-www-form-urlencoded",

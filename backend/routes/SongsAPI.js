@@ -1,3 +1,8 @@
+function makeid(r) {
+	for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = t.length, o = 0; o < r; o++) a += t.charAt(Math.floor(Math.random() * n));
+	return a;
+}
+
 var express = require("express");
 var router = express.Router();
 const ytdl = require("ytdl-core");
@@ -8,15 +13,35 @@ const mongo_uri = "mongodb://127.0.0.1:27017/?readPreference=primary&gssapiServi
 var franc = require("franc");
 let axios = require("axios");
 var jwt = require("jsonwebtoken");
+const ytsr = require("ytsr");
+var ytpl = require("ytpl");
+const simpleYT = require("simpleyt");
+const yt = require("youtube-search-without-api-key");
+const yts = require("yt-search");
+
+Array.prototype.last = () => this[this.length - 1];
 const aut = 400;
 
+function YouTubeGetID(e) {
+	return void 0 !== (e = e.replace(/(>|<)/gi, "").split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/))[2] ? e[2].split(/[^0-9a-z_\-]/i)[0] : e;
+}
 
+const currentURL = "http://localhost:9000/";
 const youtube_key = "AIzaSyAJkG5coTOfjTRgpYRvCUq0C0V0WFc7tZU";
+/*
 const endPoints = {
-	searchYoutubeMultipleIds: (ids) => `https://www.googleapis.com/youtube/v3/videos?key=${youtube_key}&part=snippet&id=${ids.join(",")}`,
-	searchYotubeMultipleIdsFake: (ids) => "https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/videoIdSearch.json",
+	searchYoutubeMultipleIds: (ids, maxResults = 5) => `https://www.googleapis.com/youtube/v3/videos?key=${youtube_key}&part=snippet&id=${ids.join(",")}&maxResults=${maxResults}`,
+	searchYotubeMultipleIdsFake: (ids, maxResults = 5) => "https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/videoIdSearch.json",
 	searchYoutube: (q, maxResults = 5) => `https://www.googleapis.com/youtube/v3/search?part=snippet&videoCategoryId=10&type=video&key=${youtube_key}&q=${q}&maxResults=${maxResults}`,
-	searchYoutubeFake: (q) => `https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/search-result.json`,
+	searchYoutubeFake: (q, maxResults = 5) => `https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/search-result.json`,
+	ytPlaylist: (playListId, maxResults = 5) => `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&videoCategoryId=10&type=video&key=${youtube_key}&playlistId=${playListId}&maxResults=${maxResults}`
+};
+*/
+const endPoints = {
+	searchYoutubeMultipleIds: (ids, maxResults = 5) => `${currentURL}api/backend/search?q=${ids.join(" , ")}&maxResults=${maxResults}`,
+	searchYotubeMultipleIdsFake: (ids, maxResults = 5) => "https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/videoIdSearch.json",
+	searchYoutube: (q, maxResults = 5) => `${currentURL}api/backend/search?q=${q}&maxResults=4`,
+	searchYoutubeFake: (q, maxResults = 5) => `https://cdn.jsdelivr.net/gh/kabeer11000/sample-response/yt-api/search-result.json`,
 	ytPlaylist: (playListId, maxResults = 5) => `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&videoCategoryId=10&type=video&key=${youtube_key}&playlistId=${playListId}&maxResults=${maxResults}`
 };
 const playlistsIds = {
@@ -61,7 +86,7 @@ router.get("/song", async (req, res) => {
 							user_id: decoded.user_id,
 							yt_video_id: req.query.id,
 						}).catch(e => res.json(e.message)))
-						.catch(err => res.status(400).json(err.message));
+						.catch(err => res.status(400).json("Video Not Found"));
 				});
 		}
 	});
@@ -172,18 +197,14 @@ router.get("/feed/search", (req, res) => {
 		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
 			.then((db) => {
 				if (!db) return res.status(500).json("Error Connecting to Database");
-				const videoIds = [];
 				db.db("music").collection("history")
-					.find({user_id: user_id, type: "searchHistory"}).toArray()
-					.then(value => value.map((v, i) => videoIds.push(v.video_id)))
-					.then(() => {
-						axios.get(endPoints.searchYoutubeMultipleIds(pickRandom(videoIds, 5)))
+					.find({user_id: user_id, type: "listeningHistory"}).toArray()
+					.then(value => (value.map((v, i) => (v.yt_video_id))))
+					.then((videoIds) => {
+						axios.get(endPoints.searchYoutubeMultipleIds(videoIds.filter((item, pos, self) => self.indexOf(item) === pos), 5))
 							.then(v => v.data)
 							.then((ytResponse) => {
-								return res.status(200).json({
-									title: `Based on Last Searches`,
-									songs: {...ytResponse}
-								});
+								return res.status(200).json({...ytResponse, title: `Based on Your Last Search`});
 							})
 							.catch(e => res.json(e.message));
 					}).catch(e => res.json(e));
@@ -206,19 +227,19 @@ router.get("/feed/topartist", (req, res) => {
 					.then(value => value.map((v, i) => channelTitles.push(v.artist_name)))
 					.then(() => {
 						const ListenedMaximum = getMaximum(channelTitles);
-						axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} music`, 5))
+						axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} songs official`).toLowerCase())
 							.then(v => v.data)
 							.then((ytResponse) => {
 								return res.status(200).json({
-									title: `Because You Listened to ${ListenedMaximum.name}`,
-									songs: {...ytResponse}
+									...ytResponse,
+									title: `Because You Listened to ${ListenedMaximum.name}`
 								});
-							}).catch(e => res.json(e.message));
-					}).catch(e => res.json(e));
-			}).catch(e => res.json(e));
+							}).catch(e => res.status(500).json(e.message));
+					}).catch(e => res.status(500).json(e));
+			}).catch(e => res.status(500).json(e));
 	});
 });
-router.get("/feed/topartist", (req, res) => {
+router.get("/feed/topbollywood", (req, res) => {
 	if (!req.headers.authorization) return res.status(402).json("Bad Request");
 	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
 		if (err || !decoded) return res.status(400).json(err);
@@ -228,7 +249,7 @@ router.get("/feed/topartist", (req, res) => {
 			.then(v => v.data)
 			.then(ytPlaylist => res.json({
 				title: "Top Bollywood",
-				url: ytPlaylist
+				songs: {...ytPlaylist}
 			}))
 			.catch(e => res.json(e.message));
 	});
@@ -277,6 +298,119 @@ router.get("/request/:url", (req, res) => {
 			})
 			.catch(e => res.json({message: e.message}));
 	});
+});
+router.get("/backend/search", (req, res) => {
+	yts({query: decodeURI(req.query.q)}).then(value => {
+		const ytlr_result = value;
+		const items = [];
+		ytlr_result.videos.map((video, index) => {
+			const videoId = video.videoId;
+			items.push({
+				kind: "KabeersMusic#Song",
+				etag: makeid(10),
+				id: videoId,
+				channelId: video.author.url.split("/")[4],
+				snippet: {
+					publishedAt: video.ago,
+					title: video.title,
+					description: video.description,
+					channelTitle: video.author.name || "From Kabeers Music",
+					duration: video.duration,
+					views: video.views,
+					thumbnails: {
+						default: {
+							url: `https://i.ytimg.com/vi/${videoId}/default.jpg`,
+							width: 120,
+							height: 90
+						},
+						medium: {
+							url: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+							width: 320,
+							height: 180
+						},
+						high: {
+							url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+							width: 480,
+							height: 360
+						}
+					}
+				}
+			});
+		});
+		res.json({
+			"kind": "KabeersMusic#searchListResponse",
+			"etag": makeid(10),
+			"regionCode": "PK",
+			"pageInfo": {
+				"totalResults": items.length,
+			},
+			"items": items,
+			"accounts": ytlr_result.channels
+		});
+	}).catch(e => res.status(500).json(e));
+});
+router.get("/backend/playlist", (req, res) => {
+	ytpl(req.query.playlist, {
+		limit: 5
+	})
+		.then(ytlr_result => {
+			const items = [];
+			ytlr_result.items.map((video, index) => {
+				const videoId = YouTubeGetID(video.url_simple);
+				items.push({
+					kind: "KabeersMusic#Song",
+					etag: makeid(10),
+					id: videoId,
+					snippet: {
+						id: videoId,
+						publishedAt: video.uploaded_at,
+						channelId: video.author.ref.split("/")[5],
+						channelVerified: video.author.verified,
+						title: video.title,
+						description: video.description,
+						thumbnails: {
+							"default": {
+								"url": `https://i.ytimg.com/vi/${videoId}/default.jpg`,
+								"width": 120,
+								"height": 90
+							},
+							"medium": {
+								"url": `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+								"width": 320,
+								"height": 180
+							},
+							"high": {
+								"url": `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+								"width": 480,
+								"height": 360
+							}
+						},
+						channelTitle: video.author.name,
+						liveBroadcastContent: video.live,
+						"publishTime": "2020-08-22T04:00:05Z"
+					}
+				});
+			});
+			return res.json({
+				id: ytlr_result.id,
+				url: ytlr_result.url,
+				title: ytlr_result.title,
+				visibility: ytlr_result.visibility,
+				description: ytlr_result.description,
+				total_items: ytlr_result.total_items,
+				views: ytlr_result.views,
+				last_updated: ytlr_result.last_updated,
+				author: {
+					id: ytlr_result.author.id,
+					name: ytlr_result.author.name,
+					avatar: ytlr_result.author.avatar,
+					user: ytlr_result.author.user,
+					channel_url: ytlr_result.author.channel_url,
+					user_url: ytlr_result.author.user_url
+				},
+				items: items
+			});
+		}).catch(e => res.status(500).json(e));
 });
 module.exports = router;
 // TODO Because you lisened to travis scott
@@ -329,3 +463,21 @@ fs.readFile("../../pocketsphinx/test/data/goforward.raw", function(err, data) {
                 }
 
  */
+const kabeer = {
+	"id": "PLFgquLnL59akA2PflFpeQG9L01VFg90wS",
+	"url": "https://www.youtube.com/playlist?list=PLFgquLnL59akA2PflFpeQG9L01VFg90wS",
+	"title": "Latest Videos - Music",
+	"visibility": "link only",
+	"description": null,
+	"total_items": 200,
+	"views": 249002544,
+	"last_updated": "Updated today",
+	"author": {
+		"id": "UC-9-kyTW8ZkZNDHQJ6FgpwQ",
+		"name": "Music",
+		"avatar": "https://yt3.ggpht.com/notrbEhkuo1Z9cIY0aA55jQDMODUOdgW__0nl0kvK2KeOure9BxzmjXnTMGld4tjpPn5QRRI1B0=s100-c-k-c0xffffffff-no-rj-mo",
+		"user": null,
+		"channel_url": "https://www.youtube.com/channel/UC-9-kyTW8ZkZNDHQJ6FgpwQ",
+		"user_url": null
+	}
+};

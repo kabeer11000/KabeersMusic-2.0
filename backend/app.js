@@ -34,14 +34,15 @@ app.use(cookieParser());
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(session({
-  secret: '5s323720194bccb1cb94164a13E144994E3E17F9B',
+  secret: "5s323720194bccb1cb94164a13E144994E3E17F9B",
   resave: false,
   saveUninitialized: false,
   store: new MongoStore({
     url: mongo_uri
   })
 }));
-app.use('/proxy', ProxyRouter);
+app.set("json spaces", 2);
+app.use("/proxy", ProxyRouter);
 app.use('/api', songsRouter);
 app.use('/auth', authRouter);
 

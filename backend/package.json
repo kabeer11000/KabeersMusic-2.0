@@ -23,7 +23,12 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.0",
     "morgan": "~1.9.1",
-    "ytdl-core": "^3.2.2"
+    "simpleyt": "^1.0.5",
+    "youtube-search-without-api-key": "^1.0.2",
+    "yt-search": "^2.3.0",
+    "ytdl-core": "^3.2.2",
+    "ytpl": "^1.0.0",
+    "ytsr": "^1.0.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

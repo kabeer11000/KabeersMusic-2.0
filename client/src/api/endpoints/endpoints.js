@@ -1,5 +1,5 @@
-//const hostName = `${window.location.protocol}//${window.location.host}`;
-const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
+const hostName = `${window.location.protocol}//${window.location.host}`;
+//const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
 
 const endPoints = {
     mostPopular: key => `https://www.googleapis.com/youtube/v3/videos?part=snippet&videoCategoryId=10&type=video&key=${key}&chart=mostPopular`,
@@ -17,6 +17,9 @@ const endPoints = {
     getFeed: () => `${hostName}/api/feed`,
     getFeedFake: () => `${hostName}/files/yt-fake/sample-response-master/yt-api/suggested-cardib.json`,
     authRedirect: `${hostName}/auth/redirect`,
-    refreshToken: `${hostName}/auth/store/tokens/refresh`
+    refreshToken: `${hostName}/auth/store/tokens/refresh`,
+    getSearchFeed: () => `${hostName}/api/feed/search`,
+    getTopArtistFeed: () => `${hostName}/api/feed/topartist`,
+    getPlayListById: (id) => `${hostName}/api/backend/playlist?playlist=${id}`
 };
 module.exports = endPoints;

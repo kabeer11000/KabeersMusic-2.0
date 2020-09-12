@@ -48,6 +48,12 @@ const CustomBottomNavigation = (props) => {
             <BottomNavigation value={value} onChange={handleChange} className={classes.root}>
                 <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/home"} label="Home"
                                         value="recents" icon={<Home/>}/>
+                {/*
+                                <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/charts"}
+                                        label="Trending" value="charts"
+                                        icon={<TrendingUp/>}/>
+
+                */}
                 <BottomNavigationAction style={{textDecoration: "none"}} component={Link} to={"/downloads"}
                                         label="Downloads" value="downloads"
                                         icon={<GetApp/>}/>

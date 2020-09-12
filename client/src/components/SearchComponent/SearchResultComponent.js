@@ -63,7 +63,7 @@ const SearchResultComponent = (props) => {
     );
 
     function PlaySong(video, metaData) {
-        getSong(video.id.videoId).then(value => {
+        getSong(video.id).then(value => {
             if (value) {
                 //Avoid the Promise Error
                 setTimeout(function () {
@@ -106,7 +106,7 @@ const SearchResultComponent = (props) => {
                 .catch(setListItems(errorPage()))
                 .then(resultsArray => {
                     if (!resultsArray) return;
-                    setListItems(() => resultsArray.items.map((value, index) => {
+                    setListItems(() => resultsArray.items ? resultsArray.items.map((value, index) => {
                         if (!value) return;
                         return (
                             <ListItem button key={index} onClick={() => PlaySong(value, {
@@ -119,7 +119,7 @@ const SearchResultComponent = (props) => {
                                               secondary={`${value.snippet.channelTitle}`}/>
                             </ListItem>
                         );
-                    }));
+                    }) : errorPage("Nothing Found Retry"));
                 })
         } else {
             SuggestOfflineSongs(props.query)
@@ -168,7 +168,7 @@ const SearchResultComponent = (props) => {
                 </AppBar>
                 <div className={"container px-3"} style={{marginTop: "4rem"}}>
                     <div className={"row"}>
-                        {listItems}
+                        {listItems ? listItems : <SkeletonList/>}
                     </div>
                 </div>
             </Dialog>
