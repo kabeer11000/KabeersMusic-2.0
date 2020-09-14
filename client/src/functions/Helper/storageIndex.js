@@ -4,4 +4,6 @@ const a = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwi
 
 export const storageIndex = {
 	userData: "bGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+	homeSongObject: "6pcGyKPkNzCc1LIrvJperozvZemGtVK6FKn2uU4",
+	homeTimeObject: "b1dvcmxkX0NuOU91VU5UWlJmdWFDbndjNjp1c2V",
 };

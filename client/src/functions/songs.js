@@ -60,7 +60,7 @@ export async function downloadSong(data = {
 	},
 	error: () => {
 	}
-}) {
+}, abortController = new AbortController()) {
 	try {
 		initAuth().then(async token => {
 			console.log("Download Started");
@@ -68,7 +68,8 @@ export async function downloadSong(data = {
 			fetch(endPoints.getProxyfiedURI(data.videoId), {
 				headers: new Headers({
 					"Authorization": `Bearer ${token}`
-				})
+				}),
+				signal: abortController.signal
 			})
 				.then(value => value.json())
 				.then(async url => {
@@ -117,7 +118,7 @@ export async function getSong(id) {
 			headers: new Headers({
 				"Authorization": `Bearer ${token}`
 			})
-		}, 10000).then(value => {
+		}, 100000).then(value => {
 			if (!value.ok) return null;
 			return value.json();
 		});

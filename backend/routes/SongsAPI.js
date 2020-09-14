@@ -255,7 +255,29 @@ router.get("/feed/topartist", (req, res) => {
 			}).catch(e => res.status(500).json(e));
 	});
 });
+router.get("/feed/artists/all", (req, res) => {
+	if (!req.headers.authorization) return res.status(402).json("Bad Request");
+	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
+		if (err || !decoded) return res.status(400).json(err);
+		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
+		const user_id = decoded.user_id;
 
+		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
+			.then((db) => {
+				if (!db) return res.status(500).json("Error Connecting to Database");
+				const channelTitles = [];
+				db.db("music").collection("history")
+					.find({user_id: user_id, type: "watchHistory"}).toArray()
+					.then(value => value.map((v, i) => channelTitles.push({id: v.channelId, name: v.artist_name})))
+					.then(async () => {
+						res.status(200).json({
+							kind: "KabeersMusic#Artists",
+							items: channelTitles.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i),
+						});
+					}).catch(e => res.status(500).json(e));
+			});
+	});
+});
 router.post("/history/save", async (req, res) => {
 	if (!req.body || !req.body.time || !req.headers.authorization) return res.status(400).json("402 Bad Request");
 	MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -279,6 +301,7 @@ router.post("/history/save", async (req, res) => {
 					video_keywords: req.body.video_keywords.split(","),
 					language: franc(req.body.video_description, {}) || "en",
 					video_featuring_artists: req.body.video_featuring_artists.split(","),
+					channelId: req.body.channelId
 				}, function (err, result) {
 					if (err) return res.status(400).json(err.message);
 					return res.status(200).json(result);
@@ -317,6 +340,7 @@ router.get("/backend/search", (req, res) => {
 					title: video.title,
 					description: video.description,
 					channelTitle: video.author.name || "From Kabeers Music",
+					channelId: video.author.url.split("/")[4],
 					duration: video.duration,
 					views: video.views,
 					thumbnails: {
@@ -351,6 +375,62 @@ router.get("/backend/search", (req, res) => {
 		});
 	}).catch(e => res.status(500).json(e));
 });
+router.get("/backend/get/artist", (req, res) => {
+	/*	if (!req.headers.authorization || !req.query.id) return res.status(402).json("Bad Request");
+	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
+		if (err || !decoded) return res.status(400).json(err);
+		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
+		ytpl(`https://www.youtube.com/channel/${req.query.id}`, function(err, playlist) {
+			if(err) throw err;
+			res.json(playlist);
+		});
+	});
+	 */
+	ytpl(`https://www.youtube.com/channel/${req.query.id}`)
+		.then(ytlr_result => {
+			const items = [];
+			ytlr_result.items.map((video, index) => {
+				const videoId = YouTubeGetID(video.url_simple);
+				items.push({
+					kind: "KabeersMusic#Song",
+					etag: makeid(10),
+					id: videoId,
+					snippet: {
+						id: videoId,
+						publishedAt: video.uploaded_at,
+						channelId: video.author.ref.split("/")[4],
+						channelVerified: video.author.verified,
+						title: video.title,
+						description: video.description,
+						thumbnails: {
+							"default": {
+								"url": `https://i.ytimg.com/vi/${videoId}/default.jpg`,
+								"width": 120,
+								"height": 90
+							},
+							"medium": {
+								"url": `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+								"width": 320,
+								"height": 180
+							},
+							"high": {
+								"url": `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+								"width": 480,
+								"height": 360
+							}
+						},
+						channelTitle: video.author.name,
+						liveBroadcastContent: video.live,
+						"publishTime": "2020-08-22T04:00:05Z"
+					}
+				});
+			});
+			ytlr_result.items = items;
+			return res.json(ytlr_result);
+		})
+		.catch(e => res.json(e));
+});
+
 router.get("/backend/playlist", (req, res) => {
 	ytpl(req.query.playlist, {
 		limit: 5
@@ -363,10 +443,11 @@ router.get("/backend/playlist", (req, res) => {
 					kind: "KabeersMusic#Song",
 					etag: makeid(10),
 					id: videoId,
+					channelId: video.author.ref.split("/")[4],
 					snippet: {
 						id: videoId,
 						publishedAt: video.uploaded_at,
-						channelId: video.author.ref.split("/")[5],
+						channelId: video.author.ref.split("/")[4],
 						channelVerified: video.author.verified,
 						title: video.title,
 						description: video.description,

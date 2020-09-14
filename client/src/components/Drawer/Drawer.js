@@ -102,7 +102,7 @@ function DrawerComponent(props) {
             </List>
             <div className={`classes.toolbar`}/>
             <Divider/>
-            <List>
+            <List onClick={handleDrawerToggle}>
                 <ListItem button component={Link} to={"/home"}>
                     <ListItemIcon><Home/></ListItemIcon>
                     <ListItemText primary={"Home"}/>
@@ -110,15 +110,15 @@ function DrawerComponent(props) {
 
                 <ListItem button component={Link} to={"/downloads"}>
                     <ListItemIcon><GetApp/></ListItemIcon>
-                    <ListItemText primary={'Downloads'}/>
+                    <ListItemText primary={"Downloads"}/>
                 </ListItem>
-                <ListItem button component={Link} to={'/history'}>
+                <ListItem button component={Link} to={"/history"}>
                     <ListItemIcon><History/></ListItemIcon>
-                    <ListItemText primary={'History'}/>
+                    <ListItemText primary={"History"}/>
                 </ListItem>
-                <ListItem button component={Link} to={'/liked'}>
+                <ListItem button component={Link} to={"/liked"}>
                     <ListItemIcon><Favorite/></ListItemIcon>
-                    <ListItemText primary={'Liked'}/>
+                    <ListItemText primary={"Liked"}/>
                 </ListItem>
             </List>
             <Divider/>

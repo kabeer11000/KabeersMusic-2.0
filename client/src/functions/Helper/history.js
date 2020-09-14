@@ -39,11 +39,12 @@ export async function saveHistoryToServer(video, callback = () => {
                     user_id: userId,
                     video_id: videoID,
                     artist_name: video.snippet.channelTitle,
+                    channelId: video.snippet.channelId,
                     tags: video.snippet.tags || [],
                     yt_catagory: 10,
                     video_title: video.snippet.title,
                     video_keywords: [...desc],
-                    video_featuring_artists: video.snippet.title.split(/ft.|feat.|ft|feat/i) || '',
+                    video_featuring_artists: video.snippet.title.split(/ft.|feat.|ft|feat/i) || "",
                     video_description: video.snippet.description ? video.snippet.description.substring(0, 100) : ""
                 }),
                 headers: new Headers({

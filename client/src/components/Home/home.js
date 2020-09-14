@@ -12,6 +12,12 @@ import {connect} from "react-redux";
 //import fetch from "../../functions/fetchWithTimeOut";
 import Preloader from "../Preloader/Preloader";
 import Grow from "@material-ui/core/Grow";
+import {storageIndex} from "../../functions/Helper/storageIndex";
+import Avatar from "@material-ui/core/Avatar";
+import Chip from "@material-ui/core/Chip";
+import {Done} from "@material-ui/icons";
+import {makeStyles} from "@material-ui/core/styles";
+import {Link} from "react-router-dom";
 //import {work} from "worka";
 //import {dictionary} from "../../functions/Worker/dict";
 function makeid(r) {
@@ -35,10 +41,13 @@ const playlistsIds = {
 	Reggaeton: "PLS_oEMUyvA728OZPmF9WPKjsGtfC75LiN"
 };
 
+const useStyles = makeStyles({});
 const HomeComponent = (props) => {
+
+	const classes = makeStyles(useStyles);
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const abortController = new AbortController();
-	const [mainArray, setMainArray] = React.useState([]);
+	const [artists, setArtists] = React.useState({});
 	const [songObj, setSongObj] = React.useState({});
 	const [loadedComponents, setLoadedComponents] = React.useState(<React.Fragment/>);
 	const [other, setOther] = React.useState(() => {
@@ -107,7 +116,7 @@ const HomeComponent = (props) => {
 					[makeid(10)]: o
 				}))).catch(o => (o));
 
-				return Object.keys(songObj).length ? localStorage.setItem("homeObjectTime", JSON.stringify(Date.now())) : null;
+				return Object.keys(songObj).length ? localStorage.setItem(storageIndex.homeTimeObject, JSON.stringify(Date.now())) : null;
 			}).catch(e => {
 			enqueueSnackbar("Failed to Load Songs");
 			setOther(errorPage("An error Occurred Please Re login", <Button onClick={() => {
@@ -146,8 +155,12 @@ const HomeComponent = (props) => {
 	}
 
 	function init() {
-		if (localStorage.getItem("homePageSongObj") === null || !(Date.now() - parseInt(localStorage.getItem("homeObjectTime"))) / (100 * 60) > 1) Load();
-		else setSongObj(JSON.parse(localStorage.getItem("homePageSongObj")));
+		if (localStorage.getItem(storageIndex.homeSongObject) === null || !(Date.now() - parseInt(localStorage.getItem(storageIndex.homeTimeObject))) / (100 * 60) > 1) Load();
+		else setSongObj(JSON.parse(localStorage.getItem(storageIndex.homeSongObject)));
+		initAuth().then(token => fetch(endPoints.getFeedArtists, {
+			headers: new Headers({Authorization: `Bearer ${token}`}),
+			signal: abortController.signal
+		}).then(e => e.json()).then(e => setArtists(e)).catch(e => console.log(e)));
 	}
 
 	useEffect(() => {
@@ -161,17 +174,35 @@ const HomeComponent = (props) => {
 	}, []);
 
 	useEffect(() => {
-		if (Object.keys(songObj).length) localStorage.setItem("homePageSongObj", JSON.stringify(songObj));
+		if (Object.keys(songObj).length) {
+			localStorage.setItem(storageIndex.homeSongObject, JSON.stringify(songObj));
+			localStorage.setItem(storageIndex.homeTimeObject, JSON.stringify(Date.now()));
+		}
 	}, [songObj]);
 
 	return (
 		<div className="home mb-5" style={{minHeight: "70vh"}}>
 			<div style={{marginTop: "5rem"}}>
+				<div className={`cardSlider text-left Slider ${artists.items ? "d-block" : "d-none"}`}>
+					{artists.items ? (
+						artists.items.map((v, i) => (
+							<Chip
+								component={Link}
+								to={"/artist?id=" + v.id}
+								avatar={<Avatar>{v.name.charAt(0)}</Avatar>}
+								label={v.name}
+								clickable
+								className={"mx-1"}
+								deleteIcon={<Done/>}
+							/>
+						))
+					) : null}
+				</div>
 				{props.homeComponents ? props.homeComponents : <div>{Object.keys(songObj).length !== -1 ? (
 					<React.Fragment>
 						{Object.keys(songObj).map((key, keyIndex) => (
 							<React.Fragment key={keyIndex}>
-								{songObj[key] && songObj[key].items.length ?
+								{songObj[key] && songObj[key].items ?
 									(<React.Fragment key={keyIndex}>
 										<Grow in={true}>
 											<Typography variant={"h5"} className={"pl-3 text-left text-truncate"}>

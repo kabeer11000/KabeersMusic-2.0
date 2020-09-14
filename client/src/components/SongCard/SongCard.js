@@ -6,6 +6,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import {Typography} from "@material-ui/core";
 import Grow from "@material-ui/core/Grow";
+import Link from "@material-ui/core/Link";
 
 // = {title, description, tags, channelTitle, videoId, thumbnail}
 function SongCard(props) {
@@ -33,7 +34,8 @@ function SongCard(props) {
 						<Typography gutterBottom variant="h6" component="p" className={"text-truncate"}>
 							{video_.title.slice(0, 70) + " ..."}
 						</Typography>
-						<Typography variant="body2" color="textSecondary" component="p" className={"text-truncate"}>
+						<Typography variant="body2" color="textSecondary" style={{textDecoration: "none"}}
+									component={Link} to={`/artist?id=${video_.channelId}`} className={"text-truncate"}>
 							{video_.description ? video_.description.slice(0, 70) + " ..." : ""}
 							<span className={"text-muted"}>
                         {video_.channelTitle}

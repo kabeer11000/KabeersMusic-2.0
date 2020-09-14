@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import "./Player.css";
 import {AppBar, Avatar, CircularProgress, Dialog, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
 import {
+	AccountCircle,
 	ArrowBack,
 	Done,
 	GetApp,
@@ -32,6 +33,8 @@ import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Grow from "@material-ui/core/Grow";
 import {saveHistoryToServer} from "../../functions/Helper/history";
 import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import {useHistory} from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -39,6 +42,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const Player = (props) => {
 	if (props.hidden) return null;
+	let history = useHistory();
 	const dialog = useDialog();
 	const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
 	const [button, setButton] = React.useState(<IconButton color={"#60B18A"} colorSecondary={"#60B18A"}
@@ -59,7 +63,7 @@ const Player = (props) => {
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [PlayList, setPlayList] = React.useState(false);
 	const [AutoPlayButton, SetAutoPlayButton] = React.useState(props.autoPlay);
-
+	const abortController = new AbortController();
 	const handleClose = () => {
 		addToReduxState([false, true]);
 		setOpen(false);
@@ -120,7 +124,7 @@ const Player = (props) => {
 				enqueueSnackbar("Download Failed");
 				setDownloadButton(<Grow in={true}><IconButton onClick={downloadAudio}><GetApp/></IconButton></Grow>);
 			}
-		});
+		}, abortController);
 		// enqueueSnackbar('Download Started');
 		setDownloadButton(<Grow in={true}><IconButton onClick={deleteDownload}><CircularProgress
 			color={"primary.light"} size={25}/></IconButton></Grow>);
@@ -161,6 +165,7 @@ const Player = (props) => {
 			setDownloadButton(v ? <IconButton onClick={deleteDownload}><Done/></IconButton> :
 				<IconButton onClick={downloadAudio}><GetApp/></IconButton>);
 		});
+		AutoPlay(!AutoPlayButton);
 	}, []);
 
 	function SkipSong(data) {
@@ -216,6 +221,11 @@ const Player = (props) => {
 			});
 	}
 
+	useEffect(() => {
+		return () => {
+			abortController.abort();
+		};
+	}, []);
 	return (
 		<div className="Player">
 			<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
@@ -225,6 +235,17 @@ const Player = (props) => {
 							<ArrowBack/>
 						</IconButton>
 						<div style={{flex: "1 1 auto"}}/>
+						<FormControlLabel
+							control={
+								<Switch checked={!AutoPlayButton} onChange={() => {
+									SetAutoPlayButton(!AutoPlayButton);
+									AutoPlay(AutoPlayButton);
+								}} name="Autoplay"/>
+							}
+							labelPlacement="start"
+							label="Autoplay"
+						/>
+
 					</Toolbar>
 					{
 						/*
@@ -240,13 +261,15 @@ const Player = (props) => {
 						className={" -ImageCircle thumbnail- text-center"} style={{
 						marginTop: "0rem"
 					}}>
-						<img src={props.videoElement.snippet.thumbnails.high.url}
-							 className={"image mb-2 img-fluid rounded shadow"}
-							 style={{
-								 marginTop: "0",
-								 width: "15rem",
-								 height: "15rem",
-							 }} alt={"Thumbnail"}/>
+						<Grow in={true}>
+							<img src={props.videoElement.snippet.thumbnails.high.url}
+								 className={"image mb-2 img-fluid rounded shadow"}
+								 style={{
+									 marginTop: "0",
+									 width: "15rem",
+									 height: "15rem",
+								 }} alt={"Thumbnail"}/>
+						</Grow>
 						<br/>
 						<Typography variant={"h6"} component={"div"} className={"mx-4 py-1 text-truncate text-left"}>
 							{props.videoElement.snippet.title || "Untitled"}
@@ -295,10 +318,11 @@ const Player = (props) => {
 							<IconButton onClick={() => {
 								setPlayList(true);
 							}}><Toc/></IconButton>
-							<Switch checked={AutoPlayButton} onChange={() => {
-								AutoPlay(!AutoPlayButton);
-								SetAutoPlayButton(!AutoPlayButton);
-							}} name="checkedA"/>
+							<IconButton onClick={() => {
+								history.push(`/artist?id=${props.videoElement.channelId}`);
+								handleClose();
+							}}><AccountCircle/>
+							</IconButton>
 						</div>
 						<SwipeableDrawer
 							anchor={"bottom"}

@@ -22,6 +22,8 @@ const endPoints = {
     refreshToken: `${hostName}/auth/store/tokens/refresh`,
     getSearchFeed: () => `${hostName}/api/feed/search`,
     getTopArtistFeed: () => `${hostName}/api/feed/topartist`,
-    getPlayListById: (id) => `${hostName}/api/backend/playlist?playlist=${id}`
+    getPlayListById: (id) => `${hostName}/api/backend/playlist?playlist=${id}`,
+    getFeedArtists: `${hostName}/api/feed/artists/all`,
+    getArtistInfo: (id) => `${hostName}/api/backend/get/artist?id=${id}`
 };
 module.exports = endPoints;

@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import HomeComponent from "./components/Home/home.lazy";
-import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import CustomBottomNavigation from "./components/CustomBottomNavigation/CustomBottomNavigation.lazy";
 import Downloads from "./components/Downloads/Downloads.lazy";
 import Player from "./components/Player/Player.lazy";
@@ -25,8 +25,10 @@ import {DialogProvider} from "muibox";
 import endPoints from "./api/endpoints/endpoints";
 import PlayLists from "./components/PlayLists/PlayLists.lazy";
 import NoSsr from "@material-ui/core/NoSsr";
+import ArtistComponent from "./components/ArtistComponent/ArtistComponent.lazy";
 
 const App = () => {
+
 	const [darkState, setDarkState] = React.useState(localStorage.getItem("darkmode") === null ? false : JSON.parse(localStorage.getItem("darkmode")));
 	const [Player__, SetPlayer] = React.useState(true);
 	const [backdrop, SetBackdrop] = React.useState(true);
@@ -140,7 +142,7 @@ const App = () => {
 								<CssBaseline/>
 								<div className="App">
 									<DrawerComponent>
-										<Route exact={true}
+										<Route exact
 											   path={["/", "/home", "/search", "/downloads", "/history", "/liked", "/charts"]}
 											   render={() => (
 												   <React.Fragment>
@@ -151,26 +153,33 @@ const App = () => {
 										<Player offline={PlayerOffline} misc_func={misc_functions} hidden={Player__}
 												changes={changeStates}/>
 										<MiniPlayer hidden={Player__}/>
-										<Route exact={true} path={"/home"}
+										<Route exact path={"/home"}
 											   render={() => <HomeComponent misc={misc_functions}
 																			appState={changeStates}/>}/>
-										<Route exact={true} path={"/downloads"}
+										<Route exact path={"/downloads"}
 											   render={() => <Downloads appState={changeStates}/>}/>
-										<Route exact={true} path={"/search"} component={SearchComponent}/>
-										<Route exact={true} path={"/liked"} component={Liked}/>
-										<Route exact={true} path={"/settings"} render={() => {
+										<Route exact path={"/search"} component={SearchComponent}/>
+										<Route exact path={"/liked"} component={Liked}/>
+										<Route exact path={"/settings"} render={() => {
 											let audio = document.getElementById("MainAudio-KabeersMusic");
 											if (!audio.paused) audio.pause();
 											return <Settings handleTheme={handleThemeChange}/>;
 										}}/>
-										<Route exact={true} path={"/history"} component={HistoryComponent}/>
-										<Route exact={true} path={"/charts"} component={PlayLists}/>
-										<Route exact={true} path={"/*"} render={() => {
-											return <Redirect to={"/home"}/>;
+										<Route exact path={"/history"} component={HistoryComponent}/>
+										<Route exact path={"/charts"} component={PlayLists}/>
+										<Route exact path={"/artist"} render={() => {
+											return <ArtistComponent appState={changeStates} misc={misc_functions}/>;
 										}}/>
 										<Route exact={true} path={"/search/results"} render={() => {
 											return <SearchResultComponent appState={changeStates}/>;
 										}}/>
+										{
+											/*
+
+										<Route render={()=>errorPage('Route Not Found, 404', ()=>{}, <Button
+											onClick={()=>{window.location.href = ('/home')}}>Go Home</Button>)}/>
+											 */
+										}
 										<CustomBottomNavigation progress_hidden={backdrop}/>
 									</DrawerComponent>
 								</div>
