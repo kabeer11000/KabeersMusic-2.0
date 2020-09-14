@@ -49,13 +49,13 @@ const SearchResultComponent = (props) => {
     const [resultsArray, setResultsArray] = React.useState([]);
     const [listItems, setListItems] = React.useState(<SkeletonList length={5}/>);
     const classes = useStyles();
-
+    const abortController = new AbortController();
     const errorPage = (message = "No Internet Connection", button = <Button component={Link}
                                                                             to={"/search"}>Retry</Button>) => (
-        <div className={'errorPage text-center'}
-             style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
-            <img src={'/./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
-                 alt={'Kabeers Music Logo'}/>
+        <div className={"errorPage text-center"}
+             style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)"}}>
+            <img src={"/./assets/icons/darkmode_nothingfound.svg"} style={{width: "8rem", height: "auto"}}
+                 alt={"Kabeers Music Logo"}/>
             <br/>
             <div className={"text-truncate"}>{message}</div>
             {button}
@@ -93,7 +93,7 @@ const SearchResultComponent = (props) => {
                     video: data.videoElement,
                     list: {items: [data.videoElement]},
                     index: index
-                });
+                }, false);
             }
         });
     }
@@ -102,11 +102,11 @@ const SearchResultComponent = (props) => {
     useEffect(() => {
         if (!props.query) return history.push("/search");
         if (navigator.onLine) {
-            SearchYoutube(props.query)
+            SearchYoutube(props.query, abortController)
                 .catch(setListItems(errorPage()))
                 .then(resultsArray => {
                     if (!resultsArray) return;
-                    setListItems(() => resultsArray.items ? resultsArray.items.map((value, index) => {
+                    setListItems(() => resultsArray.items.length ? resultsArray.items.map((value, index) => {
                         if (!value) return;
                         return (
                             <ListItem button key={index} onClick={() => PlaySong(value, {
@@ -125,9 +125,9 @@ const SearchResultComponent = (props) => {
             SuggestOfflineSongs(props.query)
                 .then(resultsArray => {
                     if (!resultsArray) return;
-                    setListItems(() => resultsArray.map((value, index) => {
+                    setListItems(() => resultsArray.length ? resultsArray.map((value, index) => {
                         value = value.item;
-                        if (!value) return errorPage('Nothing Matched your Search!');
+                        if (!value) return errorPage("Nothing Matched your Search!");
                         return (
                             <ListItem button key={index} onClick={() => {
                                 PlayOfflineSong(value, index);
@@ -139,21 +139,24 @@ const SearchResultComponent = (props) => {
                                               secondary={`${value.channelTitle}`}/>
                             </ListItem>
                         );
-                    }));
+                    }) : null);
                 }).catch(e => {
                 setListItems(errorPage());
             });
         }
+        return () => {
+            abortController.abort();
+        };
     }, []);
     return (
         <div className="SearchResultComponent">
             <Dialog fullScreen open={open} onClose={() => {
             }}>
                 <AppBar className={`fixed-top`}>
-                    <Toolbar component={Link} to={'/search'}>
+                    <Toolbar component={Link} to={`/search?q=${props.query}`}>
                         {window.history ? <IconButton onClick={() => {
                             setOpen(false);
-                        }} component={Link} to={'/home'} color="primary.light" visibility={false}>
+                        }} component={Link} to={"/home"} color="primary.light" visibility={false}>
                             <ArrowBack/>
                         </IconButton> : <></>}
                         <InputBase
@@ -168,7 +171,7 @@ const SearchResultComponent = (props) => {
                 </AppBar>
                 <div className={"container px-3"} style={{marginTop: "4rem"}}>
                     <div className={"row"}>
-                        {listItems ? listItems : <SkeletonList/>}
+                        {listItems.length ? listItems : <SkeletonList length={10}/>}
                     </div>
                 </div>
             </Dialog>

@@ -1,4 +1,4 @@
-import {CHANGE_DRAWER, CURRENT_SONG, HOME_COMPONENT_STATE, SEARCH_QUERY_PARAM} from '../actions/actions';
+import {CHANGE_DRAWER, CURRENT_SONG, HOME_COMPONENT_STATE, SEARCH_QUERY_PARAM, SET_AUTOPLAY} from "../actions/actions";
 
 const initialState = {
     currentSong: {
@@ -10,7 +10,7 @@ const initialState = {
     },
     drawer: false,
     q: '',
-
+    autoPlay: false
 };
 
 function rootReducer(state = initialState, action) {
@@ -25,18 +25,23 @@ function rootReducer(state = initialState, action) {
                 currentSong: action.currentSong,
                 drawer: state.drawer
             };
-        case SEARCH_QUERY_PARAM:
-            return {
-                ...state,
-                q: action.q,
-            };
-        case HOME_COMPONENT_STATE:
-            return {
-                ...state,
-                home: action.home
-            };
-        default:
-            return state;
+    case SEARCH_QUERY_PARAM:
+        return {
+            ...state,
+            q: action.q,
+        };
+    case HOME_COMPONENT_STATE:
+        return {
+            ...state,
+            home: action.home
+        };
+    case SET_AUTOPLAY:
+        return {
+            ...state,
+            autoPlay: action.autoPlay
+        };
+    default:
+        return state;
     }
 }
 

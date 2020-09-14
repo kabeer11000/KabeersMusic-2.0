@@ -1,0 +1,8 @@
+{
+  "appId": "com.kabeers.music",
+  "appName": "Kabeers Music",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {}
+}

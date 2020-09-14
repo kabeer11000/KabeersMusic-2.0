@@ -13,7 +13,8 @@ const MiniPlayer = (props) => {
         ComponentStates = props.componentState,
         audioElement = props.audioElement,
         videoElement = props.videoElement;
-    const [button, setButton] = React.useState(<IconButton onClick={pauseAudio}><Pause color={'#fff'}/></IconButton>);
+    const [button, setButton] = React.useState(<IconButton onClick={pauseAudio}><Pause color={"#fff"}/></IconButton>);
+    const [open, setOpen] = React.useState(store.getState().currentSong.componentState.miniPlayer);
 
     async function handleScrubbing(v) {
         if (isFinite(v)) {
@@ -69,14 +70,14 @@ const MiniPlayer = (props) => {
 
     if (!ComponentStates.dialog && ComponentStates.MiniPlayer && audioElement !== null || '' || undefined) {
         return (
-            <Grow in={true}>
-                <AppBar color={'slideDown primary.miniPlayer.main'} style={{
-                    position: 'fixed',
+            <Grow in={true} style={{transitionProperty: 1000}}>
+                <AppBar color={"slideDown primary.miniPlayer.main"} style={{
+                    position: "fixed",
                     top: "auto",
-                    bottom: '3.5rem',
-                    width: '100%',
-                }} component={'div'} elevation={1} className={'d-inline-flex KabeersMiniPlayerContainer'}>
-                    <div className={'d-inline-flex'}>
+                    bottom: "3.5rem",
+                    width: "100%",
+                }} component={"div"} elevation={1} className={"d-inline-flex KabeersMiniPlayerContainer"}>
+                    <div className={"d-inline-flex"}>
                         <div onClick={() => {
                             props.reOpenDialog();
                             // Update Redux State

@@ -1,18 +1,19 @@
-import {applyMiddleware, compose, createStore} from 'redux';
-import rootReducer from '../reducers/rootReducers';
+import {applyMiddleware, compose, createStore} from "redux";
+import rootReducer from "../reducers/rootReducers";
 import thunk from "redux-thunk";
-import StateLoader from "./state.loader"
+import StateLoader from "./state.loader";
 
 const initialState = {
     currentSong: {
-        audioElement: new Audio(''),
+        audioElement: new Audio(""),
         videoElement: {},
         playList: {index: 0, list: []},
         reOpenDialog: () => {
-        }
+        },
     },
     drawer: false,
     q: '',
+    autoPlay: false
 };
 /*
 const stateLoader = new StateLoader();

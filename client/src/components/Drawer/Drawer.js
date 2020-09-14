@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
     Divider,
     Drawer,
@@ -11,20 +11,23 @@ import {
     makeStyles,
     Typography,
     useTheme
-} from '@material-ui/core';
+} from "@material-ui/core";
 import {AccountCircle, Favorite, GetApp, History, Home, Settings} from "@material-ui/icons";
-import store from '../../Redux/store/store';
-import {setDrawerState} from '../../Redux/actions/actions';
+import store from "../../Redux/store/store";
+import {setDrawerState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
+import {storageIndex} from "../../functions/Helper/storageIndex";
+import Avatar from "@material-ui/core/Avatar";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
+        display: "flex",
     },
     drawer: {
-        [theme.breakpoints.up('xl')]: {
+        [theme.breakpoints.up("xl")]: {
             width: drawerWidth,
             flexShrink: 0,
         },
@@ -63,12 +66,16 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
     },
     logoImage: {
-        height: 'auto',
+        height: "auto",
         width: theme.spacing(3),
     },
     marginRight: {
         marginLeft: drawerWidth
-    }
+    },
+    smallAvatar: {
+        width: theme.spacing(3),
+        height: theme.spacing(3),
+    },
 }));
 
 function DrawerComponent(props) {
@@ -82,22 +89,26 @@ function DrawerComponent(props) {
         setMobileOpen(!props.isOpen);
         store.dispatch(setDrawerState(!props.isOpen));
     };
-
+    const userData = localStorage.getItem(storageIndex.userData) ? JSON.parse(atob(localStorage.getItem(storageIndex.userData))) : {};
     const drawer = (
         <div>
-            <div className={`${classes.logoContainer} d-inline-flex`}>
-                <img src="assets/icons/kabeersnetwork.svg" className={classes.logoImage} alt='Kabeers Network Logo'/>
-                <span className={classes.logoText}>&nbsp; Kabeers Network</span>
-            </div>
+            <List className={classes.root}>
+                <ListItem>
+                    <ListItemAvatar>
+                        <Avatar src={userData.account_image} alt={userData.username}/>
+                    </ListItemAvatar>
+                    <ListItemText className={"text-truncate"} primary={userData.username} secondary={userData.email}/>
+                </ListItem>
+            </List>
             <div className={`classes.toolbar`}/>
             <Divider/>
             <List>
-                <ListItem button component={Link} to={'/home'}>
+                <ListItem button component={Link} to={"/home"}>
                     <ListItemIcon><Home/></ListItemIcon>
-                    <ListItemText primary={'Home'}/>
+                    <ListItemText primary={"Home"}/>
                 </ListItem>
 
-                <ListItem button component={Link} to={'/downloads'}>
+                <ListItem button component={Link} to={"/downloads"}>
                     <ListItemIcon><GetApp/></ListItemIcon>
                     <ListItemText primary={'Downloads'}/>
                 </ListItem>
@@ -165,7 +176,9 @@ function DrawerComponent(props) {
                 </Hidden>
             </nav>
             <main className={`MainDrawerContainer ${classes.content}`}>
-                {children}
+                <React.Fragment>
+                    {children}
+                </React.Fragment>
             </main>
         </div>
     );

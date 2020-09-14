@@ -20,17 +20,17 @@ const DownloadListItem = (props) => {
 
     const classes = useStyles();
     return (<ListItem alignItems="flex-start">
-            <React.Fragment onClick={props.onClick}>
-                <ListItemAvatar onClick={props.onClick}>
-                    <Avatar alt={props.title} src={props.thumbnail}/>
-                </ListItemAvatar>
-                <ListItemText
-                    className={"text-truncate"}
-                    primary={props.title}
-                    onClick={props.onClick}
-                    secondary={
-                        <React.Fragment>
-                            <Typography
+            <React.Fragment>
+				<ListItemAvatar onClick={props.onClick}>
+					<Avatar alt={props.title} src={props.thumbnail}/>
+				</ListItemAvatar>
+				<ListItemText
+					className={"text-truncate"}
+					primary={props.title}
+					onClick={props.onClick}
+					secondary={
+						<React.Fragment>
+							<Typography
                                 component="span"
                                 variant="body2"
                                 className={`${classes.inline} text-truncate`}

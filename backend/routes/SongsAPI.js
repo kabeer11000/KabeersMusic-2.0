@@ -9,7 +9,8 @@ const ytdl = require("ytdl-core");
 const
 	mongo = require("mongodb"),
 	MongoClient = mongo.MongoClient;
-const mongo_uri = "mongodb://127.0.0.1:27017/?readPreference=primary&gssapiServiceName=mongodb&appname=MongoDB%20Compass%20Community&ssl=false";
+//const mongo_uri = "mongodb://127.0.0.1:27017/?readPreference=primary&gssapiServiceName=mongodb&appname=MongoDB%20Compass%20Community&ssl=false";
+const mongo_uri = require("../keys/mongokey");
 var franc = require("franc");
 let axios = require("axios");
 var jwt = require("jsonwebtoken");
@@ -27,6 +28,7 @@ function YouTubeGetID(e) {
 }
 
 const currentURL = "http://localhost:9000/";
+//const currentURL = "https://kabeersmusic.herokuapp.com/";
 const youtube_key = "AIzaSyAJkG5coTOfjTRgpYRvCUq0C0V0WFc7tZU";
 /*
 const endPoints = {
@@ -87,22 +89,34 @@ router.get("/song", async (req, res) => {
 							yt_video_id: req.query.id,
 						}).catch(e => res.json(e.message)))
 						.catch(err => res.status(400).json("Video Not Found"));
-				});
+				}).catch(e => res.status(500).json("Database Connection Error"));
 		}
 	});
 });
 router.get("/search", (req, res) => {
 	if (!req.headers.authorization) return res.status(402).json("Token Not Found");
 	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
-		if (err) return res.status(402).json("Token Expired or Invalid Signature");
-		if (decoded) {
-			const required_prems = ["s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"];
-			const decoded_grantTypes = decoded.grant_types.split("|");
-			if (!required_prems.every(i => decoded_grantTypes.includes(i))) return res.status(400).json("Invalid Token Scope");
-			return axios.get(endPoints.searchYoutube(req.query.q))
-				.then(v => res.status(200).json(v.data))
-				.catch(e => res.status(400).json(e));
-		}
+		if (err || !decoded) return res.status(402).json("Token Expired or Invalid Signature");
+		const user_id = decoded.user_id;
+		const required_prems = ["s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"];
+		const decoded_grantTypes = decoded.grant_types.split("|");
+		if (!required_prems.every(i => decoded_grantTypes.includes(i))) return res.status(400).json("Invalid Token Scope");
+
+		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
+			.then((db) => {
+				if (!db) return res.status(500).json("Internal Server Error");
+				const dbo = db.db("music");
+				dbo.collection("history").insertOne({
+					type: "searchHistory",
+					time: Date.now(),
+					user_id: user_id,
+					query: req.query.q,
+				}).then(() => {
+					return axios.get(endPoints.searchYoutube(req.query.q))
+						.then(v => res.status(200).json(v.data))
+						.catch(e => res.status(400).json(e));
+				});
+			}).catch(e => res.status(500).json("Database Connection Error"));
 	});
 });
 router.get("/feed55", async (req, res) => {
@@ -198,17 +212,19 @@ router.get("/feed/search", (req, res) => {
 			.then((db) => {
 				if (!db) return res.status(500).json("Error Connecting to Database");
 				db.db("music").collection("history")
-					.find({user_id: user_id, type: "listeningHistory"}).toArray()
-					.then(value => (value.map((v, i) => (v.yt_video_id))))
+					.find({user_id: user_id, type: "searchHistory"}).toArray()
+					.then(value => (value.map((v, i) => (v.query))))
 					.then((videoIds) => {
-						axios.get(endPoints.searchYoutubeMultipleIds(videoIds.filter((item, pos, self) => self.indexOf(item) === pos), 5))
+						if (!videoIds) return res.status(400).json(" No History Found");
+						//videoIds.filter((item, pos, self) => self.indexOf(item) === pos), 5)
+						axios.get(endPoints.searchYoutube(videoIds))
 							.then(v => v.data)
 							.then((ytResponse) => {
 								return res.status(200).json({...ytResponse, title: `Based on Your Last Search`});
 							})
-							.catch(e => res.json(e.message));
-					}).catch(e => res.json(e));
-			}).catch(e => res.json(e));
+							.catch(e => res.status(400).json(e.message));
+					}).catch(e => res.status(400).json(e));
+			}).catch(e => res.status(400).json(e));
 	});
 });
 router.get("/feed/topartist", (req, res) => {
@@ -227,33 +243,19 @@ router.get("/feed/topartist", (req, res) => {
 					.then(value => value.map((v, i) => channelTitles.push(v.artist_name)))
 					.then(() => {
 						const ListenedMaximum = getMaximum(channelTitles);
-						axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} songs official`).toLowerCase())
+						axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} official music`).toLowerCase())
 							.then(v => v.data)
 							.then((ytResponse) => {
-								return res.status(200).json({
+								return ListenedMaximum.name ? res.status(200).json({
 									...ytResponse,
 									title: `Because You Listened to ${ListenedMaximum.name}`
-								});
+								}) : res.status(400).json("No Data Found For User");
 							}).catch(e => res.status(500).json(e.message));
 					}).catch(e => res.status(500).json(e));
 			}).catch(e => res.status(500).json(e));
 	});
 });
-router.get("/feed/topbollywood", (req, res) => {
-	if (!req.headers.authorization) return res.status(402).json("Bad Request");
-	jwt.verify(req.headers.authorization.split(" ")[1], "d546fd8RiOe5kf4tiNTv1S4VGhCA", {}, function (err, decoded) {
-		if (err || !decoded) return res.status(400).json(err);
-		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
 
-		axios.get(endPoints.ytPlaylist(playlistsIds.TopBolloywood, 5))
-			.then(v => v.data)
-			.then(ytPlaylist => res.json({
-				title: "Top Bollywood",
-				songs: {...ytPlaylist}
-			}))
-			.catch(e => res.json(e.message));
-	});
-});
 router.post("/history/save", async (req, res) => {
 	if (!req.body || !req.body.time || !req.headers.authorization) return res.status(400).json("402 Bad Request");
 	MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})

@@ -48,16 +48,17 @@ const SearchComponent = (props) => {
         let history = useHistory();
         const [open, setOpen] = React.useState(true);
         const [queryArray, setQueryArray] = React.useState([]);
-        const [listItems, setListItems] = React.useState(
-            <div className={'errorPage text-center'}
-                 style={{
-                     position: 'absolute',
-                     top: '50%',
-                     left: '50%',
-                     transform: 'translate(-50%, -50%)'
-                 }}>
-                <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: "auto"}}
-                     alt={'Kabeers Music Logo'}/>
+    const abortController = new AbortController();
+    const [listItems, setListItems] = React.useState(
+        <div className={"errorPage text-center"}
+             style={{
+                 position: "absolute",
+                 top: "50%",
+                 left: "50%",
+                 transform: "translate(-50%, -50%)"
+             }}>
+            <img src={"./assets/icons/darkmode_nothingfound.svg"} style={{width: "8rem", height: "auto"}}
+                 alt={"Kabeers Music Logo"}/>
                 <br/>
                 <div>{navigator.onLine ? 'Results will appear as you type' : 'Searching In Downloads'}</div>
             </div>);
@@ -80,8 +81,8 @@ const SearchComponent = (props) => {
         };
 
         const Search = async (e) => {
-            if (e.key === 'Enter') return store.getState().q ? history.push("/search/results") : null;
-            if (navigator.onLine) SuggestSearch(e.target.value).then(v => setQueryArray(v));
+            if (e.key === "Enter") return store.getState().q ? history.push("/search/results") : null;
+            if (navigator.onLine) SuggestSearch(e.target.value, abortController).then(v => setQueryArray(v));
             else SuggestOfflineSongs(e.target.value).then(t => setQueryArray(t.map(t => ({suggestion: {attributes: {data: t.item.title}}}))));
             ListItems();
             props.history.push({
@@ -107,16 +108,21 @@ const SearchComponent = (props) => {
             return isOnline;
         }
 
-        return (
-            <div className="SearchComponent">
-                <Dialog fullScreen open={open} onClose={() => {
-                }} TransitionComponent={Transition}>
-                    <AppBar className={`fixed-top`}>
-                        <Toolbar>
-                            {window.history ? <IconButton onClick={() => {
-                                setOpen(false);
-                            }} component={Link} to={"/home"} color="primary.light" visibility={false}>
-                                <ArrowBack color="#FFF"/>
+    useEffect(() => {
+        return () => {
+            abortController.abort();
+        };
+    }, []);
+    return (
+        <div className="SearchComponent">
+            <Dialog fullScreen open={open} onClose={() => {
+            }} TransitionComponent={Transition}>
+                <AppBar className={`fixed-top`}>
+                    <Toolbar>
+                        {window.history ? <IconButton onClick={() => {
+                            setOpen(false);
+                        }} component={Link} to={"/home"} color="primary.light" visibility={false}>
+                            <ArrowBack color="#FFF"/>
                             </IconButton> : <></>}
                             <InputBase
                                 autoCapitalize={true}

@@ -1,7 +1,8 @@
 export const CHANGE_DRAWER = 'CHANGE_DRAWER';
 export const CURRENT_SONG = 'CURRENT_SONG';
 export const SEARCH_QUERY_PARAM = 'SEARCH_QUERY_PARAM';
-export const HOME_COMPONENT_STATE = 'HOME_COMPONENT_STATE';
+export const HOME_COMPONENT_STATE = "HOME_COMPONENT_STATE";
+export const SET_AUTOPLAY = "SET_AUTOPLAY";
 
 export function setDrawerState(state) {
     return {type: CHANGE_DRAWER, drawer: state};
@@ -31,7 +32,14 @@ export function setHomeScreen(components) {
     return {
         type: HOME_COMPONENT_STATE,
         home: components,
-    }
+    };
+}
+
+export function setAutoPlay(autoPlay) {
+    return {
+        type: SET_AUTOPLAY,
+        autoPlay: autoPlay,
+    };
 }
 /*
 ComponentState = {

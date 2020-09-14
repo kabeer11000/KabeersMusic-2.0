@@ -2,6 +2,8 @@ const hostName = `${window.location.protocol}//${window.location.host}`;
 //const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
 
 const endPoints = {
+    hostName: hostName,
+    getUserData: `${hostName}/auth/user/data`,
     mostPopular: key => `https://www.googleapis.com/youtube/v3/videos?part=snippet&videoCategoryId=10&type=video&key=${key}&chart=mostPopular`,
     mostPopularFake: key => `${hostName}/files/yt-fake/sample-response-master/yt-api/yt.json`,
     //getVideo: (key, id) => `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${key}`,

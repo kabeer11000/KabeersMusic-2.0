@@ -55,6 +55,7 @@ export async function downloadSong(data = {
 	title: "",
 	channelTitle: "",
 	tags: "",
+	videoElement: {},
 	success: () => {
 	},
 	error: () => {
@@ -119,7 +120,7 @@ export async function getSong(id) {
 		}, 10000).then(value => {
 			if (!value.ok) return null;
 			return value.json();
-		}).catch(e => e);
+		});
 	});
 }
 
@@ -317,3 +318,23 @@ export async function getFeed() {
 		}
 	});
 }
+
+export async function downloadsToPlaylist() {
+	const downloads = await db.songs.toArray();
+	const items = [];
+	downloads.map((song, index) => {
+		//song.videoElement
+		items.push(song.videoElement);
+	});
+	return {
+		"kind": "KabeersMusic#searchListResponse",
+		"etag": "makeid(10)",
+		"regionCode": "PK",
+		"pageInfo": {
+			"totalResults": items.length,
+		},
+		"items": items,
+	};
+}
+
+downloadsToPlaylist();

@@ -18,7 +18,7 @@ import {
 } from "@material-ui/icons";
 import {deleteDownloadedSong, downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
 import CustomSlider from "./CustomSlider";
-import {setCurrentSongState} from "../../Redux/actions/actions";
+import {setAutoPlay, setCurrentSongState} from "../../Redux/actions/actions";
 import store from "../../Redux/store/store";
 import {connect} from "react-redux";
 import {useSnackbar} from "notistack";
@@ -31,6 +31,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Grow from "@material-ui/core/Grow";
 import {saveHistoryToServer} from "../../functions/Helper/history";
+import Switch from "@material-ui/core/Switch";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -57,6 +58,7 @@ const Player = (props) => {
 	const [downloadButton, setDownloadButton] = React.useState(<div/>);
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const [PlayList, setPlayList] = React.useState(false);
+	const [AutoPlayButton, SetAutoPlayButton] = React.useState(props.autoPlay);
 
 	const handleClose = () => {
 		addToReduxState([false, true]);
@@ -68,12 +70,25 @@ const Player = (props) => {
 		setOpen(true);
 	};
 
+	const AutoPlay = (AutoPlayButton) => {
+		if (AutoPlayButton) audioElement.onended = () => {
+			if (props.playList.list.items[props.playList.index + 1]) {
+				const item = props.playList.list.items[props.playList.index + 1];
+				SkipSong({video: item, index: props.playList.index + 1});
+			}
+		};
+		else audioElement.onended = () => {
+		};
+		addToReduxState([true, false]);
+	};
+
 	function addToReduxState(AppState) {
 		if (!AppState) AppState = [store.getState().currentSong.componentState.Dialog, store.getState().currentSong.componentState.MiniPlayer];
 		store.dispatch(setCurrentSongState(audioElement, props.videoElement, {
 			Dialog: AppState[0],
 			MiniPlayer: AppState[1]
 		}, ReOpen, {index: props.playList.index, list: props.playList.list}));
+		store.dispatch(setAutoPlay(!AutoPlayButton));
 	}
 
 	async function addToHistory() {
@@ -146,7 +161,6 @@ const Player = (props) => {
 			setDownloadButton(v ? <IconButton onClick={deleteDownload}><Done/></IconButton> :
 				<IconButton onClick={downloadAudio}><GetApp/></IconButton>);
 		});
-
 	}, []);
 
 	function SkipSong(data) {
@@ -164,14 +178,15 @@ const Player = (props) => {
 						video: data.video,
 						list: props.playList.list,
 						index: data.index
-					}).then(() => {
+					}, props.offline).then(() => {
 						props = {};
 					});
 				} catch (e) {
 					console.log(e);
+					enqueueSnackbar("Failed To Load Song");
 				}
 			}
-		});
+		}).catch(e => enqueueSnackbar("Failed To Load Song"));
 	}
 
 	async function deleteDownload() {
@@ -226,7 +241,7 @@ const Player = (props) => {
 						marginTop: "0rem"
 					}}>
 						<img src={props.videoElement.snippet.thumbnails.high.url}
-							 className={"image img-fluid rounded shadow"}
+							 className={"image mb-2 img-fluid rounded shadow"}
 							 style={{
 								 marginTop: "0",
 								 width: "15rem",
@@ -280,6 +295,10 @@ const Player = (props) => {
 							<IconButton onClick={() => {
 								setPlayList(true);
 							}}><Toc/></IconButton>
+							<Switch checked={AutoPlayButton} onChange={() => {
+								AutoPlay(!AutoPlayButton);
+								SetAutoPlayButton(!AutoPlayButton);
+							}} name="checkedA"/>
 						</div>
 						<SwipeableDrawer
 							anchor={"bottom"}
@@ -313,6 +332,7 @@ const mapStateToProps = state => ({
 	componentState: state.currentSong.componentState,
 	audioElement: state.currentSong.audioElement,
 	videoElement: state.currentSong.videoElement,
-	playList: state.currentSong.playList
+	playList: state.currentSong.playList,
+	autoPlayMode: state.currentSong.autoPlay
 });
 export default connect(mapStateToProps)(Player);

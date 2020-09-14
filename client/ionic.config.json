@@ -1,0 +1,7 @@
+{
+  "name": "Kabeers Music",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

@@ -1,5 +1,5 @@
-import React from 'react';
-import './Settings.css';
+import React from "react";
+import "./Settings.css";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Switch from "@material-ui/core/Switch";
@@ -12,6 +12,7 @@ import CustomAppBar from "../CustomAppBar/CustomAppBar.lazy";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import {FeedbackButton} from "../FeedBack/FeedBack";
+import {storageIndex} from "../../functions/Helper/storageIndex";
 
 const Settings = (props) => {
     const [checked, setChecked] = React.useState(['darkmode']);
@@ -32,15 +33,15 @@ const Settings = (props) => {
         <div className="Settings">
             <CustomAppBar title={'Settings'}/>
             <List className={'mt-5 text-left'} subheader={<ListSubheader>Settings</ListSubheader>}>
-                <div style={{display: 'inline-flex', justifyContent: 'center'}} className={'w-100'}>
-                    {localStorage.getItem('user_data') ?
-                        <Avatar alt={JSON.parse(localStorage.getItem('user_data')).username}
-                                src={JSON.parse(localStorage.getItem('user_data')).avatar}/> :
+                <div style={{display: "inline-flex", justifyContent: "center"}} className={"w-100"}>
+                    {localStorage.getItem(storageIndex.userData) ?
+                        <Avatar alt={JSON.parse(atob(localStorage.getItem(storageIndex.userData))).username}
+                                src={JSON.parse(atob(localStorage.getItem(storageIndex.userData))).account_image}/> :
                         <Avatar src={<BrokenImage/>}/>}
                 </div>
-                <div className={'text-center'}>
+                <div className={"text-center"}>
                     <ListItemText id="switch-list-label-wifi"
-                                  primary={`Welcome ${localStorage.getItem('user_data') === null ? 'User' : JSON.parse(localStorage.getItem('user_data')).username}`}/>
+                                  primary={`Welcome ${localStorage.getItem(storageIndex.userData) === null ? "User" : JSON.parse(atob(localStorage.getItem(storageIndex.userData))).username}`}/>
                 </div>
                 <Divider/>
                 <ListItem>
