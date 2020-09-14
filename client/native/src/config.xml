@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.kabeers.music" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+    <name>Kabeers Music</name>
+    <description>
+        Listen to Free Unlimited Music. Music App By Kabeers Network
+    </description>
+    <author email="kabeersnetwork@gmail.com" href="mailto:kabeersnetwork@gmail.com">
+        Kabeers Network Support
+    </author>
+    <content src="index.html"/>
+    <access origin="*"/>
+    <allow-intent href="http://*/*"/>
+    <allow-intent href="https://*/*"/>
+    <allow-intent href="tel:*"/>
+    <allow-intent href="sms:*"/>
+    <allow-intent href="mailto:*"/>
+    <allow-intent href="geo:*"/>
+    <platform name="android">
+        <allow-intent href="market:*"/>
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*"/>
+        <allow-intent href="itms-apps:*"/>
+    </platform>
+</widget>

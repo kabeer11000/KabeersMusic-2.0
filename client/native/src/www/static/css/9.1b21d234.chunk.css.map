@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "sources": [
+    "E:/Projects/phpstormprojects/music_react/client/src/components/Player/E:/Projects/phpstormprojects/music_react/client/src/components/Player/Player.css",
+    "9.1b21d234.chunk.css"
+  ],
+  "names": [],
+  "mappings": "AAAA,oCAEI,UAAA,CACA,iBCCJ,CDEA,4BACI,yBCCJ,CDEA,4BACI,UCCJ,CDGA,yCAKI,4CACI,mBCCJ,CACJ,CDEA,0CAKI,4CACI,mBCCJ,CACJ,CDEA,cACI,kCAAA,CAAA,0BCEJ",
+  "file": "9.1b21d234.chunk.css",
+  "sourcesContent": [
+    ".ExpandedPlayButtonContainer button {\r\n    /*background-color: #68C398;*/\r\n    color: rgb(255, 255, 255);\r\n    border-color: white;\r\n}\r\n\r\n.Player .ImageCircle .image {\r\n    border: #68C398 solid 1rem;\r\n}\r\n\r\n.KabeersMiniPlayerContainer {\r\n    width: 100%;\r\n}\r\n\r\n\r\n@media only screen and (min-width: 768px) {\r\n    .KabeersMiniPlayerContainer {\r\n        width: 50% !important;\r\n    }\r\n\r\n    .smallOnDesktop {\r\n        width: 50% !important;\r\n    }\r\n}\r\n\r\n@media only screen and (min-width: 1024px) {\r\n    .KabeersMiniPlayerContainer {\r\n        width: 30% !important;\r\n    }\r\n\r\n    .smallOnDesktop {\r\n        width: 30% !important;\r\n    }\r\n}\r\n\r\n.PlayerDialog {\r\n    backdrop-filter: blur(10px);\r\n}\r\n",
+    ".ExpandedPlayButtonContainer button {\r\n    /*background-color: #68C398;*/\r\n    color: rgb(255, 255, 255);\r\n    border-color: white;\r\n}\r\n\r\n.Player .ImageCircle .image {\r\n    border: #68C398 solid 1rem;\r\n}\r\n\r\n.KabeersMiniPlayerContainer {\r\n    width: 100%;\r\n}\r\n\r\n\r\n@media only screen and (min-width: 768px) {\r\n    .KabeersMiniPlayerContainer {\r\n        width: 50% !important;\r\n    }\r\n\r\n    .smallOnDesktop {\r\n        width: 50% !important;\r\n    }\r\n}\r\n\r\n@media only screen and (min-width: 1024px) {\r\n    .KabeersMiniPlayerContainer {\r\n        width: 30% !important;\r\n    }\r\n\r\n    .smallOnDesktop {\r\n        width: 30% !important;\r\n    }\r\n}\r\n\r\n.PlayerDialog {\r\n    -webkit-backdrop-filter: blur(10px);\r\n            backdrop-filter: blur(10px);\r\n}\r\n\n.ComingNext {\r\n}\r\n\n"
+  ]
+}
