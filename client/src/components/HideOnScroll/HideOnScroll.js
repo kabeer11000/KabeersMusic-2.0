@@ -1,8 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './HideOnScroll.css';
+import React from "react";
+import PropTypes from "prop-types";
+import "./HideOnScroll.css";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Slide from "@material-ui/core/Slide";
+import {pure} from "recompose";
 
 const HideOnScroll = (props = {...props, direction: "down", appear: false}) => {
     const {children, window} = props;
@@ -29,4 +30,4 @@ HideOnScroll.propTypes = {
 
 HideOnScroll.defaultProps = {};
 
-export default HideOnScroll;
+export default pure(HideOnScroll);

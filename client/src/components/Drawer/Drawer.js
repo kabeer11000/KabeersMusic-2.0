@@ -20,6 +20,7 @@ import {Link} from "react-router-dom";
 import {storageIndex} from "../../functions/Helper/storageIndex";
 import Avatar from "@material-ui/core/Avatar";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import {pure} from "recompose";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -197,4 +198,4 @@ DrawerComponent.propTypes = {
 const mapStateToProps = state => ({isOpen: state.drawer});
 //export default DrawerComponent;
 
-export default connect(mapStateToProps)(DrawerComponent);
+export default connect(mapStateToProps)(pure(DrawerComponent));

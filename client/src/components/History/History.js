@@ -8,6 +8,7 @@ import DownloadListItem from "../DownloadListItem/DownloadListItem";
 import Container from "@material-ui/core/Container";
 import {Button} from "@material-ui/core";
 import {Link} from "react-router-dom";
+import {pure} from "recompose";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -69,4 +70,4 @@ HistoryComponent.propTypes = {};
 
 HistoryComponent.defaultProps = {};
 
-export default HistoryComponent;
+export default pure(HistoryComponent);

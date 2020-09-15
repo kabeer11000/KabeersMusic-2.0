@@ -15,6 +15,7 @@ import {ArrowBack} from "@material-ui/icons";
 import {useHistory} from "react-router-dom";
 import Grow from "@material-ui/core/Grow";
 import withRouter from "react-router-dom/es/withRouter";
+import {pure} from "recompose";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -157,7 +158,7 @@ ArtistComponent.propTypes = {};
 
 ArtistComponent.defaultProps = {};
 
-export default withRouter(ArtistComponent);
+export default withRouter(pure(ArtistComponent));
 {
 	/*
 							<Button onClick={()=>{

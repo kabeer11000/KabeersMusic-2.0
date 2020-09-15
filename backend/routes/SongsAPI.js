@@ -27,8 +27,8 @@ function YouTubeGetID(e) {
 	return void 0 !== (e = e.replace(/(>|<)/gi, "").split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/))[2] ? e[2].split(/[^0-9a-z_\-]/i)[0] : e;
 }
 
-const currentURL = "http://localhost:9000/";
-//const currentURL = "https://kabeersmusic.herokuapp.com/";
+//const currentURL = "http://localhost:9000/";
+const currentURL = "https://kabeersmusic.herokuapp.com/";
 const youtube_key = "AIzaSyAJkG5coTOfjTRgpYRvCUq0C0V0WFc7tZU";
 /*
 const endPoints = {

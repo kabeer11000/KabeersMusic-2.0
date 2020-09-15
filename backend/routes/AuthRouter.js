@@ -73,7 +73,7 @@ router.get("/redirect", (req, res) => {
 	const info = {
 		clientId: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
 		scopes: ["AStroWorld_Cn9OuUNTZRfuaCnwc6:account_image", "AStroWorld_Cn9OuUNTZRfuaCnwc6:username", "AStroWorld_Cn9OuUNTZRfuaCnwc6:email", "AStroWorld_Cn9OuUNTZRfuaCnwc6:user_id", "s564d68a34dCn9OuUNTZRfuaCnwc6:getSong", "s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|"),
-		callback: encodeURI(endPoints.callbackURLFAKE)
+		callback: encodeURI(endPoints.callbackURL)
 	};
 	const id = makeid(10);
 	req.session.state = id;

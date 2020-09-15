@@ -7,6 +7,7 @@ import Divider from "@material-ui/core/Divider";
 import NextListItem from "./NextListItem";
 import List from "@material-ui/core/List";
 import ListSubheader from "@material-ui/core/ListSubheader";
+import {pure} from "recompose";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -52,7 +53,9 @@ const ComingNext = (props) => {
 	useEffect(() => {
 		setList(() => {
 			const listItems = props.playList.list.items.map((value, index) => {
-				return <NextListItem currentIndex={index} keyIndex={props.playList.index} key={index}
+				return <NextListItem onClick={() => {
+					props.playSong({video: value, index: index});
+				}} currentIndex={index} keyIndex={props.playList.index} key={index}
 									 title={value.snippet.title} channelTitle={value.snippet.channelTitle}
 									 image={value.snippet.thumbnails.high.url}/>;
 			});
@@ -94,5 +97,5 @@ const mapStateToProps = state => ({
 	videoElement: state.currentSong.videoElement,
 	playList: state.currentSong.playList
 });
-export default connect(mapStateToProps)(ComingNext);
+export default connect(mapStateToProps)(pure(ComingNext));
 

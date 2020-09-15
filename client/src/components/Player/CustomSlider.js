@@ -3,6 +3,7 @@ import Slider from "@material-ui/core/Slider";
 import store from "../../Redux/store/store";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
+import {pure} from "recompose";
 
 const CustomSlider = (props) => {
 	if (!props.componentState.Dialog) return <></>;
@@ -12,6 +13,8 @@ const CustomSlider = (props) => {
 		if (props.componentState.Dialog) {
 			setInterval(() => !props.audioElement.paused && props.componentState.Dialog ? setScrubbing(props.audioElement.currentTime) : null, 1000);
 		}
+		return () => {
+		};
 	}, []);
 
 	async function handleScrubbing(v) {
@@ -45,4 +48,4 @@ const mapStateToProps = state => ({
 	componentState: state.currentSong.componentState,
 	audioElement: state.currentSong.audioElement,
 });
-export default connect(mapStateToProps)(CustomSlider);
+export default connect(mapStateToProps)(pure(CustomSlider));

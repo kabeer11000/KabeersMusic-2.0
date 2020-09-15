@@ -3,6 +3,7 @@ import Slider from "@material-ui/core/Slider";
 import store from "../../Redux/store/store";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
+import {pure} from "recompose";
 
 const CustomMiniPlayerSlider = (props) => {
     if (!props.componentState.MiniPlayer) {
@@ -43,4 +44,4 @@ const mapStateToProps = state => ({
     componentState: state.currentSong.componentState,
     audioElement: state.currentSong.audioElement,
 });
-export default connect(mapStateToProps)(CustomMiniPlayerSlider);
+export default connect(mapStateToProps)(pure(CustomMiniPlayerSlider));

@@ -5,6 +5,7 @@ import store from "../../Redux/store/store";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
 import CustomMiniPlayerSlider from "./CustomMiniPlayerSlider";
+import {pure} from "recompose";
 
 
 const MiniPlayer = (props) => {
@@ -123,4 +124,4 @@ const mapStateToProps = state => ({
     reOpenDialog: state.currentSong.reOpenDialog,
     playList: state.currentSong.playList
 });
-export default connect(mapStateToProps)(MiniPlayer);
+export default connect(mapStateToProps)(pure(MiniPlayer));

@@ -20,6 +20,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Link} from "react-router-dom";
 //import {work} from "worka";
 //import {dictionary} from "../../functions/Worker/dict";
+import {pure} from "recompose";
+
 function makeid(r) {
 	for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = t.length, o = 0; o < r; o++) a += t.charAt(Math.floor(Math.random() * n));
 	return a;
@@ -238,4 +240,4 @@ HomeComponent.defaultProps = {};
 const mapStateToProps = state => ({
 	homeComponents: state.home
 });
-export default connect(mapStateToProps)(HomeComponent);
+export default connect(mapStateToProps)(pure(HomeComponent));

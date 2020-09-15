@@ -1,10 +1,11 @@
-import React from 'react';
+import React from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {pure} from "recompose";
 
 const useStyles = makeStyles((theme) => ({
     inline: {
@@ -15,13 +16,14 @@ const NextListItem = (props) => {
 
     const classes = useStyles();
     return (
-        <ListItem alignItems="flex-start" selected={props.currentIndex === props.keyIndex} className={'p-0 px-1'}
+        <ListItem button disabled={props.currentIndex === props.keyIndex} alignItems="flex-start"
+                  selected={props.currentIndex === props.keyIndex} className={"p-0 px-1"}
                   onClick={props.onClick}>
             <ListItemAvatar>
                 <Avatar alt={props.title} src={props.image}/>
             </ListItemAvatar>
             <ListItemText
-                className={'text-truncate'}
+                className={"text-truncate"}
                 primary={props.title}
                 secondary={
                     <React.Fragment>
@@ -43,4 +45,4 @@ NextListItem.propTypes = {};
 
 NextListItem.defaultProps = {};
 
-export default NextListItem;
+export default pure(NextListItem);

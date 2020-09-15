@@ -17,6 +17,7 @@ import Avatar from "@material-ui/core/Avatar";
 import {getSong, getSongFromStorage, SuggestOfflineSongs} from "../../functions/songs";
 import {Button, Slide} from "@material-ui/core";
 import SkeletonList from "../SkeletonList/SkeletonList";
+import {pure} from "recompose";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -106,7 +107,7 @@ const SearchResultComponent = (props) => {
                 .catch(setListItems(errorPage()))
                 .then(resultsArray => {
                     if (!resultsArray) return;
-                    setListItems(() => resultsArray.items.length ? resultsArray.items.map((value, index) => {
+                    setListItems(() => resultsArray.items ? resultsArray.items.map((value, index) => {
                         if (!value) return;
                         return (
                             <ListItem button key={index} onClick={() => PlaySong(value, {
@@ -115,7 +116,7 @@ const SearchResultComponent = (props) => {
                                 <ListItemIcon>
                                     <Avatar alt={value.snippet.title} src={value.snippet.thumbnails.default.url}/>
                                 </ListItemIcon>
-                                <ListItemText primary={`${decodeURIComponent(value.snippet.title)}`}
+                                <ListItemText primary={`${value.snippet.title}`}
                                               secondary={`${value.snippet.channelTitle}`}/>
                             </ListItem>
                         );
@@ -186,4 +187,4 @@ SearchResultComponent.defaultProps = {};
 const mapStateToProps = state => ({
     query: state.q,
 });
-export default connect(mapStateToProps)(SearchResultComponent);
+export default connect(mapStateToProps)(pure(SearchResultComponent));

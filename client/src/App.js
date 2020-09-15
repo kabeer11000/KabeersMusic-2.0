@@ -26,6 +26,8 @@ import endPoints from "./api/endpoints/endpoints";
 import PlayLists from "./components/PlayLists/PlayLists.lazy";
 import NoSsr from "@material-ui/core/NoSsr";
 import ArtistComponent from "./components/ArtistComponent/ArtistComponent.lazy";
+import Redirect from "react-router-dom/es/Redirect";
+import {pure} from "recompose";
 
 const App = () => {
 
@@ -33,6 +35,7 @@ const App = () => {
 	const [Player__, SetPlayer] = React.useState(true);
 	const [backdrop, SetBackdrop] = React.useState(true);
 	const [PlayerOffline, SetPlayerOffline] = React.useState(navigator.onLine);
+	const abortController = new AbortController();
 	const palletType = darkState ? "dark" : "light";
 	const colors = {
 		primary: {
@@ -147,15 +150,18 @@ const App = () => {
 											   render={() => (
 												   <React.Fragment>
 													   <CustomAppBar/>
+													   <CustomBottomNavigation progress_hidden={backdrop}/>
 													   {/*<BackDropLoader hidden={backdrop}/>*/}
 												   </React.Fragment>
 											   )}/>
 										<Player offline={PlayerOffline} misc_func={misc_functions} hidden={Player__}
 												changes={changeStates}/>
 										<MiniPlayer hidden={Player__}/>
-										<Route exact path={"/home"}
+										<Route path={"/home"}
 											   render={() => <HomeComponent misc={misc_functions}
 																			appState={changeStates}/>}/>
+										<Route path={"/"}
+											   render={() => <Redirect to={"/home"}/>}/>
 										<Route exact path={"/downloads"}
 											   render={() => <Downloads appState={changeStates}/>}/>
 										<Route exact path={"/search"} component={SearchComponent}/>
@@ -180,7 +186,6 @@ const App = () => {
 											onClick={()=>{window.location.href = ('/home')}}>Go Home</Button>)}/>
 											 */
 										}
-										<CustomBottomNavigation progress_hidden={backdrop}/>
 									</DrawerComponent>
 								</div>
 							</SnackbarProvider>
@@ -192,4 +197,4 @@ const App = () => {
 	);
 };
 
-export default App;
+export default pure(App);

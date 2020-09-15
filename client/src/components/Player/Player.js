@@ -35,6 +35,7 @@ import {saveHistoryToServer} from "../../functions/Helper/history";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {useHistory} from "react-router-dom";
+import {pure} from "recompose";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -334,7 +335,7 @@ const Player = (props) => {
 								setPlayList(true);
 							}}
 						>
-							<ComingNext/>
+							<ComingNext playSong={SkipSong}/>
 						</SwipeableDrawer>
 
 					</div>
@@ -359,4 +360,4 @@ const mapStateToProps = state => ({
 	playList: state.currentSong.playList,
 	autoPlayMode: state.currentSong.autoPlay
 });
-export default connect(mapStateToProps)(Player);
+export default connect(mapStateToProps)(pure(Player));
