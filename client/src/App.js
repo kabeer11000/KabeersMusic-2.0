@@ -18,7 +18,6 @@ import HistoryComponent from "./components/History/History.lazy";
 import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
-//import "swiped-events";
 import Liked from "./components/Liked/Liked.lazy";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import {DialogProvider} from "muibox";
@@ -28,6 +27,8 @@ import NoSsr from "@material-ui/core/NoSsr";
 import ArtistComponent from "./components/ArtistComponent/ArtistComponent.lazy";
 import Redirect from "react-router-dom/es/Redirect";
 import {pure} from "recompose";
+//import "swiped-events";
+
 
 const App = () => {
 

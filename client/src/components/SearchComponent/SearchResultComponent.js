@@ -157,7 +157,8 @@ const SearchResultComponent = (props) => {
                     <Toolbar component={Link} to={`/search?q=${props.query}`}>
                         {window.history ? <IconButton onClick={() => {
                             setOpen(false);
-                        }} component={Link} to={"/home"} color="primary.light" visibility={false}>
+                        }} component={Link} style={{textDecoration: "none"}} to={"/home"} color="primary.light"
+                                                      visibility={false}>
                             <ArrowBack/>
                         </IconButton> : <></>}
                         <InputBase
@@ -172,7 +173,7 @@ const SearchResultComponent = (props) => {
                 </AppBar>
                 <div className={"container px-3"} style={{marginTop: "4rem"}}>
                     <div className={"row"}>
-                        {listItems.length ? listItems : <SkeletonList length={10}/>}
+                        {listItems && listItems.length ? listItems : <SkeletonList length={10}/>}
                     </div>
                 </div>
             </Dialog>

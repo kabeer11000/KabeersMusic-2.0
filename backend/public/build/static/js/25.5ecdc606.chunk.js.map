@@ -1,0 +1,44 @@
+{
+  "version": 3,
+  "sources": [
+    "components/Liked/Liked.js"
+  ],
+  "names": [
+    "__webpack_require__",
+    "r",
+    "__webpack_exports__",
+    "react__WEBPACK_IMPORTED_MODULE_0__",
+    "react__WEBPACK_IMPORTED_MODULE_0___default",
+    "n",
+    "_material_ui_core__WEBPACK_IMPORTED_MODULE_2__",
+    "Liked",
+    "a",
+    "createElement",
+    "className",
+    "message",
+    "arguments",
+    "length",
+    "undefined",
+    "onclick",
+    "button",
+    "onClick",
+    "style",
+    "position",
+    "top",
+    "left",
+    "transform",
+    "src",
+    "width",
+    "height",
+    "alt",
+    "errorPage",
+    "Fragment",
+    "defaultProps"
+  ],
+  "mappings": "iHAAAA,EAAAC,EAAAC,GAAA,IAAAC,EAAAH,EAAA,GAAAI,EAAAJ,EAAAK,EAAAF,GAAAG,GAAAN,EAAA,KAAAA,EAAA,MAKMO,EAAQ,WAYV,OACIH,EAAAI,EAAAC,cAAA,OAAKC,UAAU,SAZD,eAACC,EAADC,UAAAC,OAAA,QAAAC,IAAAF,UAAA,GAAAA,UAAA,GAAW,yBAA0BG,EAArCH,UAAAC,OAAA,EAAAD,UAAA,QAAAE,EAA8CE,EAA9CJ,UAAAC,OAAA,QAAAC,IAAAF,UAAA,GAAAA,UAAA,GAAuDR,EAAAI,EAAAC,cAACH,EAAA,EAAD,CACrEW,QAASF,GAD4D,SAAvD,OAEdX,EAAAI,EAAAC,cAAA,OAAKC,UAAW,wBACXQ,MAAO,CAACC,SAAU,WAAYC,IAAK,MAAOC,KAAM,MAAOC,UAAW,0BACnElB,EAAAI,EAAAC,cAAA,OAAKc,IAAK,2CAA4CL,MAAO,CAACM,MAAO,OAAQC,OAAQ,QAChFC,IAAK,uBACVtB,EAAAI,EAAAC,cAAA,WACAL,EAAAI,EAAAC,cAAA,OAAKC,UAAW,iBAAkBC,GACjCK,GAKAW,CAAU,8BAA+B,aACvCvB,EAAAI,EAAAC,cAAAL,EAAAI,EAAAoB,SAAA,SAOfrB,EAAMsB,aAAe,GAENtB",
+  "file": "static/js/25.5ecdc606.chunk.js",
+  "sourcesContent": [
+    "import React from 'react';\n\nimport './Liked.css';\nimport {Button} from \"@material-ui/core\";\n\nconst Liked = () => {\n    const errorPage = (message = 'No Internet Connection', onclick, button = <Button\n        onClick={onclick}>Retry</Button>) => (\n        <div className={'errorPage text-center'}\n             style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>\n            <img src={'./assets/icons/darkmode_nothingfound.svg'} style={{width: '8rem', height: \"auto\"}}\n                 alt={'Kabeers Music Logo'}/>\n            <br/>\n            <div className={\"text-truncate\"}>{message}</div>\n            {button}\n        </div>\n    );\n    return (\n        <div className=\"Liked\">\n            {errorPage('Feature Not Implemented Yet', () => {\n            }, <></>)}\n        </div>\n    );\n};\n\nLiked.propTypes = {};\n\nLiked.defaultProps = {};\n\nexport default Liked;\n"
+  ],
+  "sourceRoot": ""
+}

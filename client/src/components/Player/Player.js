@@ -144,7 +144,7 @@ const Player = (props) => {
 
 	useEffect(() => {
 		addToHistory()
-			.then(saveHistoryToServer(props.videoElement))
+			.then(navigator.onLine ? saveHistoryToServer(props.videoElement) : null) // Play With Expired Token While offline
 			.then(addToReduxState([true, false]))
 			.then(() => {
 				audioElement.play();
@@ -167,6 +167,9 @@ const Player = (props) => {
 				<IconButton onClick={downloadAudio}><GetApp/></IconButton>);
 		});
 		AutoPlay(!AutoPlayButton);
+		return () => {
+			abortController.abort();
+		};
 	}, []);
 
 	function SkipSong(data) {

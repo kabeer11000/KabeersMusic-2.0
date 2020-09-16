@@ -11,8 +11,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import CustomAppBar from "../CustomAppBar/CustomAppBar.lazy";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
-import {FeedbackButton} from "../FeedBack/FeedBack";
+import FeedbackButton from "../FeedBack/FeedBack";
 import {storageIndex} from "../../functions/Helper/storageIndex";
+import {pure} from "recompose";
 
 const Settings = (props) => {
     const [checked, setChecked] = React.useState(['darkmode']);
@@ -73,4 +74,4 @@ Settings.propTypes = {};
 
 Settings.defaultProps = {};
 
-export default Settings;
+export default pure(Settings);

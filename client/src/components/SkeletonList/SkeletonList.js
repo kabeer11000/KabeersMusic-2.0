@@ -1,10 +1,11 @@
-import React from 'react';
-import './SkeletonList.css';
+import React from "react";
+import "./SkeletonList.css";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import {Skeleton} from "@material-ui/lab";
 import ListItemText from "@material-ui/core/ListItemText";
+import {pure} from "recompose";
 
 const SkeletonList = (props = 8) => (
     <List>
@@ -32,4 +33,4 @@ SkeletonList.propTypes = {};
 
 SkeletonList.defaultProps = {};
 
-export default SkeletonList;
+export default pure(SkeletonList);

@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import {Typography} from "@material-ui/core";
 import Grow from "@material-ui/core/Grow";
 import Link from "@material-ui/core/Link";
+import {pure} from "recompose";
 
 // = {title, description, tags, channelTitle, videoId, thumbnail}
 function SongCard(props) {
@@ -52,4 +53,4 @@ SongCard.propTypes = {};
 
 SongCard.defaultProps = {};
 
-export default SongCard;
+export default pure(SongCard);

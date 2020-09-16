@@ -1,8 +1,9 @@
-import React from 'react'
-import {IconButton, Tooltip} from '@material-ui/core'
-import FeedbackIcon from '@material-ui/icons/Feedback';
-import {FeedbackDialog} from 'mui-feedback-dialog'
+import React from "react";
+import {IconButton, Tooltip} from "@material-ui/core";
+import FeedbackIcon from "@material-ui/icons/Feedback";
+import {FeedbackDialog} from "mui-feedback-dialog";
 import {useSnackbar} from "notistack";
+import {pure} from "recompose";
 
 
 const FeedbackButton = () => {
@@ -25,6 +26,4 @@ const FeedbackButton = () => {
     </React.Fragment>
 };
 
-export {
-    FeedbackButton
-}
+export default pure(FeedbackButton);

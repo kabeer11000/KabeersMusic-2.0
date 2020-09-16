@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import {initAuth} from "../../functions/auth";
 import endPoints from "../../api/endpoints/endpoints";
 import {Button} from "@material-ui/core";
+import {pure} from "recompose";
 
 const playlistsIds = {
 	LatestSongs: "PLFgquLnL59akA2PflFpeQG9L01VFg90wS",
@@ -91,9 +92,4 @@ PlayLists.propTypes = {};
 
 PlayLists.defaultProps = {};
 
-export default PlayLists;
-const formulas = {
-	alkane: "CNH2N+2",
-	alkene: "CNH2N",
-	alkyne: "CNH2N-2"
-};
+export default pure(PlayLists);

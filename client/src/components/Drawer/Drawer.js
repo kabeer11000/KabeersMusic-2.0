@@ -28,6 +28,14 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
     },
     drawer: {
+        [theme.breakpoints.up("xs")]: {
+            width: drawerWidth + 50,
+            flexShrink: 0,
+        },
+        [theme.breakpoints.up("md")]: {
+            width: drawerWidth + 100,
+            flexShrink: 0,
+        },
         [theme.breakpoints.up("xl")]: {
             width: drawerWidth,
             flexShrink: 0,
