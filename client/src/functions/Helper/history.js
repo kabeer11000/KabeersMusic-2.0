@@ -42,9 +42,9 @@ export async function saveHistoryToServer(video, callback = () => {
                     channelId: video.snippet.channelId,
                     tags: video.snippet.tags || [],
                     yt_catagory: 10,
-                    video_title: video.snippet.title,
+                    video_title: video.snippet.title.replace(/[^a-zA-Z ]/g, ""),
                     video_keywords: [...desc],
-                    video_featuring_artists: video.snippet.title.split(/ft.|feat.|ft|feat/i) || "",
+                    video_featuring_artists: video.snippet.title.replace(/[^a-zA-Z ]/g, "").split(/ft.|feat.|ft|feat/i) || "",
                     video_description: video.snippet.description ? video.snippet.description.substring(0, 100) : ""
                 }),
                 headers: new Headers({

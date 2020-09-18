@@ -23,6 +23,7 @@ const endPoints = {
     getSearchFeed: () => `${hostName}/api/feed/search`,
     getTopArtistFeed: () => `${hostName}/api/feed/topartist`,
     getPlayListById: (id) => `${hostName}/api/backend/playlist?playlist=${id}`,
+    getPlayListByIdSearchFallback: (id) => `${hostName}/api/backend/search?q=${id}&playListMode=true`,
     getFeedArtists: `${hostName}/api/feed/artists/all`,
     getArtistInfo: (id) => `${hostName}/api/backend/get/artist?id=${id}`
 };

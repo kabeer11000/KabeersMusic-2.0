@@ -19,7 +19,10 @@ var ytpl = require("ytpl");
 const simpleYT = require("simpleyt");
 const yt = require("youtube-search-without-api-key");
 const yts = require("yt-search");
+var natural = require("natural");
 
+
+var tokenizer = new natural.WordTokenizer();
 Array.prototype.last = () => this[this.length - 1];
 const aut = 400;
 
@@ -199,7 +202,7 @@ const getMaximum = (e) => {
 		for (let r = m; r < e.length; r++) e[m] === e[r] && l++, n < l && (n = l, t = e[m]);
 		l = 0;
 	}
-	return {name: t, times: n};
+	return t && n ? {name: t, times: n} : {name: e[0], times: 1};
 };
 router.get("/feed/search", (req, res) => {
 	if (!req.headers.authorization) return res.status(402).json("Bad Request");
@@ -233,24 +236,40 @@ router.get("/feed/topartist", (req, res) => {
 		if (err || !decoded) return res.status(400).json(err);
 		if (!decoded.grant_types.split("|").includes("s564d68a34dCn9OuUNTZRfuaCnwc6:feed")) return res.status(402).json("Invalid Token Scope");
 		const user_id = decoded.user_id;
-
 		MongoClient.connect(mongo_uri, {useNewUrlParser: true, useUnifiedTopology: true})
 			.then((db) => {
 				if (!db) return res.status(500).json("Error Connecting to Database");
-				const channelTitles = [];
-				db.db("music").collection("history")
-					.find({user_id: user_id, type: "watchHistory"}).toArray()
-					.then(value => value.map((v, i) => channelTitles.push(v.artist_name)))
-					.then(() => {
-						const ListenedMaximum = getMaximum(channelTitles);
-						axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} official music`).toLowerCase())
-							.then(v => v.data)
-							.then((ytResponse) => {
-								return ListenedMaximum.name ? res.status(200).json({
-									...ytResponse,
-									title: `Because You Listened to ${ListenedMaximum.name}`
-								}) : res.status(400).json("No Data Found For User");
-							}).catch(e => res.status(500).json(e.message));
+				const dbo = db.db("music");
+				dbo.collection("history")
+					.find({
+						user_id: user_id,
+						type: "watchHistory",
+					})
+					.sort({timeStamp: -1}).limit(10).toArray()
+					.then((results) => {
+						const historyKeywords = results.map((object, index) => ({
+							videoId: object.video_id,
+							keyWords: object.video_keywords
+						})).flat().filter((item, pos, self) => self.indexOf(item) === pos);
+						dbo.collection("history").find({
+							type: "watchHistory",
+							video_keywords: {
+								$elemMatch: {
+									$in: [...historyKeywords.map(video => video.keyWords)].flat() // Fatten Array
+								}
+							}
+						}).sort({timeStamp: -1}).limit(10).toArray()
+							.then(recom => {
+								if (!recom.map(v => v.artist_name).length) return res.status(404).json({message: "Nothing Found"});
+								console.log(recom.map(v => v.artist_name));
+								const ListenedMaximum = getMaximum(recom.map(v => v.artist_name));
+								axios.get(endPoints.searchYoutube(`${ListenedMaximum.name} official music`).toLowerCase())
+									.then(v => v.data)
+									.then(ytResponse => res.status(200).json({
+										...ytResponse,
+										title: `Because You Listened to ${ListenedMaximum.name}`
+									})).catch(e => res.status(500).json(e));
+							}).catch(e => res.status(500).json(e));
 					}).catch(e => res.status(500).json(e));
 			}).catch(e => res.status(500).json(e));
 	});
@@ -275,7 +294,7 @@ router.get("/feed/artists/all", (req, res) => {
 							items: channelTitles.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i),
 						});
 					}).catch(e => res.status(500).json(e));
-			});
+			}).catch(e => res.status(500).json(e.message));
 	});
 });
 router.post("/history/save", async (req, res) => {
@@ -301,7 +320,9 @@ router.post("/history/save", async (req, res) => {
 					video_keywords: req.body.video_keywords.split(","),
 					language: franc(req.body.video_description, {}) || "en",
 					video_featuring_artists: req.body.video_featuring_artists.split(","),
-					channelId: req.body.channelId
+					video_description: req.body.video_description,
+					channelId: req.body.channelId,
+					timeStamp: Date.now()
 				}, function (err, result) {
 					if (err) return res.status(400).json(err.message);
 					return res.status(200).json(result);
@@ -323,6 +344,43 @@ router.get("/request/:url", (req, res) => {
 			})
 			.catch(e => res.json({message: e.message}));
 	});
+});
+router.get("/backend/videoinfo", (req, res) => {
+	yts({videoId: decodeURI(req.query.id)})
+		.then(video => {
+			res.json({
+				kind: "KabeersMusic#Song",
+				etag: makeid(10),
+				id: video.videoId,
+				channelId: video.author.url.split("/")[4],
+				snippet: {
+					publishedAt: video.ago,
+					title: video.title,
+					description: video.description,
+					channelTitle: video.author.name || "From Kabeers Music",
+					channelId: video.author.url.split("/")[4],
+					duration: video.duration,
+					views: video.views,
+					thumbnails: {
+						default: {
+							url: `https://i.ytimg.com/vi/${video.videoId}/default.jpg`,
+							width: 120,
+							height: 90
+						},
+						medium: {
+							url: `https://i.ytimg.com/vi/${video.videoId}/mqdefault.jpg`,
+							width: 320,
+							height: 180
+						},
+						high: {
+							url: `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`,
+							width: 480,
+							height: 360
+						}
+					}
+				}
+			});
+		}).catch(e => res.status(500).json("Failed To Fetch"));
 });
 router.get("/backend/search", (req, res) => {
 	yts({query: decodeURI(req.query.q)}).then(value => {
@@ -371,7 +429,8 @@ router.get("/backend/search", (req, res) => {
 				"totalResults": items.length,
 			},
 			"items": items,
-			"accounts": ytlr_result.channels
+			"accounts": ytlr_result.channels,
+			title: req.query.playListMode ? req.query.q : null
 		});
 	}).catch(e => res.status(500).json(e));
 });
@@ -437,6 +496,7 @@ router.get("/backend/playlist", (req, res) => {
 	})
 		.then(ytlr_result => {
 			const items = [];
+
 			ytlr_result.items.map((video, index) => {
 				const videoId = YouTubeGetID(video.url_simple);
 				items.push({

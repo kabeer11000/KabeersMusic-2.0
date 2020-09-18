@@ -14,10 +14,25 @@ const net = new brain.recurrent.LSTM({
 	leakyReluAlpha: 0.01, // supported for activation type 'leaky-relu'
 	learningRate: 0.01, // scales with delta to effect training rate --> number between 0 and 1
 });
+
 //new brain.
+data = data.map((IOobject) => {
+	let inputSplit = IOobject.input.split(" ");
+	inputSplit = inputSplit.filter((item, pos) => inputSplit.indexOf(item) === pos);
+	//console.log(inputSplit.join())
+	return inputSplit.join();
+	//inputSplit.map(value => Math.floor(Math.random()+Math.random()));
+	//console.log(inputSplit)
+}).join();
+
+
+console.log("Data", data.split(","));
+
+
+/*
 net.train(data, {
 	// Defaults values --> expected validation
-	iterations: 2000, // the maximum times to iterate the training data --> number greater than 0
+	iterations: 1000, // the maximum times to iterate the training data --> number greater than 0
 	errorThresh: 0.005, // the acceptable error percentage from training data --> number between 0 and 1
 	log: true, // true to use console.log, when a function is supplied it is used --> Either true or a function
 	logPeriod: 5, // iterations between logging out --> number greater than 0
@@ -26,12 +41,26 @@ net.train(data, {
 	// iodic call back that can be triggered while training --> null or function
 	callbackPeriod: 10, // the number of iterations through the training data between callback calls --> number greater than 0
 	timeout: Infinity, // the max number of milliseconds to train for --> number greater than 0
-	learningRate: 0.01, // scales with delta to effect training rate --> number between 0 and 1
+	learningRate: 0.001, // scales with delta to effect training rate --> number between 0 and 1
+	hiddenLayers: [3, 4], // array of ints for the sizes of the hidden layers in the network
 });
-net.maxPredictionLength = 10;
+*/
+//net.maxPredictionLength = 10;
 const mainJs = async (t) => {
 	//net.trainAsync()
-	const output = net.run(t);
+	const index = {};
+	data.split(",").filter((item, pos) => data.split(",").indexOf(item) === pos).map((v, i) => index[v] = i);
+	return index;
+	let d;
+	if (t === "1") d = [2, 5, 3, 3, 3, 3, 3, 5, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 4, 4, 5, 5, 5, 5, 5, 5, 5, 4, 5, 2, 2, 2, 5, 6, 6, 1];
+	if (t === "1.sorted") d = [2, 5, 3, 3, 3, 3, 3, 5, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 4, 4, 5, 5, 5, 5, 5, 5, 5, 4, 5, 2, 2, 2, 5, 6, 6, 1].sort();
+	if (t === "1") d = [2, 5, 3, 3, 3, 3, 3, 5, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 4, 4, 5, 5, 5, 5, 5, 5, 5, 4, 5, 2, 2, 2, 5, 6, 6, 1].reverse();
+
+	if (t === "2") d = [4, 4, 5, 5, 4, 4, 4, 5, 5, 5, 5, 5, 5, 4, 4, 4, 5, 5, 5, 6, 6, 5, 5, 5];
+	if (t === "2.sort") d = [4, 4, 5, 5, 4, 4, 4, 5, 5, 5, 5, 5, 5, 4, 4, 4, 5, 5, 5, 6, 6, 5, 5, 5].sort();
+	if (t === "2.rev") d = [4, 4, 5, 5, 4, 4, 4, 5, 5, 5, 5, 5, 5, 4, 4, 4, 5, 5, 5, 6, 6, 5, 5, 5].reverse();
+
+	const output = net.run(d);
 	return output;
 };
 const getMaximum = e => {

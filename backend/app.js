@@ -18,7 +18,7 @@ const mongo_uri = require("./keys/mongokey");
 var authRouter = require("./routes/AuthRouter");
 var ProxyRouter = require("./routes/ProxyRouter");
 var songsRouter = require("./routes/SongsAPI");
-//var recomRouter = require('./routes/RecomAPI/Recom');
+var recomRouter = require("./routes/RecomAPI/simpleRecom");
 
 var app = express();
 
@@ -47,7 +47,7 @@ app.set("json spaces", 2);
 app.use("/proxy", ProxyRouter);
 app.use("/api", songsRouter);
 app.use("/auth", authRouter);
-//app.use('/recom', recomRouter);
+app.use("/recom", recomRouter);
 
 app.use(express.static("public/build"));
 app.get(["/home", "/downloads", "/liked", "/history", "/settings", "/search", "/search/results", "/artist", "/charts"], (req, res) => {
