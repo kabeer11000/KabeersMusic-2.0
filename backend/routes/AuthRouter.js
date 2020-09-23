@@ -1,6 +1,14 @@
 var express = require("express");
 var router = express.Router();
 var axios = require("axios");
+const
+	mongo = require("mongodb"),
+	MongoClient = mongo.MongoClient;
+const mongo_uri = require("../keys/mongokey");
+const mongoClient = MongoClient.connect(mongo_uri, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+}).then(db => db.db("music"));
 
 const endPoints = {
 	callbackURL: "https://kabeersmusic.herokuapp.com/auth/callback",
@@ -31,7 +39,7 @@ router.get("/callback", function (req, res, next) {
 		url: "https://kabeers-auth.herokuapp.com/auth/token?modern=true",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded"
-		},//https://kabeersmusic.herokuapp.com/auth/callback
+		},
 		data: serialize({
 			client_secret: "pojsd682jxp31accE3mHsMtBRGVtIk0AmTV0jU3g",
 			client_public: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
@@ -60,7 +68,7 @@ router.get("/callback", function (req, res, next) {
 				token: IdentityProviderTokens.access_token
 			}), {maxAge: 7.2e+6});
 			res.cookie("user_data_refresh_token", IdentityProviderTokens.refresh_token, {maxAge: 8.64e+8,});
-			//res.status(200).json({ expire: '2h', exp: Date.now(), token: response.data[0]['s564d68a34dCn9OuUNTZRfuaCnwc6'].access_token });
+
 			res.redirect("/");
 		})
 		.catch(function (error) {
@@ -73,7 +81,7 @@ router.get("/redirect", (req, res) => {
 	const info = {
 		clientId: "S565ds6887df646k5Y4f56IOiDWxRXS840lnnmD",
 		scopes: ["AStroWorld_Cn9OuUNTZRfuaCnwc6:account_image", "AStroWorld_Cn9OuUNTZRfuaCnwc6:username", "AStroWorld_Cn9OuUNTZRfuaCnwc6:email", "AStroWorld_Cn9OuUNTZRfuaCnwc6:user_id", "s564d68a34dCn9OuUNTZRfuaCnwc6:getSong", "s564d68a34dCn9OuUNTZRfuaCnwc6:search", "s564d68a34dCn9OuUNTZRfuaCnwc6:feed", "s564d68a34dCn9OuUNTZRfuaCnwc6:history.readwrite"].join("|"),
-		callback: encodeURI(endPoints.callbackURL)
+		callback: encodeURI(endPoints.callbackURLFAKE)
 	};
 	const id = makeid(10);
 	req.session.state = id;

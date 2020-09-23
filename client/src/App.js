@@ -28,10 +28,14 @@ import ArtistComponent from "./components/ArtistComponent/ArtistComponent.lazy";
 import Redirect from "react-router-dom/es/Redirect";
 import {pure} from "recompose";
 //import "swiped-events";
-
+import "./functions/Cast/Cast";
+import {useBeforeunload} from "react-beforeunload";
+import {registerDeviceCast, unRegisterDevice} from "./functions/Cast/Cast";
 
 const App = () => {
 
+	window.onload = registerDeviceCast;
+	useBeforeunload(unRegisterDevice);
 	const [darkState, setDarkState] = React.useState(localStorage.getItem("darkmode") === null ? false : JSON.parse(localStorage.getItem("darkmode")));
 	const [Player__, SetPlayer] = React.useState(true);
 	const [backdrop, SetBackdrop] = React.useState(true);

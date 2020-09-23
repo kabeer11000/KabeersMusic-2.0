@@ -19,6 +19,7 @@ var authRouter = require("./routes/AuthRouter");
 var ProxyRouter = require("./routes/ProxyRouter");
 var songsRouter = require("./routes/SongsAPI");
 var recomRouter = require("./routes/RecomAPI/simpleRecom");
+var castEventRouter = require("./routes/RecomAPI/SessionMaintain");
 
 var app = express();
 
@@ -48,6 +49,7 @@ app.use("/proxy", ProxyRouter);
 app.use("/api", songsRouter);
 app.use("/auth", authRouter);
 app.use("/recom", recomRouter);
+app.use("/cast", castEventRouter);
 
 app.use(express.static("public/build"));
 app.get(["/home", "/downloads", "/liked", "/history", "/settings", "/search", "/search/results", "/artist", "/charts"], (req, res) => {

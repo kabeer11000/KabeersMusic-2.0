@@ -1,6 +1,7 @@
 import endPoints from "../api/endpoints/endpoints";
 import fetch from "./fetchWithTimeOut";
 import {storageIndex} from "./Helper/storageIndex";
+//import {registerDeviceCast} from "./Cast/Cast";
 
 const cookies = {
 	getCookie(cname) {
@@ -46,6 +47,9 @@ export async function initAuth() {
 			.then(res => res.json())
 			.then(userData => localStorage.setItem(storageIndex.userData, btoa(JSON.stringify(userData))))
 			.catch(e => console.log(e));
+	} else {
+		//addDeviceEtag();
+		//registerDeviceCast();
 	}
 })();
 //export async function initAuth() {

@@ -4,6 +4,7 @@ import {AppBar, Avatar, CircularProgress, Dialog, IconButton, Slide, Toolbar, Ty
 import {
 	AccountCircle,
 	ArrowBack,
+	Cast,
 	Done,
 	GetApp,
 	Loop,
@@ -36,6 +37,8 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {useHistory} from "react-router-dom";
 import {pure} from "recompose";
+import {castEnabled, getCastDevices, sendCast} from "../../functions/Cast/Cast";
+import CastDialog from "./CastDialog";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -65,6 +68,23 @@ const Player = (props) => {
 	const [PlayList, setPlayList] = React.useState(false);
 	const [AutoPlayButton, SetAutoPlayButton] = React.useState(props.autoPlay);
 	const abortController = new AbortController();
+	const castDevices = getCastDevices();
+
+
+	const [castDialogOpen, setCastDialogOpen] = React.useState(false);
+	const [castSelectedDevice, setCastSelectedDevice] = React.useState(castDevices[0]);
+
+	const handleCastDialogClickOpen = () => {
+		setCastDialogOpen(true);
+	};
+
+	const handleCastDialogClose = (v) => {
+		setCastDialogOpen(false);
+		setCastSelectedDevice(v);
+		sendCast("YqeW9_5kURI", v);
+	};
+
+
 	const handleClose = () => {
 		addToReduxState([false, true]);
 		setOpen(false);
@@ -225,6 +245,10 @@ const Player = (props) => {
 			});
 	}
 
+	const CastHelper = () => {
+		handleCastDialogClickOpen();
+	};
+
 	useEffect(() => {
 		return () => {
 			abortController.abort();
@@ -239,6 +263,16 @@ const Player = (props) => {
 							<ArrowBack/>
 						</IconButton>
 						<div style={{flex: "1 1 auto"}}/>
+						{
+							navigator.onLine && castEnabled && castDevices.length ? (
+								<IconButton onClick={() => {
+									CastHelper();
+								}}>
+									<Cast/>
+								</IconButton>
+							) : null
+
+						}
 						<FormControlLabel
 							control={
 								<Switch checked={!AutoPlayButton} onChange={() => {
@@ -343,6 +377,8 @@ const Player = (props) => {
 
 					</div>
 				</div>
+				<CastDialog onClose={handleCastDialogClose} open={castDialogOpen} selectedValue={castSelectedDevice}
+							emails={castDevices}/>
 			</Dialog>
 		</div>
 	);

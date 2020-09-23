@@ -1,5 +1,5 @@
-const hostName = `${window.location.protocol}//${window.location.host}`;
-//const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
+//const hostName = `${window.location.protocol}//${window.location.host}`;
+const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
 
 const endPoints = {
     hostName: hostName,
@@ -25,6 +25,10 @@ const endPoints = {
     getPlayListById: (id) => `${hostName}/api/backend/playlist?playlist=${id}`,
     getPlayListByIdSearchFallback: (id) => `${hostName}/api/backend/search?q=${id}&playListMode=true`,
     getFeedArtists: `${hostName}/api/feed/artists/all`,
-    getArtistInfo: (id) => `${hostName}/api/backend/get/artist?id=${id}`
+    getArtistInfo: (id) => `${hostName}/api/backend/get/artist?id=${id}`,
+    castURL: `${hostName}/cast/connect`,
+    updateActiveDevices: `${hostName}/cast/devices/update`,
+    unregisterDevice: `${hostName}/cast/devices/unregister`,
+    sendCastPlay: `${hostName}/cast/devices/send`,
 };
 module.exports = endPoints;
