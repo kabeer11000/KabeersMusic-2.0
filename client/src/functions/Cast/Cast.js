@@ -1,7 +1,14 @@
 import endPoints, {hostName} from "../../api/endpoints/endpoints";
 import {storageIndex} from "../Helper/storageIndex";
-import {serialize} from "../Helper/history";
 import uniqid from "../Helper/randomKey";
+import socketIOClient from "socket.io-client";
+
+const prefix = {
+	client2server: `___CLIENT---SERVER___`,
+	client: `___CLIENT___`,
+};
+
+const socket = socketIOClient(hostName);
 
 const userId = localStorage.getItem(storageIndex.userData) ? JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id : null;
 const deviceId = localStorage.getItem(storageIndex.deviceEtag) ? localStorage.getItem(storageIndex.deviceEtag) : null;
@@ -36,34 +43,20 @@ export const setCastDevicePlayListener = (method, callback = () => null) => {
 		(castEvent.removeEventListener(`devicePlay-${userId}-${deviceId}`, callback));
 };
 export const registerDeviceCast = async () => {
-	return await fetch(endPoints.updateActiveDevices, {
-		method: "POST",
-		headers: new Headers({
-			deviceid: localStorage.getItem(storageIndex.deviceEtag),
-			userdata: JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id,
-		}),
-		body: serialize({
-			deviceid: localStorage.getItem(storageIndex.deviceEtag),
-			userdata: JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id,
-		})
-	})
-		.then(value => value.json())
-		.then(value => console.log(value))
-		.catch(e => console.log(e));
+	return socket.emit("deviceRegister", {
+		deviceId: deviceId,
+		userId: userId
+	});
 };
 export const addDeviceEtag = async () => {
 	if (!localStorage.getItem(storageIndex.deviceEtag)) localStorage.setItem(storageIndex.deviceEtag, uniqid());
 };
 export const unRegisterDevice = async () => {
 	localStorage.removeItem(storageIndex.castDevices);
-	await fetch(endPoints.unregisterDevice, {
-		method: "POST",
-		headers: new Headers({
-			deviceid: localStorage.getItem(storageIndex.deviceEtag),
-			userdata: atob(localStorage.getItem(storageIndex.userData)),
-		})
+	return socket.emit("deviceUnregister", {
+		deviceId: deviceId,
+		userId: userId
 	});
-	return true;
 };
 export const sendCast = async (video, deviceId) => {
 	await fetch(endPoints.sendCastPlay, {

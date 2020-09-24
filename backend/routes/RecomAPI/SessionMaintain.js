@@ -112,16 +112,137 @@ router.get("/user/devices/all", (req, res) => {
 });
 
 // console.log(castDevices.map(session => session.userId === userId ? session.castDevices[deviceId] === null ? session.castDevices.push(deviceId) : null : null));
+
+
+const functions = {
+	deviceRegister: async (socket, data) => {
+		if (!data.userId || !data.deviceId) return new Error("Invalid Query");
+		const
+			userId = data.userId,
+			deviceId = data.deviceId;
+
+		const currentSession = castDevices.find(m => m.userId === userId);
+		!currentSession ? castDevices.push({
+			userId: userId,
+			castDevices: [deviceId]
+		}) : currentSession.castDevices.filter(value => value === deviceId).push(deviceId);
+		return socket.emit(`deviceListUpdate-${userId}`, currentSession);
+	},
+	deviceUnregister: (socket, data) => {
+		const
+			deviceId = data.deviceId,
+			userId = data.userId;
+
+		castDevices.map(session => session.userId === userId ? session.castDevices.filter(deviceId => deviceId === deviceId) : null);
+		const currentSession = castDevices.find(session => session.userId === userId);
+		socket.emit(`unregister-${deviceId}`, currentSession);
+		socket.emit(`deviceListUpdate-${userId}`, currentSession);
+	},
+	devicePlay: (socket, data) => {
+		if (!data.videoelement || !data.remotedeviceid || !data.deviceid || !data.userdata) return new Error("Invalid Headers");
+		const
+			deviceId = data.deviceid,
+			remoteDeviceId = data.remotedeviceid,
+			userId = data.userId,
+			videoElement = data.videoelement;
+
+		const castSession = castDevices.find(session => session.userId === userId);
+		if (castSession.castDevices.includes(deviceId)) socket.emit(`devicePlay-${userId}-${remoteDeviceId}`, {
+			userId: userId,
+			deviceId: deviceId,
+			video: videoElement,
+			remoteDeviceId: remoteDeviceId,
+		});
+	},
+	//deviceListUpdate-${userId}
+	devicePause: (socket, data) => {
+		if (!data.remoteDeviceId || !data.deviceId || !data.userId) return new Error("Invalid Headers");
+		const
+			deviceId = data.deviceId,
+			remoteDeviceId = data.remoteDeviceId,
+			userId = data.userId;
+
+		const castSession = castDevices.find(session => session.userId === userId);
+		if (castSession.castDevices.includes(deviceId)) socket.emit(`devicePlayRemoveListener-${userId}-${remoteDeviceId}`, {
+			userId: userId,
+			deviceId: deviceId,
+			remoteDeviceId: remoteDeviceId,
+		});
+	}
+};
+
+
 module.exports = function (io) {
+	const prefix = {
+		client2server: `___CLIENT---SERVER___`,
+		client: `___CLIENT___`,
+	};
 	//Socket.IO
-	io.on("connection", function (socket) {
+	io.on("connection", (socket) => {
+
+		// Add User ID Session
+		router.get("/user/connect/:user_id/:device_id", (req, res) => {
+			const userId = req.params.user_id;
+
+			if (castDevices.findIndex(m => m.userId === userId) === -1) {
+				castDevices.push({
+					userId: userId,
+					castDevices: []
+				});
+			}
+			castSSE.init(req, res);
+		});
+
+		// Update User Object
+		router.post("/user/devices/update", (req, res) => {
+			const
+				deviceId = req.headers.deviceid,
+				userId = JSON.parse(req.headers.userdata).user_id;
+
+			castDevices.map(session => session.userId === userId ? session.castDevices.find(deviceId) === null ? session.castDevices.push(deviceId) : null : null);
+			return res.json("done");
+		});
+
+		// Remove User Device Object
+		router.post("/user/devices/unregister", (req, res) => {
+			const
+				deviceId = req.headers.deviceid,
+				userId = JSON.parse(req.headers.userdata).user_id;
+
+			castDevices.map(session => session.userId === userId ? session.castDevices.filter(deviceId => deviceId === deviceId) : null);
+			socket.emit({...castDevices.find(session => session.userId === userId)}, `deviceUnregister-${userId}-${deviceId}`);
+			return res.json("done");
+		});
+
+		// Send Data to Other Device
+		router.post("/devices/send", (req, res) => {
+			const
+				deviceId = req.headers.deviceid,
+				userId = JSON.parse(req.headers.userdata).user_id,
+				songId = req.headers.songid;
+			const castSession = castDevices.find(session => session.userId === userId);
+			if (castSession.castDevices.includes(deviceId)) socket.emit(`devicePlay-${userId}-${deviceId}`, {
+				userId: userId,
+				deviceId: deviceId,
+				songId: songId
+			});
+			return res.json("done");
+		});
+		socket.on(`deviceRegister`, (e) => {
+			functions.deviceRegister(socket, e);
+		});
+		socket.on("message", e => console.log("sex", e));
 		socket.emit("FromAPI", "response");
 		console.log("User has connected to Index");
 		//ON Events
-		socket.on("admin", function () {
+		socket.on("admin", () => {
 			console.log("Successful Socket Test");
 		});
 		//End ON Events
+		socket.on("end", (e) => {
+
+		});
 	});
+	io.on("end", (e) => console.log);
 	return router;
 };
