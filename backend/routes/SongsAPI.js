@@ -31,8 +31,8 @@ function YouTubeGetID(e) {
 	return void 0 !== (e = e.replace(/(>|<)/gi, "").split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/))[2] ? e[2].split(/[^0-9a-z_\-]/i)[0] : e;
 }
 
-//const currentURL = "http://localhost:9000/";
-const currentURL = "https://kabeersmusic.herokuapp.com/";
+const currentURL = "http://localhost:9000/";
+//const currentURL = "https://kabeersmusic.herokuapp.com/";
 const youtube_key = "AIzaSyAJkG5coTOfjTRgpYRvCUq0C0V0WFc7tZU";
 /*
 const endPoints = {
@@ -221,6 +221,7 @@ router.get("/feed/search", (req, res) => {
 					.then((videoIds) => {
 						if (!videoIds) return res.status(400).json(" No History Found");
 						//videoIds.filter((item, pos, self) => self.indexOf(item) === pos), 5)
+						console.log(videoIds);
 						axios.get(endPoints.searchYoutube(videoIds))
 							.then(v => v.data)
 							.then((ytResponse) => {
@@ -342,26 +343,23 @@ router.post("/history/save", async (req, res) => {
 
 				const user_id = decoded.user_id;
 				const tokenizer = new natural.WordTokenizer();
-				searchWeb([req.body.video_title]).then((fetchedKeywords) => {
-					dbo.collection("history").insertOne({
-						type: "watchHistory",
-						time: req.body.time,
-						user_id: user_id,
-						video_id: req.body.video_id,
-						artist_name: req.body.artist_name,
-						tags: req.body.tags.split(","),
-						yt_catagory: req.body.yt_catagory,
-						video_title: req.body.video_title,
-						video_keywords: tokenizer.tokenize([req.body.video_title, req.body.video_keywords.split(","), req.body.video_description, req.body.artist_name].join(" ")),
-						language: franc(req.body.video_description, {}) || "en",
-						video_featuring_artists: req.body.video_featuring_artists.split(","),
-						video_description: req.body.video_description,
-						channelId: req.body.channelId,
-						timeStamp: Date.now(),
-						fetched_keywords: fetchedKeywords.results[req.body.video_title]["1"].results
-					}, {})
-						.then(result => res.status(200).json({message: "done"})).catch(e => res.status(500).json(e));
-				});
+				dbo.collection("history").insertOne({
+					type: "watchHistory",
+					time: req.body.time,
+					user_id: user_id,
+					video_id: req.body.video_id,
+					artist_name: req.body.artist_name,
+					tags: req.body.tags.split(","),
+					yt_catagory: req.body.yt_catagory,
+					video_title: req.body.video_title,
+					video_keywords: tokenizer.tokenize([req.body.video_title, req.body.video_keywords.split(","), req.body.video_description, req.body.artist_name].join(" ")),
+					language: franc(req.body.video_description, {}) || "en",
+					video_featuring_artists: req.body.video_featuring_artists.split(","),
+					video_description: req.body.video_description,
+					channelId: req.body.channelId,
+					timeStamp: Date.now(),
+				}, {})
+					.then(result => res.status(200).json({message: "done"})).catch(e => res.status(500).json(e));
 			});
 		}).catch(err => {
 		res.status(500).json(err);

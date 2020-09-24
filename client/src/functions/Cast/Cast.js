@@ -1,46 +1,58 @@
-import endPoints from "../../api/endpoints/endpoints";
+import endPoints, {hostName} from "../../api/endpoints/endpoints";
 import {storageIndex} from "../Helper/storageIndex";
 import {serialize} from "../Helper/history";
+import uniqid from "../Helper/randomKey";
 
-export const makeId = t => {
-	let o = "";
-	const r = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	for (let a = 0; a < t; a++) o += r.charAt(Math.floor(Math.random() * r.length));
-	return o;
-};
-export const es = new EventSource(endPoints.castURL);
-const userId = JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id;
-const deviceId = localStorage.getItem(storageIndex.deviceEtag);
-/*
-es.onmessage = function (event) {
-//	alert(event)
-};
+const userId = localStorage.getItem(storageIndex.userData) ? JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id : null;
+const deviceId = localStorage.getItem(storageIndex.deviceEtag) ? localStorage.getItem(storageIndex.deviceEtag) : null;
 
- */
-es.addEventListener(`deviceListUpdate-${userId}`, function (event) {
-	localStorage.setItem(storageIndex.castDevices, JSON.stringify(JSON.parse(event.data).activeDevices.filter(e => e !== deviceId)));
-	console.log("Cast Event", event);
+export const castEvent = new EventSource(endPoints.castURL(userId, deviceId));
+export const castEnabled = localStorage.getItem(storageIndex.castEnabled);
+castEvent.addEventListener(`pingtest-${deviceId}`, (e) => {
 });
-es.addEventListener(`devicePlay-${userId}-${deviceId}`, (e) => alert(`Now Playing ${JSON.parse(e.data).songId}`));
+const internal = {
+	pingReturn: () => fetch(endPoints.castPingTest, {
+		method: "POST",
+		headers: new Headers({
+			deviceid: deviceId,
+			userid: userId
+		})
+	})
+};
+export const setCastDeviceUpdateListener = (method, callback = () => null) => {
+	method ?
+		(castEvent.addEventListener(`deviceListUpdate-${userId}`, (e) => e.origin !== hostName ? null :
+			(localStorage.setItem(storageIndex.castDevices, JSON.stringify(JSON.parse(e.data).castDevices.filter(e => e !== deviceId))), callback(e)))) :
+		(castEvent.removeEventListener(`deviceListUpdate-${userId}`, callback));
+};
+export const setCastDeviceRemoveListener = (method, callback = () => null) => {
+	return method ?
+		(castEvent.addEventListener(`devicePlayRemoveListener-${userId}-${deviceId}`, (e) => e.origin !== hostName ? null : callback(e)), localStorage.removeItem(storageIndex.currentlyCasting)) :
+		(castEvent.removeEventListener(`devicePlayRemoveListener-${userId}-${deviceId}`, callback));
+};
+export const setCastDevicePlayListener = (method, callback = () => null) => {
+	return method && localStorage.getItem(storageIndex.castEnabled) === "true" ?
+		(castEvent.addEventListener(`devicePlay-${userId}-${deviceId}`, (e) => e.origin !== hostName ? null : callback(e)), localStorage.setItem(storageIndex.currentlyCasting, true)) :
+		(castEvent.removeEventListener(`devicePlay-${userId}-${deviceId}`, callback));
+};
 export const registerDeviceCast = async () => {
-	await fetch(endPoints.updateActiveDevices, {
+	return await fetch(endPoints.updateActiveDevices, {
 		method: "POST",
 		headers: new Headers({
 			deviceid: localStorage.getItem(storageIndex.deviceEtag),
-			userdata: atob(localStorage.getItem(storageIndex.userData)),
+			userdata: JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id,
 		}),
 		body: serialize({
 			deviceid: localStorage.getItem(storageIndex.deviceEtag),
-			userdata: atob(localStorage.getItem(storageIndex.userData)),
+			userdata: JSON.parse(atob(localStorage.getItem(storageIndex.userData))).user_id,
 		})
 	})
 		.then(value => value.json())
 		.then(value => console.log(value))
 		.catch(e => console.log(e));
-	return true;
 };
 export const addDeviceEtag = async () => {
-	if (localStorage.getItem(storageIndex.deviceEtag) === null) localStorage.setItem(storageIndex.deviceEtag, makeId(20));
+	if (!localStorage.getItem(storageIndex.deviceEtag)) localStorage.setItem(storageIndex.deviceEtag, uniqid());
 };
 export const unRegisterDevice = async () => {
 	localStorage.removeItem(storageIndex.castDevices);
@@ -53,23 +65,41 @@ export const unRegisterDevice = async () => {
 	});
 	return true;
 };
-export const sendCast = async (songId, deviceId) => {
+export const sendCast = async (video, deviceId) => {
 	await fetch(endPoints.sendCastPlay, {
 		method: "POST",
 		headers: new Headers({
-			deviceid: deviceId, //JSON.parse(localStorage.getItem(storageIndex.castDevices))[0],
+			"Content-Type": "application/x-www-form-urlencoded",
+			remotedeviceid: deviceId,
+			deviceid: localStorage.getItem(storageIndex.deviceEtag), //JSON.parse(localStorage.getItem(storageIndex.castDevices))[0],
 			userdata: atob(localStorage.getItem(storageIndex.userData)),
-			songid: songId
-		})
-	});
+			videoelement: JSON.stringify(video)
+		}),
+		body: {}
+	}).then(value => console.log("Cast Sent", value.json()), localStorage.setItem(storageIndex.castingTo, deviceId));
 	return true;
 };
-export const castEnabled = localStorage.getItem(storageIndex.castEnabled);
+export const sendPauseCast = async (deviceId) => {
+	await fetch(endPoints.sendCastPause, {
+		method: "POST",
+		headers: new Headers({
+			"Content-Type": "application/x-www-form-urlencoded",
+			remotedeviceid: deviceId,
+			deviceid: localStorage.getItem(storageIndex.deviceEtag), //JSON.parse(localStorage.getItem(storageIndex.castDevices))[0],
+			userdata: atob(localStorage.getItem(storageIndex.userData)),
+		}),
+		body: {}
+	}).then(value => console.log("Cast Paused", value.json()));
+	return true;
+};
 export const getCastDevices = () => JSON.parse(localStorage.getItem(storageIndex.castDevices)) || [];
+export const castSnackbar = {
+	setSnackbarKey: key => localStorage.setItem(storageIndex.castSnackbarKey, key),
+	getSnackbarKey: () => localStorage.getItem(storageIndex.castSnackbarKey),
+	removeSnackbarKey: () => localStorage.removeItem(storageIndex.castSnackbarKey),
+};
 (async () => {
 	addDeviceEtag()
-		.then(registerDeviceCast)
-		.then(localStorage.setItem(storageIndex.castEnabled, true));
+		.then((localStorage.getItem(storageIndex.castEnabled) === "true" ? registerDeviceCast().then(localStorage.setItem(storageIndex.castEnabled, true)) : null));
 })();
-//YqeW9_5kURI
 

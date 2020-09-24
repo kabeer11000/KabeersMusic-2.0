@@ -1,5 +1,5 @@
-//const hostName = `${window.location.protocol}//${window.location.host}`;
-const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
+//export const hostName = `${window.location.protocol}//${window.location.host}`;
+export const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
 
 const endPoints = {
     hostName: hostName,
@@ -26,9 +26,11 @@ const endPoints = {
     getPlayListByIdSearchFallback: (id) => `${hostName}/api/backend/search?q=${id}&playListMode=true`,
     getFeedArtists: `${hostName}/api/feed/artists/all`,
     getArtistInfo: (id) => `${hostName}/api/backend/get/artist?id=${id}`,
-    castURL: `${hostName}/cast/connect`,
-    updateActiveDevices: `${hostName}/cast/devices/update`,
-    unregisterDevice: `${hostName}/cast/devices/unregister`,
-    sendCastPlay: `${hostName}/cast/devices/send`,
+    castURL: (userid, deviceid) => `${hostName}/cast/user/connect?user_id=${userid}&device_id=${deviceid}`,
+    updateActiveDevices: `${hostName}/cast/user/devices/update`,
+    unregisterDevice: `${hostName}/cast/user/devices/unregister`,
+    sendCastPlay: `${hostName}/cast/user/devices/send`,
+    sendCastPause: `${hostName}/cast/user/devices/pause`,
+    castPingTest: `${hostName}/cast/user/devices/ping`
 };
-module.exports = endPoints;
+export default endPoints;

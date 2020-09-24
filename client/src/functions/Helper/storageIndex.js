@@ -6,6 +6,10 @@ export const storageIndex = {
 	homeSongObject: "6pcGyKPkNzCc1LIrvJperozvZemGtVK6FKn2uU4",
 	homeTimeObject: "b1dvcmxkX0NuOU91VU5UWlJmdWFDbndjNjp1c2V",
 	deviceEtag: `iJBU3Ryb1dvcmxkX0NuOU91VWlJmdWFozvZ`,
+	deviceName: `MDcwYTlmZTIzOTQ1N2QiLCJpYXQiOjE268d`,
 	castDevices: `QiOjE2MDAwNTE4MDEsImV4cCI6MTYwMDA1O`,
-	castEnabled: `castEnabled`
+	castEnabled: `castEnabled`,
+	currentlyCasting: `0MTg0YjM4ZTJmMDBlNDNiMDcwYTl`,
+	castingTo: `0MTg0YjM4ZTJmMDBlNDNiMDcwYTlm`,
+	castSnackbarKey: `TEMP____5UWlJmdWFDbndjNjp1c`,
 };

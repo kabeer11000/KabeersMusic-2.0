@@ -1,11 +1,10 @@
-var express = require("express");
-var router = express.Router();
-var SSE = require("express-sse");
-var sse = new SSE(["test"]);
 const
+	express = require("express"),
+	router = express.Router(),
+	SSE = require("express-sse"),
 	mongo = require("mongodb"),
-	MongoClient = mongo.MongoClient;
-const mongo_uri = require("../../keys/mongokey");
+	MongoClient = mongo.MongoClient,
+	mongo_uri = require("../../keys/mongokey");
 
 const mongoClient = MongoClient.connect(mongo_uri, {
 	useNewUrlParser: true,
@@ -13,98 +12,38 @@ const mongoClient = MongoClient.connect(mongo_uri, {
 }).then(db => db.db("music"));
 const castDevices = [];
 
-router.get("/connect", sse.init);
-sse.send("success", "connected");
-
-router.post("/devices/update", (req, res) => {
-	const
-		deviceId = req.headers.deviceid,
-		userId = JSON.parse(req.headers.userdata).user_id;
-
-	mongoClient
-		.then(db => {
-			//db ? db : new Error("Db Connection Error")
-			db.collection("active_devices").findOneAndUpdate({
-				user_id: userId
-			}, {
-				$addToSet: {
-					active_devices: deviceId
-				}
-			}, {
-				upsert: true
-			})
-				.then(value => {
-					sse.send({
-						userId: userId,
-						deviceId: deviceId,
-						activeDevices: [...value.value.active_devices]
-					}, `deviceListUpdate-${userId}`);
-					//res.json("Device Registered");
-				});
-			//	.catch(e => res.status(400).json("Error"));
-		});//.catch(e => res.status(400).json(e));
-});
-router.post("/devices/unregister", (req, res) => {
-	const
-		deviceId = req.headers.deviceid,
-		userId = JSON.parse(req.headers.userdata).user_id;
-
-	mongoClient.then(db => {
-		db.collection("active_devices").updateOne({
-			user_id: userId,
-		}, {
-			$pull: {
-				active_devices: deviceId
-			}
-		}).then(r => res.json("Device Unregistered")).catch(e => res.status(400).json(e));
-	}).catch(e => res.status(400).json(e));
-});
-
-router.post("/devices/send", (req, res) => {
-	const
-		deviceId = req.headers.deviceid,
-		userId = JSON.parse(req.headers.userdata).user_id,
-		songId = req.headers.songid;
-
-	sse.send({userId: userId, deviceId: deviceId, songId: songId}, `devicePlay-${userId}-${deviceId}`);
-	/*
-TODO do Mongo stuff later
-	mongoClient.then(db => {
-		db.collection("active_devices").updateOne({
-			user_id: userId,
-		}, {
-			$pull: {
-				active_devices: deviceId
-			}
-		}).then(r => res.json("Device Unregistered")).catch(e => res.status(400).json(e));
-	}).catch(e => res.status(400).json(e));
-
- */
-});
 // Protected SSE
-const castSSE = new SSE(["test"]);
+const castSSE = new SSE();
 
 // Add User ID Session
-router.get("/user/connect/:user_id/:device_id", (req, res) => {
-	const userId = req.params.user_id;
+router.get("/user/connect", (req, res) => {
+	if (!req.query.user_id || !req.query.device_id) return res.status(400).json("Invalid Query");
+	const
+		userId = req.query.user_id,
+		deviceId = req.query.device_id;
 
-	if (castDevices.findIndex(m => m.userId === userId) === -1) {
-		castDevices.push({
-			userId: userId,
-			castDevices: []
-		});
-	}
+	const currentSession = castDevices.find(m => m.userId === userId);
+	if (!currentSession) castDevices.push({
+		userId: userId,
+		castDevices: [deviceId]
+	});
+	else currentSession.castDevices.filter(value => value === deviceId).push(deviceId);
 	castSSE.init(req, res);
+	return castSSE.send(currentSession, `deviceListUpdate-${userId}`);
 });
-
 // Update User Object
 router.post("/user/devices/update", (req, res) => {
+	if (!req.headers.deviceid || !req.headers.userdata) return res.status(400).json("Invalid Headers");
 	const
 		deviceId = req.headers.deviceid,
-		userId = JSON.parse(req.headers.userdata).user_id;
+		userId = req.headers.userdata;
 
-	castDevices.map(session => session.userId === userId ? session.castDevices.find(deviceId) === null ? session.castDevices.push(deviceId) : null : null);
-	return res.json("done");
+	const currentSession = castDevices.find(session => session.userId === userId);
+	if (currentSession.castDevices.findIndex(m => m === deviceId) === -1) currentSession.castDevices.push(deviceId);
+
+	castDevices.filter(value => value.userId === userId).push(currentSession);
+	castSSE.send(currentSession || castDevices.find(value => value.userId === userId), `deviceListUpdate-${userId}`);
+	res.json(currentSession);
 });
 
 // Remove User Device Object
@@ -114,24 +53,75 @@ router.post("/user/devices/unregister", (req, res) => {
 		userId = JSON.parse(req.headers.userdata).user_id;
 
 	castDevices.map(session => session.userId === userId ? session.castDevices.filter(deviceId => deviceId === deviceId) : null);
-	castSSE.send({...castDevices.find(session => session.userId === userId)});
-	return res.json("done");
+	castSSE.send({...castDevices.find(session => session.userId === userId)}, `unregister-${deviceId}`); // , `unregister-${deviceId}`
 });
 
 // Send Data to Other Device
-router.post("/devices/send", (req, res) => {
+router.post("/user/devices/send", (req, res) => {
+	if (!req.headers.videoelement || !req.headers.remotedeviceid || !req.headers.deviceid || !req.headers.userdata) return res.status(400).json("Invalid Headers");
 	const
 		deviceId = req.headers.deviceid,
+		remoteDeviceId = req.headers.remotedeviceid,
 		userId = JSON.parse(req.headers.userdata).user_id,
-		songId = req.headers.songid;
+		videoElement = JSON.parse(req.headers.videoelement);
+
 	const castSession = castDevices.find(session => session.userId === userId);
-	if (castSession.castDevices.includes(deviceId)) sse.send({
+	if (castSession.castDevices.includes(deviceId)) {
+		castSSE.send({
+			userId: userId,
+			deviceId: deviceId,
+			video: videoElement,
+			remoteDeviceId: remoteDeviceId,
+		}, `devicePlay-${userId}-${remoteDeviceId}`);
+	}
+	res.json({
 		userId: userId,
 		deviceId: deviceId,
-		songId: songId
-	}, `devicePlay-${userId}-${deviceId}`);
-	return res.json("done");
+		video: videoElement,
+		remoteDeviceId: remoteDeviceId,
+	});
 });
 
 
-module.exports = router;
+// Send Data to Other Device
+router.post("/user/devices/pause", (req, res) => {
+	if (!req.headers.remotedeviceid || !req.headers.deviceid || !req.headers.userdata) return res.status(400).json("Invalid Headers");
+	const
+		deviceId = req.headers.deviceid,
+		remoteDeviceId = req.headers.remotedeviceid,
+		userId = JSON.parse(req.headers.userdata).user_id;
+
+	const castSession = castDevices.find(session => session.userId === userId);
+	if (castSession.castDevices.includes(deviceId)) {
+		castSSE.send({
+			userId: userId,
+			deviceId: deviceId,
+			remoteDeviceId: remoteDeviceId,
+		}, `devicePlayRemoveListener-${userId}-${remoteDeviceId}`);
+	}
+	res.json({
+		userId: userId,
+		deviceId: deviceId,
+		remoteDeviceId: remoteDeviceId,
+	});
+});
+
+// Get Devices TODO Hide in Production
+router.get("/user/devices/all", (req, res) => {
+	res.json(castDevices);
+});
+
+// console.log(castDevices.map(session => session.userId === userId ? session.castDevices[deviceId] === null ? session.castDevices.push(deviceId) : null : null));
+module.exports = function (io) {
+	//Socket.IO
+	io.on("connection", function (socket) {
+		socket.emit("FromAPI", "response");
+		console.log("User has connected to Index");
+		//ON Events
+		socket.on("admin", function () {
+			console.log("Successful Socket Test");
+		});
+		//End ON Events
+	});
+	return router;
+};

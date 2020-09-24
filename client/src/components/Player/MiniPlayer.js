@@ -6,6 +6,8 @@ import {setCurrentSongState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
 import CustomMiniPlayerSlider from "./CustomMiniPlayerSlider";
 import {pure} from "recompose";
+import {storageIndex} from "../../functions/Helper/storageIndex";
+import {sendPauseCast} from "../../functions/Cast/Cast";
 
 
 const MiniPlayer = (props) => {
@@ -32,6 +34,7 @@ const MiniPlayer = (props) => {
             MiniPlayer: false
         }, props.reOpenDialog, props.playList));
         audioElement.src = '#';
+        if (localStorage.getItem(storageIndex.currentlyCasting)) sendPauseCast(localStorage.getItem(storageIndex.castingTo));
     }
 
     function pauseAudio() {

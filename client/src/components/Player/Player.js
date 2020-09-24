@@ -37,8 +37,9 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {useHistory} from "react-router-dom";
 import {pure} from "recompose";
-import {castEnabled, getCastDevices, sendCast} from "../../functions/Cast/Cast";
+import {castEnabled, castSnackbar, getCastDevices, sendCast} from "../../functions/Cast/Cast";
 import CastDialog from "./CastDialog";
+import Button from "@material-ui/core/Button";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -81,7 +82,27 @@ const Player = (props) => {
 	const handleCastDialogClose = (v) => {
 		setCastDialogOpen(false);
 		setCastSelectedDevice(v);
-		sendCast("YqeW9_5kURI", v);
+		sendCast(props.videoElement, v);
+		pauseAudio();
+		handleClose();
+		const action = key => (
+			<React.Fragment>
+				<Button onClick={() => {
+					alert(`I belong to snackbar with key ${key}`);
+				}}>
+					'Alert'
+				</Button>
+				<Button onClick={() => {
+					closeSnackbar(key);
+				}}>
+					'Dismiss'
+				</Button>
+			</React.Fragment>
+		);
+		castSnackbar.setSnackbarKey(enqueueSnackbar(`Playing ${props.videoElement.snippet.title} on ${v}`, {
+			persist: true,
+//			action,
+		}));
 	};
 
 
@@ -245,7 +266,7 @@ const Player = (props) => {
 			});
 	}
 
-	const CastHelper = () => {
+	const CastHelper = async () => {
 		handleCastDialogClickOpen();
 	};
 
@@ -263,16 +284,6 @@ const Player = (props) => {
 							<ArrowBack/>
 						</IconButton>
 						<div style={{flex: "1 1 auto"}}/>
-						{
-							navigator.onLine && castEnabled && castDevices.length ? (
-								<IconButton onClick={() => {
-									CastHelper();
-								}}>
-									<Cast/>
-								</IconButton>
-							) : null
-
-						}
 						<FormControlLabel
 							control={
 								<Switch checked={!AutoPlayButton} onChange={() => {
@@ -345,6 +356,8 @@ const Player = (props) => {
 						<br/>
 						<div className={"px-4 w-100 d-inline-flex smallOnDesktop"}
 							 style={{justifyContent: "space-around"}}>
+							{castEnabled && castDevices.length ? (
+								<IconButton onClick={CastHelper}>{<Cast/>}</IconButton>) : null}
 							{audioElement.loop ? (<IconButton onClick={() => {
 								setLooping(false);
 								audioElement.loop = false;
@@ -377,9 +390,10 @@ const Player = (props) => {
 
 					</div>
 				</div>
-				<CastDialog onClose={handleCastDialogClose} open={castDialogOpen} selectedValue={castSelectedDevice}
-							emails={castDevices}/>
 			</Dialog>
+			<CastDialog onClose={handleCastDialogClose} open={castDialogOpen} selectedValue={castSelectedDevice}
+						emails={castDevices}/>
+
 		</div>
 	);
 };

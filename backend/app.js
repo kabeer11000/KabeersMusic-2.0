@@ -13,15 +13,17 @@ const limiter = rateLimit({
 	max: 100 // limit each IP to 100 requests per windowMs TODO Default 10
 });
 const mongo_uri = require("./keys/mongokey");
+var app = express();
+var http = require("http").createServer(app);
+app.io = require("socket.io")(http);
 
 
 var authRouter = require("./routes/AuthRouter");
 var ProxyRouter = require("./routes/ProxyRouter");
 var songsRouter = require("./routes/SongsAPI");
 var recomRouter = require("./routes/RecomAPI/simpleRecom");
-var castEventRouter = require("./routes/RecomAPI/SessionMaintain");
+var castEventRouter = require("./routes/RecomAPI/SessionMaintain")(app.io);
 
-var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

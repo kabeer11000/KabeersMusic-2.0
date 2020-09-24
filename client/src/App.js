@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import HomeComponent from "./components/Home/home.lazy";
-import {BrowserRouter as Router, Route} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
 import CustomBottomNavigation from "./components/CustomBottomNavigation/CustomBottomNavigation.lazy";
 import Downloads from "./components/Downloads/Downloads.lazy";
 import Player from "./components/Player/Player.lazy";
@@ -15,7 +15,6 @@ import {setCurrentSongState} from "./Redux/actions/actions";
 import MiniPlayer from "./components/Player/MiniPlayer.lazy";
 import SearchResultComponent from "./components/SearchComponent/SearchResultComponent.lazy";
 import HistoryComponent from "./components/History/History.lazy";
-import {SnackbarProvider} from "notistack";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Settings from "./components/Settings/Settings.lazy";
 import Liked from "./components/Liked/Liked.lazy";
@@ -25,16 +24,50 @@ import endPoints from "./api/endpoints/endpoints";
 import PlayLists from "./components/PlayLists/PlayLists.lazy";
 import NoSsr from "@material-ui/core/NoSsr";
 import ArtistComponent from "./components/ArtistComponent/ArtistComponent.lazy";
-import Redirect from "react-router-dom/es/Redirect";
 import {pure} from "recompose";
-//import "swiped-events";
 import "./functions/Cast/Cast";
 import {useBeforeunload} from "react-beforeunload";
-import {registerDeviceCast, unRegisterDevice} from "./functions/Cast/Cast";
+import {
+	setCastDevicePlayListener,
+	setCastDeviceRemoveListener,
+	setCastDeviceUpdateListener,
+	unRegisterDevice
+} from "./functions/Cast/Cast";
+import {getSong} from "./functions/songs";
+import {useSnackbar} from "notistack";
 
 const App = () => {
 
-	window.onload = registerDeviceCast;
+	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+	const audio = document.getElementById("MainAudio-KabeersMusic");
+	//window.onload = registerDeviceCast;
+	setCastDeviceUpdateListener(true, (e) => {
+		console.log(JSON.parse(e.data));
+	});
+
+	function cutCurrentSongState() {
+		audio.pause();
+		const songState = store.getState().currentSong;
+		store.dispatch(setCurrentSongState(new Audio(""), songState.videoElement, {
+			Dialog: false,
+			MiniPlayer: false
+		}, songState.reOpenDialog, songState.playList));
+		audio.src = "#";
+		SetPlayer(false);
+		closeSnackbar();
+	}
+
+	setCastDeviceRemoveListener(true, (e) => {
+		cutCurrentSongState();
+	});
+	setCastDevicePlayListener(true, (e) => (e = JSON.parse(e.data), getSong(e.video.snippet.id).then(value => value ? (changeStates({
+		uri: value,
+		thumbnail: e.video.snippet.thumbnails.high.url,
+		video: e.video,
+		list: {items: [e.video]},
+		index: 0
+	}), enqueueSnackbar(`Casting ${e.video.snippet.title} from ${e.deviceId}`)) : null)));
+
 	useBeforeunload(unRegisterDevice);
 	const [darkState, setDarkState] = React.useState(localStorage.getItem("darkmode") === null ? false : JSON.parse(localStorage.getItem("darkmode")));
 	const [Player__, SetPlayer] = React.useState(true);
@@ -77,6 +110,7 @@ const App = () => {
 		background: {},
 
 	};
+
 	const darkTheme = createMuiTheme({
 		palette: {
 			type: palletType,
@@ -113,13 +147,11 @@ const App = () => {
 	};
 
 	async function changeStates(state, proxy = true) {
-		const audio = document.getElementById("MainAudio-KabeersMusic");
 		try {
 			audio.pause();
 			audio.src = "";
 			state.list && state.index && state.thumbnail && state.video && state.uri ? state.hidden = !1 : state.hidden = !0;
 			audio.src = proxy ? endPoints.proxyURI(state.uri) : state.uri;
-			//PlayerOffline(proxy);
 			store.dispatch(setCurrentSongState(audio, state.video, {Dialog: !0, MiniPlayer: !1}, () => {
 			}, {list: state.list, index: state.index}));
 			SetPlayer(true);
@@ -146,54 +178,52 @@ const App = () => {
 				<Router>
 					<NoSsr>
 						<DialogProvider>
-							<SnackbarProvider maxSnack={1}>
-								<CssBaseline/>
-								<div className="App">
-									<DrawerComponent>
-										<Route exact
-											   path={["/", "/home", "/search", "/downloads", "/history", "/liked", "/charts"]}
-											   render={() => (
-												   <React.Fragment>
-													   <CustomAppBar/>
-													   <CustomBottomNavigation progress_hidden={backdrop}/>
-													   {/*<BackDropLoader hidden={backdrop}/>*/}
-												   </React.Fragment>
-											   )}/>
-										<Player offline={PlayerOffline} misc_func={misc_functions} hidden={Player__}
-												changes={changeStates}/>
-										<MiniPlayer hidden={Player__}/>
-										<Route path={"/home"}
-											   render={() => <HomeComponent misc={misc_functions}
-																			appState={changeStates}/>}/>
-										<Route path={"/"}
-											   render={() => <Redirect to={"/home"}/>}/>
-										<Route exact path={"/downloads"}
-											   render={() => <Downloads appState={changeStates}/>}/>
-										<Route exact path={"/search"} component={SearchComponent}/>
-										<Route exact path={"/liked"} component={Liked}/>
-										<Route exact path={"/settings"} render={() => {
-											let audio = document.getElementById("MainAudio-KabeersMusic");
-											if (!audio.paused) audio.pause();
-											return <Settings handleTheme={handleThemeChange}/>;
-										}}/>
-										<Route exact path={"/history"} component={HistoryComponent}/>
-										<Route exact path={"/charts"} component={PlayLists}/>
-										<Route exact path={"/artist"} render={() => {
-											return <ArtistComponent appState={changeStates} misc={misc_functions}/>;
-										}}/>
-										<Route exact={true} path={"/search/results"} render={() => {
-											return <SearchResultComponent appState={changeStates}/>;
-										}}/>
-										{
-											/*
+							<CssBaseline/>
+							<div className="App">
+								<DrawerComponent>
+									<Route exact
+										   path={["/", "/home", "/search", "/downloads", "/history", "/liked", "/charts"]}
+										   render={() => (
+											   <React.Fragment>
+												   <CustomAppBar/>
+												   <CustomBottomNavigation progress_hidden={backdrop}/>
+												   {/*<BackDropLoader hidden={backdrop}/>*/}
+											   </React.Fragment>
+										   )}/>
+									<Player offline={PlayerOffline} misc_func={misc_functions} hidden={Player__}
+											changes={changeStates}/>
+									<MiniPlayer hidden={Player__}/>
+									<Route path={"/home"}
+										   render={() => <HomeComponent misc={misc_functions}
+																		appState={changeStates}/>}/>
+									<Route path={"/"}
+										   render={() => <Redirect to={"/home"}/>}/>
+									<Route exact path={"/downloads"}
+										   render={() => <Downloads appState={changeStates}/>}/>
+									<Route exact path={"/search"} component={SearchComponent}/>
+									<Route exact path={"/liked"} component={Liked}/>
+									<Route exact path={"/settings"} render={() => {
+										let audio = document.getElementById("MainAudio-KabeersMusic");
+										if (!audio.paused) audio.pause();
+										return <Settings handleTheme={handleThemeChange}/>;
+									}}/>
+									<Route exact path={"/history"} component={HistoryComponent}/>
+									<Route exact path={"/charts"} component={PlayLists}/>
+									<Route exact path={"/artist"} render={() => {
+										return <ArtistComponent appState={changeStates} misc={misc_functions}/>;
+									}}/>
+									<Route exact={true} path={"/search/results"} render={() => {
+										return <SearchResultComponent appState={changeStates}/>;
+									}}/>
+									{
+										/*
 
-										<Route render={()=>errorPage('Route Not Found, 404', ()=>{}, <Button
-											onClick={()=>{window.location.href = ('/home')}}>Go Home</Button>)}/>
-											 */
-										}
-									</DrawerComponent>
-								</div>
-							</SnackbarProvider>
+									<Route render={()=>errorPage('Route Not Found, 404', ()=>{}, <Button
+										onClick={()=>{window.location.href = ('/home')}}>Go Home</Button>)}/>
+										 */
+									}
+								</DrawerComponent>
+							</div>
 						</DialogProvider>
 					</NoSsr>
 				</Router>
