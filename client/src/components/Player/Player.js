@@ -1,11 +1,22 @@
 import React, {useEffect} from "react";
 import "./Player.css";
-import {AppBar, Avatar, CircularProgress, Dialog, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
+import {
+	AppBar,
+	Avatar,
+	CircularProgress,
+	Dialog,
+	Drawer,
+	IconButton,
+	Slide,
+	Toolbar,
+	Typography
+} from "@material-ui/core";
 import {
 	AccountCircle,
 	ArrowBack,
 	Cast,
 	Done,
+	Forward10,
 	GetApp,
 	Loop,
 	Pause,
@@ -16,8 +27,9 @@ import {
 	SkipPrevious,
 	Toc,
 	VolumeDown,
-	VolumeUp
+	VolumeUp,
 } from "@material-ui/icons";
+import Replay10Icon from "@material-ui/icons/Replay10";
 import {deleteDownloadedSong, downloadSong, getSong, isOfflineAvailable, saveToHistory} from "../../functions/songs";
 import CustomSlider from "./CustomSlider";
 import {setAutoPlay, setCurrentSongState} from "../../Redux/actions/actions";
@@ -30,7 +42,6 @@ import PropTypes from "prop-types";
 import addMediaSession from "../../functions/Helper/addMediaSession";
 import CustomVolumeSlider from "./CustomVolumeSlider";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Grow from "@material-ui/core/Grow";
 import {saveHistoryToServer} from "../../functions/Helper/history";
 import Switch from "@material-ui/core/Switch";
@@ -40,13 +51,19 @@ import {pure} from "recompose";
 import {castEnabled, castSnackbar, getCastDevices, sendCast} from "../../functions/Cast/Cast";
 import CastDialog from "./CastDialog";
 import Button from "@material-ui/core/Button";
+import ImagesSlider from "./ComingNext/ImagesSlider";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
-
+const downloadStateIndex = {
+	notDownloaded: 0,
+	downloading: 1,
+	downloaded: 2
+};
 const Player = (props) => {
-	if (props.hidden) return null;
+
+	if (props.hidden || !props.videoElement) return null;
 	let history = useHistory();
 	const dialog = useDialog();
 	const [open, setOpen] = React.useState(store.getState().currentSong.componentState.Dialog);
@@ -80,6 +97,7 @@ const Player = (props) => {
 	};
 
 	const handleCastDialogClose = (v) => {
+		if (!v) return setCastDialogOpen(false);
 		setCastDialogOpen(false);
 		setCastSelectedDevice(v);
 		sendCast(props.videoElement, v);
@@ -212,29 +230,27 @@ const Player = (props) => {
 			abortController.abort();
 		};
 	}, []);
-
 	function SkipSong(data) {
 		let videoID = "";
 		if (typeof data.video.id === "object") videoID = data.video.id.videoId;
 		if (typeof data.video.id === "string") videoID = data.video.id;
 		getSong(videoID).then(value => {
-			if (value) {
-				setOpen(false);
-				addToReduxState([false, false]);
-				try {
-					props.changes({
-						uri: value,
-						thumbnail: data.video.snippet.thumbnails.high.url,
-						video: data.video,
-						list: props.playList.list,
-						index: data.index
-					}, props.offline).then(() => {
-						props = {};
-					});
-				} catch (e) {
-					console.log(e);
-					enqueueSnackbar("Failed To Load Song");
-				}
+			if (!value) return;
+			setOpen(false);
+			addToReduxState([false, false]);
+			try {
+				props.changes({
+					uri: value,
+					thumbnail: data.video.snippet.thumbnails.high.url,
+					video: data.video,
+					list: props.playList.list,
+					index: data.index
+				}, props.offline).then(() => {
+					props = {};
+				});
+			} catch (e) {
+				console.log(e);
+				enqueueSnackbar("Failed To Load Song");
 			}
 		}).catch(e => enqueueSnackbar("Failed To Load Song"));
 	}
@@ -275,8 +291,11 @@ const Player = (props) => {
 			abortController.abort();
 		};
 	}, []);
+	const downloadButtonState = 0;
 	return (
 		<div className="Player">
+			<CastDialog onClose={handleCastDialogClose} open={castDialogOpen} selectedValue={castSelectedDevice}
+						emails={castDevices}/>
 			<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
 				<AppBar color={"transparent"} elevation={0} style={{position: "relative"}}>
 					<Toolbar color={"#BBBBBB"} style={{color: "#BBBBBB"}}>
@@ -294,7 +313,6 @@ const Player = (props) => {
 							labelPlacement="start"
 							label="Autoplay"
 						/>
-
 					</Toolbar>
 					{
 						/*
@@ -310,16 +328,7 @@ const Player = (props) => {
 						className={" -ImageCircle thumbnail- text-center"} style={{
 						marginTop: "0rem"
 					}}>
-						<Grow in={true}>
-							<img src={props.videoElement.snippet.thumbnails.high.url}
-								 className={"image mb-2 img-fluid rounded shadow"}
-								 style={{
-									 marginTop: "0",
-									 width: "15rem",
-									 height: "15rem",
-								 }} alt={"Thumbnail"}/>
-						</Grow>
-						<br/>
+						<ImagesSlider playSong={SkipSong}/>
 						<Typography variant={"h6"} component={"div"} className={"mx-4 py-1 text-truncate text-left"}>
 							{props.videoElement.snippet.title || "Untitled"}
 							<Typography variant={"body2"} style={{opacity: "50%"}}>
@@ -334,13 +343,20 @@ const Player = (props) => {
 							transform: "translate(0%)"
 						}}>
 							{props.playList.list.items[props.playList.index - 1] ?
-								<IconButton><SkipPrevious onClick={() => {
+								<IconButton onClick={() => {
 									const item = props.playList.list.items[props.playList.index - 1];
 									SkipSong({video: item, index: props.playList.index - 1});
-								}}/></IconButton> : <IconButton disabled={true}><SkipPrevious/></IconButton>}
+								}}><SkipPrevious/></IconButton> :
+								<IconButton disabled={true}><SkipPrevious/></IconButton>}
+							<IconButton onClick={() => audioElement.currentTime -= 10}>
+								<Replay10Icon/>
+							</IconButton>
 							<div className={"-ExpandedPlayButtonContainer"}>
 								{button}
 							</div>
+							<IconButton onClick={() => audioElement.currentTime += 10}>
+								<Forward10/>
+							</IconButton>
 							{props.playList.list.items[props.playList.index + 1] ? <IconButton onClick={() => {
 								const item = props.playList.list.items[props.playList.index + 1];
 								SkipSong({video: item, index: props.playList.index + 1});
@@ -356,7 +372,7 @@ const Player = (props) => {
 						<br/>
 						<div className={"px-4 w-100 d-inline-flex smallOnDesktop"}
 							 style={{justifyContent: "space-around"}}>
-							{castEnabled && castDevices.length ? (
+							{navigator.onLine && castEnabled && castDevices.length ? (
 								<IconButton onClick={CastHelper}>{<Cast/>}</IconButton>) : null}
 							{audioElement.loop ? (<IconButton onClick={() => {
 								setLooping(false);
@@ -366,16 +382,20 @@ const Player = (props) => {
 								audioElement.loop = true;
 							}}><Repeat/></IconButton>)}
 							{downloadButton ? downloadButton : <IconButton><CircularProgress size={25}/></IconButton>}
+							{ /*
+								Object.values(downloadStateIndex).includes(downloadButtonState) ? (
+									downloadButtonState
+								) : null
+								*/
+							}
 							<IconButton onClick={() => {
 								setPlayList(true);
 							}}><Toc/></IconButton>
-							<IconButton onClick={() => {
-								history.push(`/artist?id=${props.videoElement.channelId}`);
-								handleClose();
-							}}><AccountCircle/>
+							<IconButton
+								onClick={() => navigator.onLine ? (history.push(`/artist?id=${props.videoElement.channelId}`), handleClose()) : (enqueueSnackbar("No Connection"))}><AccountCircle/>
 							</IconButton>
 						</div>
-						<SwipeableDrawer
+						<Drawer
 							anchor={"bottom"}
 							open={PlayList}
 							onClose={() => {
@@ -386,14 +406,10 @@ const Player = (props) => {
 							}}
 						>
 							<ComingNext playSong={SkipSong}/>
-						</SwipeableDrawer>
-
+						</Drawer>
 					</div>
 				</div>
 			</Dialog>
-			<CastDialog onClose={handleCastDialogClose} open={castDialogOpen} selectedValue={castSelectedDevice}
-						emails={castDevices}/>
-
 		</div>
 	);
 };

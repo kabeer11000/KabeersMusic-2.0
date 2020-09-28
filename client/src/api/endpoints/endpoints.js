@@ -26,11 +26,12 @@ const endPoints = {
     getPlayListByIdSearchFallback: (id) => `${hostName}/api/backend/search?q=${id}&playListMode=true`,
     getFeedArtists: `${hostName}/api/feed/artists/all`,
     getArtistInfo: (id) => `${hostName}/api/backend/get/artist?id=${id}`,
-    castURL: (userid, deviceid) => `${hostName}/cast/user/connect?user_id=${userid}&device_id=${deviceid}`,
+    castURL: (userid, deviceid) => `${hostName}/cast/user/connect/${userid}/${deviceid}`,
     updateActiveDevices: `${hostName}/cast/user/devices/update`,
     unregisterDevice: `${hostName}/cast/user/devices/unregister`,
     sendCastPlay: `${hostName}/cast/user/devices/send`,
     sendCastPause: `${hostName}/cast/user/devices/pause`,
-    castPingTest: `${hostName}/cast/user/devices/ping`
+    castPingTest: `${hostName}/cast/user/devices/ping`,
+    clientComSocket: `${hostName}/socket/com`
 };
 export default endPoints;

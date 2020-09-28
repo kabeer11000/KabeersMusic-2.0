@@ -1,5 +1,5 @@
-import React from 'react';
-import './DownloadListItem.css';
+import React from "react";
+import "./DownloadListItem.css";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
@@ -9,13 +9,14 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
     inline: {
-        display: 'inline',
+        display: "inline",
     },
 }));
 const DownloadListItem = (props) => {
 
     const classes = useStyles();
-    return (<ListItem alignItems="flex-start">
+    return (
+        <ListItem button alignItems="flex-start">
             <ListItemAvatar>
                 <Avatar alt={props.title} src={props.thumbnail}/>
             </ListItemAvatar>
@@ -34,7 +35,8 @@ const DownloadListItem = (props) => {
                     </React.Fragment>
                 }
             />
-    </ListItem>)
+        </ListItem>
+    );
 };
 
 DownloadListItem.propTypes = {};

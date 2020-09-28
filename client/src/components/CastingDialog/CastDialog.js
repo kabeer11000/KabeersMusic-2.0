@@ -8,7 +8,8 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import {Airplay} from "@material-ui/icons";
+import PersonIcon from "@material-ui/icons/Person";
+import AddIcon from "@material-ui/icons/Add";
 import {blue} from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
@@ -23,7 +24,7 @@ export default function CastDialog(props) {
 	const {onClose, selectedValue, open, emails} = props;
 
 	const handleClose = () => {
-		onClose();
+		onClose(selectedValue);
 	};
 
 	const handleListItemClick = (value) => {
@@ -37,13 +38,22 @@ export default function CastDialog(props) {
 				{emails.map((email) => (
 					<ListItem button onClick={() => handleListItemClick(email)} key={email}>
 						<ListItemAvatar>
-							<Avatar>
-								<Airplay/>
+							<Avatar className={classes.avatar}>
+								<PersonIcon/>
 							</Avatar>
 						</ListItemAvatar>
 						<ListItemText primary={email}/>
 					</ListItem>
 				))}
+
+				<ListItem autoFocus button onClick={() => handleListItemClick("addAccount")}>
+					<ListItemAvatar>
+						<Avatar>
+							<AddIcon/>
+						</Avatar>
+					</ListItemAvatar>
+					<ListItemText primary="Add account"/>
+				</ListItem>
 			</List>
 		</Dialog>
 	);

@@ -7,7 +7,7 @@ import {pure} from "recompose";
 
 const CustomSlider = (props) => {
 	if (!props.componentState.Dialog) return <></>;
-	const [scrubbing, setScrubbing] = React.useState(0);
+	const [scrubbing, setScrubbing] = React.useState(props.audioElement.currentTime || 0);
 
 	useEffect(() => {
 		if (props.componentState.Dialog) {

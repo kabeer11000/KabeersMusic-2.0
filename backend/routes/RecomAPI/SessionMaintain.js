@@ -11,25 +11,29 @@ const mongoClient = MongoClient.connect(mongo_uri, {
 	useUnifiedTopology: true
 }).then(db => db.db("music"));
 const castDevices = [];
+const activeDevices = [];
 
 // Protected SSE
 const castSSE = new SSE();
 
 // Add User ID Session
-router.get("/user/connect", (req, res) => {
-	if (!req.query.user_id || !req.query.device_id) return res.status(400).json("Invalid Query");
+router.get("/user/connect/:userId/:deviceId", (req, res) => {
+	if (!req.params.userId || !req.params.deviceId) return res.status(400).json("Invalid Query");
 	const
-		userId = req.query.user_id,
-		deviceId = req.query.device_id;
+		userId = req.params.userId,
+		deviceId = req.params.deviceId;
 
 	const currentSession = castDevices.find(m => m.userId === userId);
-	if (!currentSession) castDevices.push({
+	if (currentSession) {
+		currentSession.castDevices.filter(value => value !== deviceId).push(deviceId);
+		castDevices.filter(value => value.userId === userId).push(currentSession);
+	} else castDevices.push({
 		userId: userId,
 		castDevices: [deviceId]
 	});
-	else currentSession.castDevices.filter(value => value === deviceId).push(deviceId);
+
 	castSSE.init(req, res);
-	return castSSE.send(currentSession, `deviceListUpdate-${userId}`);
+	return castSSE.send(castDevices.find(m => m.userId === userId), `deviceListUpdate-${userId}`);
 });
 // Update User Object
 router.post("/user/devices/update", (req, res) => {
@@ -99,13 +103,8 @@ router.post("/user/devices/pause", (req, res) => {
 			remoteDeviceId: remoteDeviceId,
 		}, `devicePlayRemoveListener-${userId}-${remoteDeviceId}`);
 	}
-	res.json({
-		userId: userId,
-		deviceId: deviceId,
-		remoteDeviceId: remoteDeviceId,
-	});
+	return res.status(200).json({});
 });
-
 // Get Devices TODO Hide in Production
 router.get("/user/devices/all", (req, res) => {
 	res.json(castDevices);
@@ -172,77 +171,4 @@ const functions = {
 };
 
 
-module.exports = function (io) {
-	const prefix = {
-		client2server: `___CLIENT---SERVER___`,
-		client: `___CLIENT___`,
-	};
-	//Socket.IO
-	io.on("connection", (socket) => {
-
-		// Add User ID Session
-		router.get("/user/connect/:user_id/:device_id", (req, res) => {
-			const userId = req.params.user_id;
-
-			if (castDevices.findIndex(m => m.userId === userId) === -1) {
-				castDevices.push({
-					userId: userId,
-					castDevices: []
-				});
-			}
-			castSSE.init(req, res);
-		});
-
-		// Update User Object
-		router.post("/user/devices/update", (req, res) => {
-			const
-				deviceId = req.headers.deviceid,
-				userId = JSON.parse(req.headers.userdata).user_id;
-
-			castDevices.map(session => session.userId === userId ? session.castDevices.find(deviceId) === null ? session.castDevices.push(deviceId) : null : null);
-			return res.json("done");
-		});
-
-		// Remove User Device Object
-		router.post("/user/devices/unregister", (req, res) => {
-			const
-				deviceId = req.headers.deviceid,
-				userId = JSON.parse(req.headers.userdata).user_id;
-
-			castDevices.map(session => session.userId === userId ? session.castDevices.filter(deviceId => deviceId === deviceId) : null);
-			socket.emit({...castDevices.find(session => session.userId === userId)}, `deviceUnregister-${userId}-${deviceId}`);
-			return res.json("done");
-		});
-
-		// Send Data to Other Device
-		router.post("/devices/send", (req, res) => {
-			const
-				deviceId = req.headers.deviceid,
-				userId = JSON.parse(req.headers.userdata).user_id,
-				songId = req.headers.songid;
-			const castSession = castDevices.find(session => session.userId === userId);
-			if (castSession.castDevices.includes(deviceId)) socket.emit(`devicePlay-${userId}-${deviceId}`, {
-				userId: userId,
-				deviceId: deviceId,
-				songId: songId
-			});
-			return res.json("done");
-		});
-		socket.on(`deviceRegister`, (e) => {
-			functions.deviceRegister(socket, e);
-		});
-		socket.on("message", e => console.log("sex", e));
-		socket.emit("FromAPI", "response");
-		console.log("User has connected to Index");
-		//ON Events
-		socket.on("admin", () => {
-			console.log("Successful Socket Test");
-		});
-		//End ON Events
-		socket.on("end", (e) => {
-
-		});
-	});
-	io.on("end", (e) => console.log);
-	return router;
-};
+module.exports = router;

@@ -3,6 +3,7 @@ import Slider from "@material-ui/core/Slider";
 import store from "../../Redux/store/store";
 import {setCurrentSongState} from "../../Redux/actions/actions";
 import {connect} from "react-redux";
+import {pure} from "recompose";
 
 const CustomSlider = (props) => {
 	if (!props.componentState.Dialog) return <></>;
@@ -25,18 +26,20 @@ const CustomSlider = (props) => {
 		}
 	}
 
-	return (<Slider
-		className={"container -PlayerSlider"}
-		defaultValue={props.audioElement.volume * 100}
-		value={scrubbing}
-		min={0.0}
-		max={100}
-		onChange={async (v, x) => handleScrubbing(x)}
-	/>);
+	return (
+		<Slider
+			className={"container -PlayerSlider"}
+			defaultValue={props.audioElement.volume * 100}
+			value={scrubbing}
+			min={0.0}
+			max={100}
+			onChange={async (v, x) => handleScrubbing(x)}
+		/>
+	);
 };
 
 const mapStateToProps = state => ({
 	componentState: state.currentSong.componentState,
 	audioElement: state.currentSong.audioElement,
 });
-export default connect(mapStateToProps)(CustomSlider);
+export default connect(mapStateToProps)(pure(CustomSlider));

@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import HomeComponent from "./components/Home/home.lazy";
-import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 import CustomBottomNavigation from "./components/CustomBottomNavigation/CustomBottomNavigation.lazy";
 import Downloads from "./components/Downloads/Downloads.lazy";
 import Player from "./components/Player/Player.lazy";
@@ -35,31 +35,34 @@ import {
 } from "./functions/Cast/Cast";
 import {getSong} from "./functions/songs";
 import {useSnackbar} from "notistack";
+import {storageIndex} from "./functions/Helper/storageIndex";
+import {FocusRoot} from "@please/lrud";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import SearchComponentTV from "./components/SearchComponentTV/SearchComponentTV.lazy";
 
-const App = () => {
+const NotFoundComponent = (props) => {
+	//const location = useLocation();
+	return <h3><code>{"location.pathname"}</code> was not found on the server</h3>;
+};
 
+const App = (props) => {
+//   blacklist: [/^\/cast/,/^\/api/,/^\/auth/],
 	const {enqueueSnackbar, closeSnackbar} = useSnackbar();
 	const audio = document.getElementById("MainAudio-KabeersMusic");
-	//window.onload = registerDeviceCast;
-	setCastDeviceUpdateListener(true, (e) => {
-		console.log(JSON.parse(e.data));
-	});
-
-	function cutCurrentSongState() {
+	const cutCurrentSongState = async () => {
 		audio.pause();
-		const songState = store.getState().currentSong;
-		store.dispatch(setCurrentSongState(new Audio(""), songState.videoElement, {
+		const e = store.getState().currentSong;
+		return store.dispatch(setCurrentSongState(new Audio(""), e.videoElement, {
 			Dialog: false,
 			MiniPlayer: false
-		}, songState.reOpenDialog, songState.playList));
-		audio.src = "#";
-		SetPlayer(false);
-		closeSnackbar();
-	}
-
-	setCastDeviceRemoveListener(true, (e) => {
-		cutCurrentSongState();
-	});
+		}, e.reOpenDialog, e.playList)), audio.src = "#", setMainState(prevState => ({
+			...prevState,
+			player: false,
+		})), closeSnackbar();
+	};
+	setCastDeviceUpdateListener(true, (e) => console.log);
+	setCastDeviceRemoveListener(true, cutCurrentSongState);
+	useBeforeunload(unRegisterDevice);
 	setCastDevicePlayListener(true, (e) => (e = JSON.parse(e.data), getSong(e.video.snippet.id).then(value => value ? (changeStates({
 		uri: value,
 		thumbnail: e.video.snippet.thumbnails.high.url,
@@ -67,25 +70,26 @@ const App = () => {
 		list: {items: [e.video]},
 		index: 0
 	}), enqueueSnackbar(`Casting ${e.video.snippet.title} from ${e.deviceId}`)) : null)));
+	const [mainState, setMainState] = React.useState({
+		player: true,
+		backdrop: true,
+		darkState: localStorage.getItem(storageIndex.darkMode) === null ? false : JSON.parse(localStorage.getItem(storageIndex.darkMode))
+	});
+	//const matches = useMediaQuery("@media tv, (width: 1920px) and (height: 1080px), (width: 1280px) and (height: 720px)");
+	const matches = useMediaQuery("(min-width:600px)");
 
-	useBeforeunload(unRegisterDevice);
-	const [darkState, setDarkState] = React.useState(localStorage.getItem("darkmode") === null ? false : JSON.parse(localStorage.getItem("darkmode")));
-	const [Player__, SetPlayer] = React.useState(true);
-	const [backdrop, SetBackdrop] = React.useState(true);
-	const [PlayerOffline, SetPlayerOffline] = React.useState(navigator.onLine);
-	const abortController = new AbortController();
-	const palletType = darkState ? "dark" : "light";
+	const palletType = mainState.darkState ? "dark" : "light";
 	const colors = {
 		primary: {
-			contrastText: darkState ? "#757575" : "#FFFFFF",
+			contrastText: mainState.darkState ? "#757575" : "#FFFFFF",
 			appBarText: "#FFFFFF",
 			main: "#E14A58",
-			light: darkState ? "#757575" : "#FFFFFF",
-			dark: darkState ? "#303030" : "#FFFFFF",
+			light: mainState.darkState ? "#757575" : "#FFFFFF",
+			dark: mainState.darkState ? "#303030" : "#FFFFFF",
 			miniPlayer: {
-				main: darkState ? "#303030" : "#FEFEFE",
-				borderTop: darkState ? "#E14A58" : "#3C3F41",
-				text: darkState ? "#FFFFFF" : "#2B2B2B",
+				main: mainState.darkState ? "#303030" : "#FEFEFE",
+				borderTop: mainState.darkState ? "#E14A58" : "#3C3F41",
+				text: mainState.darkState ? "#FFFFFF" : "#2B2B2B",
 			},
 			player: {
 				slider: {
@@ -104,8 +108,8 @@ const App = () => {
 		},
 		secondary: {
 			main: "#E14A58",
-			light: darkState ? "#757575" : "#FFFFFF",
-			dark: darkState ? "#303030" : "#FFFFFF"
+			light: mainState.darkState ? "#757575" : "#FFFFFF",
+			dark: mainState.darkState ? "#303030" : "#FFFFFF"
 		},
 		background: {},
 
@@ -142,11 +146,15 @@ const App = () => {
 		}
 	});
 	const handleThemeChange = () => {
-		setDarkState(!darkState);
-		localStorage.setItem("darkmode", JSON.stringify(!darkState));
+		setMainState(prevState => ({
+			...prevState,
+			darkState: !mainState.darkState
+		}));
+		localStorage.setItem(storageIndex.darkMode, JSON.stringify(!mainState.darkState));
 	};
 
 	async function changeStates(state, proxy = true) {
+		//if (currentlyCasting) cutCurrentSongState();
 		try {
 			audio.pause();
 			audio.src = "";
@@ -154,9 +162,9 @@ const App = () => {
 			audio.src = proxy ? endPoints.proxyURI(state.uri) : state.uri;
 			store.dispatch(setCurrentSongState(audio, state.video, {Dialog: !0, MiniPlayer: !1}, () => {
 			}, {list: state.list, index: state.index}));
-			SetPlayer(true);
-			SetPlayer(false);
-			SetBackdrop(true);
+			setMainState(a => ({...a, player: !0}));
+			setMainState(a => ({...a, player: !1}));
+			setMainState(a => ({...a, backdrop: !0}));
 		} catch (e) {
 			console.log(e);
 		}
@@ -164,13 +172,21 @@ const App = () => {
 
 	const misc_functions = {
 		hideBackdrop() {
-			SetBackdrop(true);
+			setMainState(prevState => ({
+				...prevState,
+				backdrop: true
+			}));
 		},
 		showBackdrop() {
-			SetBackdrop(false);
+			setMainState(prevState => ({
+				...prevState,
+				backdrop: false
+			}));
 		},
 	};
-
+	const sharedProps = {
+		isTv: matches
+	};
 
 	return (
 		<Provider store={store}>
@@ -180,49 +196,69 @@ const App = () => {
 						<DialogProvider>
 							<CssBaseline/>
 							<div className="App">
-								<DrawerComponent>
-									<Route exact
-										   path={["/", "/home", "/search", "/downloads", "/history", "/liked", "/charts"]}
-										   render={() => (
-											   <React.Fragment>
-												   <CustomAppBar/>
-												   <CustomBottomNavigation progress_hidden={backdrop}/>
-												   {/*<BackDropLoader hidden={backdrop}/>*/}
-											   </React.Fragment>
-										   )}/>
-									<Player offline={PlayerOffline} misc_func={misc_functions} hidden={Player__}
-											changes={changeStates}/>
-									<MiniPlayer hidden={Player__}/>
-									<Route path={"/home"}
-										   render={() => <HomeComponent misc={misc_functions}
-																		appState={changeStates}/>}/>
-									<Route path={"/"}
-										   render={() => <Redirect to={"/home"}/>}/>
-									<Route exact path={"/downloads"}
-										   render={() => <Downloads appState={changeStates}/>}/>
-									<Route exact path={"/search"} component={SearchComponent}/>
-									<Route exact path={"/liked"} component={Liked}/>
-									<Route exact path={"/settings"} render={() => {
-										let audio = document.getElementById("MainAudio-KabeersMusic");
-										if (!audio.paused) audio.pause();
-										return <Settings handleTheme={handleThemeChange}/>;
-									}}/>
-									<Route exact path={"/history"} component={HistoryComponent}/>
-									<Route exact path={"/charts"} component={PlayLists}/>
-									<Route exact path={"/artist"} render={() => {
-										return <ArtistComponent appState={changeStates} misc={misc_functions}/>;
-									}}/>
-									<Route exact={true} path={"/search/results"} render={() => {
-										return <SearchResultComponent appState={changeStates}/>;
-									}}/>
-									{
-										/*
+								<FocusRoot>
+									<DrawerComponent {...sharedProps}>
+										<Route exact
+											   path={["/", "/home", "/search", "/downloads", "/history", "/liked", "/charts"]}
+											   render={() => (
+												   <React.Fragment>
+													   <CustomAppBar {...sharedProps}
+																	 progress_hidden={mainState.backdrop}/>
+													   <CustomBottomNavigation
+														   progress_hidden={mainState.backdrop} {...sharedProps}/>
+													   {/*<BackDropLoader hidden={backdrop}/>*/}
+												   </React.Fragment>
+											   )}/>
+										<Player offline={navigator.onLine} misc_func={misc_functions}
+												hidden={mainState.player}
+												changes={changeStates} {...sharedProps}/>
+										<MiniPlayer hidden={mainState.player} {...sharedProps}/>
+										<Route path={"/home"}
+											   render={() => <HomeComponent {...sharedProps} misc={misc_functions}
+																			appState={changeStates}/>}/>
 
-									<Route render={()=>errorPage('Route Not Found, 404', ()=>{}, <Button
-										onClick={()=>{window.location.href = ('/home')}}>Go Home</Button>)}/>
-										 */
-									}
-								</DrawerComponent>
+										<Route exact path={"/downloads"}
+											   render={() => <Downloads {...sharedProps} appState={changeStates}/>}/>
+										{
+											sharedProps.isTv ? (
+												<React.Fragment>
+													<Route exact={true} path={"/search/results"}
+														   render={() => <SearchResultComponent {...sharedProps}
+																								appState={changeStates}/>}/>
+													<Route exact path={"/search"} component={() => <SearchComponentTV
+														appState={changeStates}/>}/>
+												</React.Fragment>
+											) : (
+												<React.Fragment>
+													<Route exact={true} path={"/search/results"}
+														   render={() => <SearchResultComponent {...sharedProps}
+																								appState={changeStates}/>}/>
+													<Route exact path={"/search"} component={SearchComponent}/>
+												</React.Fragment>
+											)
+										}
+										<Route exact path={"/liked"} component={Liked}/>
+										<Route exact path={"/settings"} render={() => {
+											if (!audio.paused) audio.pause();
+											return <Settings {...sharedProps} handleTheme={handleThemeChange}/>;
+										}}/>
+										<Route exact path={"/history"} component={HistoryComponent}/>
+										<Route exact path={"/charts"} component={PlayLists}/>
+										<Route exact path={"/artist"} render={() => {
+											return <ArtistComponent {...sharedProps} appState={changeStates}
+																	misc={misc_functions}/>;
+										}}/>
+										{
+											/*
+										<Route path={"*"} component={<NotFoundComponent/>}/>
+										<Route path={"*"} component={<NotFoundComponent/>}/>
+
+										<Route render={()=>errorPage('Route Not Found, 404', ()=>{}, <Button
+											onClick={()=>{window.location.href = ('/home')}}>Go Home</Button>)}/>
+											 */
+										}
+									</DrawerComponent>
+								</FocusRoot>
 							</div>
 						</DialogProvider>
 					</NoSsr>

@@ -9,6 +9,8 @@ import Container from "@material-ui/core/Container";
 import {Avatar} from "@material-ui/core";
 import {useDialog} from "muibox";
 import PropTypes from "prop-types";
+import Grow from "@material-ui/core/Grow";
+import {pure} from "recompose";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -113,9 +115,11 @@ const Downloads = (props) => {
 	return (
 		<div className={"KabeersDownloadContainer mb-5"} color={"primary.dark"}>
 			<Container fixed>
-				<List className={`${classes.root} mt-5 bg-transparent`}>
-					{HistoryItems}
-				</List>
+				<Grow in={true}>
+					<List className={`${classes.root} mt-5 bg-transparent`}>
+						{HistoryItems}
+					</List>
+				</Grow>
 			</Container>
 		</div>
 	);
@@ -127,4 +131,4 @@ Downloads.propTypes = {
 
 Downloads.defaultProps = {};
 
-export default Downloads;
+export default pure(Downloads);

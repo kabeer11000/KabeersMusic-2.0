@@ -36,3 +36,22 @@
 .PlayerDialog {
     backdrop-filter: blur(10px);
 }
+
+.cardSlider {
+    padding: 1rem;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.cardSlider::-webkit-scrollbar {
+    display: none
+}
+
+div.Slider {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+div.Slider .ImageSliderIMG {
+    display: inline-block;
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="65" height="65" viewBox="0 0 65 65">
+    <defs>
+        <linearGradient id="a" x1="0.787" y1="0.054" x2="0.246" y2="0.94" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#ef564c"/>
+            <stop offset="0.111" stop-color="#d9577a"/>
+            <stop offset="0.559" stop-color="#7f57e3"/>
+            <stop offset="0.569" stop-color="#7857eb"/>
+            <stop offset="1" stop-color="#4dd8ef"/>
+        </linearGradient>
+        <filter id="b" x="0" y="0" width="65" height="65" filterUnits="userSpaceOnUse">
+            <feOffset dy="3" input="SourceAlpha"/>
+            <feGaussianBlur stdDeviation="3" result="c"/>
+            <feFlood flood-opacity="0.161"/>
+            <feComposite operator="in" in2="c"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g transform="translate(4969 2315)">
+        <g transform="matrix(1, 0, 0, 1, -4969, -2315)" filter="url(#b)">
+            <circle cx="23.5" cy="23.5" r="23.5" transform="translate(9 6)" fill="url(#a)"/>
+        </g>
+        <g transform="translate(-4944.663 -2310.168)">
+            <path d="M48.018-499.738c-5.563,1.154-8.309,1.753-8.5,1.85a1.327,1.327,0,0,0-.419.322c-.135.18-.135.232-.168,9.7-.032,9-.039,9.534-.148,9.779-.361.806-.98,1.031-3.023,1.128a6.427,6.427,0,0,0-3.481.793A2.731,2.731,0,0,0,31-473.637a3.585,3.585,0,0,0,2.8,3.674,8.01,8.01,0,0,0,2.54.174c2.314-.226,3.674-1.115,4.383-2.875.09-.239.1-1.115.135-9.289.032-8.341.039-9.037.142-9.224a.685.685,0,0,1,.29-.271c.135-.058,10.655-2.372,13.124-2.888.509-.11.722-.071.87.155.1.155.11.651.11,6.362v6.188l-.168.361c-.309.658-.7.819-2.185.9-2.443.142-3.1.245-3.964.664a2.5,2.5,0,0,0-1.3,1.238,2.112,2.112,0,0,0-.264,1.173,3.42,3.42,0,0,0,1.076,2.849,5.463,5.463,0,0,0,4.164,1.367,4.714,4.714,0,0,0,2.978-.825,3.839,3.839,0,0,0,1.212-1.47c.445-.928.419-.026.419-13.253v-11.964l-.142-.284a.86.86,0,0,0-.728-.541C56.314-501.439,53.787-500.937,48.018-499.738Z"
+                  transform="translate(-31 501.415)" fill="#fff" stroke="#707070" stroke-width="0.1"/>
+        </g>
+    </g>
+</svg>

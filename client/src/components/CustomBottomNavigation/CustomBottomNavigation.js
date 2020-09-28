@@ -10,6 +10,7 @@ import Slide from "@material-ui/core/Slide";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import * as PropTypes from "prop-types";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import {pure} from "recompose";
 
 const useStyles = makeStyles({
     root: {
@@ -39,8 +40,14 @@ const CustomBottomNavigation = (props) => {
         window: PropTypes.func,
     };
 
-    return (
-        <AppBar color="primary" style={{position: "fixed", top: "auto", bottom: 0, width: "100%",}}
+    return props.isTv ? null : (
+        <AppBar color="primary" style={{
+            position: "fixed",
+            top: "auto",
+            bottom: 0,
+            width: "100%",
+            marginLeft: props.isTv ? "4.5rem" : ""
+        }}
                 component={"div"}>
             <div style={{zIndex: "99999"}} hidden={props.progress_hidden} className={"fixed-top"}>
                 <LinearProgress/>
@@ -74,4 +81,4 @@ CustomBottomNavigation.propTypes = {
 
 CustomBottomNavigation.defaultProps = {};
 
-export default CustomBottomNavigation;
+export default pure(CustomBottomNavigation);

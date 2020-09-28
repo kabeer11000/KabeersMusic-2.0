@@ -27,29 +27,6 @@ const ComingNext = (props) => {
 	const handleSwitch = (event) => {
 		setAutoPlaySwitch({[event.target.name]: event.target.checked});
 	};
-
-	function createList() {
-		setList(() => {
-			const array = [];
-			const listItems = props.playList.list.items.map((value, index) => {
-				array.push(<NextListItem currentIndex={index} keyIndex={props.playList.index} key={index}
-										 title={value.snippet.title} channelTitle={value.snippet.channelTitle}
-										 image={value.snippet.thumbnails.high.url}/>);
-				return <NextListItem currentIndex={index} keyIndex={props.playList.index} key={index}
-									 title={value.snippet.title} channelTitle={value.snippet.channelTitle}
-									 image={value.snippet.thumbnails.high.url}/>;
-			});
-			const listItemsWithDividers = [];
-			listItems.forEach((item, index) => {
-				listItemsWithDividers.push(item);
-				if (listItems[index + 1] !== undefined) {
-					listItemsWithDividers.push(<Divider variant="inset" component="li"/>);
-				}
-			});
-			return listItemsWithDividers;
-		});
-	}
-
 	useEffect(() => {
 		setList(() => {
 			const listItems = props.playList.list.items.map((value, index) => {
@@ -69,22 +46,19 @@ const ComingNext = (props) => {
 			return listItemsWithDividers;
 		});
 	}, []);
-// myAudio.addEventListener("ended", function(){
-//      myAudio.currentTime = 0;
-//      console.log("ended");
-// });
-	return (<AccordionDetails style={{maxHeight: "90vh", overflowY: "hidden"}}>
-		<List className={"text-truncate"} style={{maxHeight: "85vh", overflowY: "scroll"}}
-			  subheader={
-				  <ListSubheader component="div" style={{backgroundColor: "primary.main"}} className={"mx-0 px-0"}
-								 id="nested-list-subheader">
-					  Coming Up Next
-				  </ListSubheader>
-			  }>
-
-			{list}
-		</List>
-	</AccordionDetails>);
+	return (
+		<AccordionDetails style={{maxHeight: "90vh", overflowY: "hidden"}}>
+			<List className={"text-truncate"} style={{maxHeight: "85vh", overflowY: "scroll"}}
+				  subheader={
+					  <ListSubheader component="div" style={{backgroundColor: "primary.main"}} className={"mx-0 px-0"}
+									 id="nested-list-subheader">
+						  Coming Up Next
+					  </ListSubheader>
+				  }>
+				{list}
+			</List>
+		</AccordionDetails>
+	);
 };
 
 ComingNext.propTypes = {};

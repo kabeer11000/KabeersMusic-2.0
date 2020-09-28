@@ -167,9 +167,8 @@ const HomeComponent = (props) => {
 
 	useEffect(() => {
 		if (navigator.onLine) init();
-		else {
-			enqueueSnackbar("Failed to Load Songs");
-		}
+		else enqueueSnackbar("Failed to Load Songs");
+
 		return () => {
 			abortController.abort();
 		};
@@ -184,7 +183,7 @@ const HomeComponent = (props) => {
 
 	return (
 		<div className="home mb-5" style={{minHeight: "70vh"}}>
-			<div style={{marginTop: "5rem"}}>
+			<div style={{marginTop: props.isTv ? "1rem" : "5rem"}}>
 				<div className={`cardSlider text-left Slider ${artists.items ? "d-block" : "d-none"}`}>
 					{artists.items ? (
 						artists.items.map((v, i) => (

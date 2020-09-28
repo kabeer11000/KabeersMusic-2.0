@@ -9,7 +9,7 @@ import Chip from "@material-ui/core/Chip";
 import IconButton from "@material-ui/core/IconButton";
 import {MoreVert} from "@material-ui/icons";
 import PropTypes from "prop-types";
-
+import {pure} from "recompose";
 // eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles((theme) => ({
     inline: {
@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
 const DownloadListItem = (props) => {
 
     const classes = useStyles();
-    return (<ListItem alignItems="flex-start">
-            <React.Fragment>
+	return (<ListItem button alignItems="flex-start">
+			<React.Fragment>
 				<ListItemAvatar onClick={props.onClick}>
 					<Avatar alt={props.title} src={props.thumbnail}/>
 				</ListItemAvatar>
@@ -31,19 +31,20 @@ const DownloadListItem = (props) => {
 					secondary={
 						<React.Fragment>
 							<Typography
-                                component="span"
-                                variant="body2"
-                                className={`${classes.inline} text-truncate`}
-                                color="textPrimary"
-                            >
-                                <div className={"text-truncate"}>{props.channelTitle}</div>
-                            </Typography>
-                            <div className={"cardSlider Slider"}>
-                                {props.tags.map((value, index) => {
-                                    return <Chip className={"mx-1"} key={index} label={value}/>;
-                                })}
-                            </div>
-                        </React.Fragment>
+								component="span"
+								variant="body2"
+								className={`${classes.inline} text-truncate`}
+								color="textPrimary"
+							>
+								<div className={"text-truncate"}>{props.channelTitle}</div>
+							</Typography>
+							{
+								props.tags.length ? <div className={"cardSlider Slider"}>
+									{props.tags.map((value, index) => <Chip className={"mx-1"} key={index}
+																			label={value}/>)}
+								</div> : null
+							}
+						</React.Fragment>
                     }
                 />
             </React.Fragment>
@@ -65,4 +66,4 @@ DownloadListItem.propTypes = {
 
 DownloadListItem.defaultProps = {};
 
-export default DownloadListItem;
+export default pure(DownloadListItem);
