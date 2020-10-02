@@ -10,7 +10,7 @@ $ npm run dev
 
 ### Front End
 ```
-$ npm run dev
+$ npm start
 ```
 Copyright 2020  Kabeers Network. 
 Code Under MIT License
