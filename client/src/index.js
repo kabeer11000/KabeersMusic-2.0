@@ -11,7 +11,6 @@ if (process.env.NODE_ENV !== "development") {
 	console.log = () => {
 	};
 }
-
 /*
 const socket = socketIOClient(hostName);
 socket.emit("deviceRegister", {

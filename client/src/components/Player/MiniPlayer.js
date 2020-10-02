@@ -145,8 +145,8 @@ const MiniPlayer = (props) => {
 												className={"text-truncate"}>
 										{videoElement.snippet.description ? videoElement.snippet.description.slice(0, 70) + " ..." : ""}
 										<span className={"text-muted"}>
-									{videoElement.snippet.channelTitle}
-								</span>
+											{videoElement.snippet.channelTitle}
+										</span>
 									</Typography>
 									{/*192.168.10.3*/}
 								</CardContent>
@@ -188,7 +188,7 @@ const MiniPlayer = (props) => {
 						}}>{videoElement.snippet.title || "Untitled"}
 						</Typography>
 					</div>
-					<div className={`float-right ml-auto`}>
+					<div className={"float-right ml-auto"}>
 						{button}
 						<IconButton onClick={cutCurrentSongState}><Close/></IconButton>
 					</div>

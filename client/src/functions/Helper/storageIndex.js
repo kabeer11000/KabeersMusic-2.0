@@ -5,14 +5,14 @@ export const storageIndex = {
 	userData: "bGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
 	homeSongObject: "6pcGyKPkNzCc1LIrvJperozvZemGtVK6FKn2uU4",
 	homeTimeObject: "b1dvcmxkX0NuOU91VU5UWlJmdWFDbndjNjp1c2V",
-	deviceEtag: `deviceEtag`, // iJBU3Ryb1dvcmxkX0NuOU91VWlJmdWFozvZ
-	deviceName: `deviceName`, // MDcwYTlmZTIzOTQ1N2QiLCJpYXQiOjE268d
-	castDevices: `castDevices`, // `QiOjE2MDAwNTE4MDEsImV4cCI6MTYwMDA1O`
-	castEnabled: `castEnabled`,
-	currentlyCasting: `currentlyCasting`, // `0MTg0YjM4ZTJmMDBlNDNiMDcwYTl`
-	castingTo: `castingTo`, // `0MTg0YjM4ZTJmMDBlNDNiMDcwYTlm`
-	castSnackbarKey: `TEMP____5UWlJmdWFDbndjNjp1c`,
-	darkMode: `darkMode`,
-	castPreventRepeat: `castPreventFakeId`,
-	onScreenKeyboard: `onScreenKeyboard`
+	deviceEtag: "deviceEtag", // iJBU3Ryb1dvcmxkX0NuOU91VWlJmdWFozvZ
+	deviceName: "deviceName", // MDcwYTlmZTIzOTQ1N2QiLCJpYXQiOjE268d
+	castDevices: "castDevices", // `QiOjE2MDAwNTE4MDEsImV4cCI6MTYwMDA1O`
+	castEnabled: "castEnabled",
+	currentlyCasting: "currentlyCasting", // `0MTg0YjM4ZTJmMDBlNDNiMDcwYTl`
+	castingTo: "castingTo", // `0MTg0YjM4ZTJmMDBlNDNiMDcwYTlm`
+	castSnackbarKey: "TEMP____5UWlJmdWFDbndjNjp1c",
+	darkMode: "darkMode",
+	castPreventRepeat: "castPreventFakeId",
+	onScreenKeyboard: "onScreenKeyboard"
 };

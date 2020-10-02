@@ -11,8 +11,8 @@ const fetchWorker = createWorker(e => {
 });
 
 const prefix = {
-	client2server: `___CLIENT---SERVER___`,
-	client: `___CLIENT___`,
+	client2server: "___CLIENT---SERVER___",
+	client: "___CLIENT___",
 };
 /*
 const fetchWorker = createWorker((e) => {

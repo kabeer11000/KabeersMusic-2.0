@@ -134,7 +134,7 @@ const DrawerComponent = (props) => {
 					<ListItemText className={"text-truncate"} primary={userData.username} secondary={userData.email}/>
 				</ListItem>
 			</List>
-			<div className={`classes.toolbar`}/>
+			<div className={"classes.toolbar"}/>
 			<Divider/>
 			<List onClick={handleDrawerToggle} className={matches && !mobileOpen ? "ml-2" : ""}>
 				<ListItem button component={Link} to={"/home"}>

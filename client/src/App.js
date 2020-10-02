@@ -40,6 +40,7 @@ import {FocusRoot} from "@please/lrud";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import SearchComponentTV from "./components/SearchComponentTV/SearchComponentTV.lazy";
 
+
 const NotFoundComponent = (props) => {
 	//const location = useLocation();
 	return <h3><code>{"location.pathname"}</code> was not found on the server</h3>;

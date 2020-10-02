@@ -17,7 +17,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles({
 	appBar: {
-		width: `calc(100% - 4.5rem)`,
+		width: "calc(100% - 4.5rem)",
 		marginLeft: "4.5rem",
 	},
 });
@@ -64,7 +64,7 @@ const CustomAppBar = (props) => {
 						<Typography style={{color: "#FFFFFF"}} variant="h6">
 							{props.title || "Music"}
 						</Typography>
-						<div style={{flex: `1 1 auto`}}/>
+						<div style={{flex: "1 1 auto"}}/>
 						<IconButton
 							edge="start"
 							style={{color: "#FFFFFF"}}

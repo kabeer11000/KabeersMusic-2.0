@@ -50,7 +50,7 @@ const ArtistSongItem = (props) => {
 				<Paper elevation={3} className={classes.paper}>
 					<img
 						loading={"lazy"}
-						src={props.video.snippet.thumbnails.high.url} alt={"PlayList Icon"} className={`h-100 w-100`}/>
+						src={props.video.snippet.thumbnails.high.url} alt={"PlayList Icon"} className={"h-100 w-100"}/>
 					<div className={"p-2 "}>
 						<Typography className={"text-left text-truncate"}>{props.video.snippet.title}</Typography>
 					</div>

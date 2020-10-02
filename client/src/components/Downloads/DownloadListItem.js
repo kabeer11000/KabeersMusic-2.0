@@ -12,13 +12,13 @@ import PropTypes from "prop-types";
 import {pure} from "recompose";
 // eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles((theme) => ({
-    inline: {
-        display: "inline",
-    },
+	inline: {
+		display: "inline",
+	},
 }));
 const DownloadListItem = (props) => {
 
-    const classes = useStyles();
+	const classes = useStyles();
 	return (<ListItem button alignItems="flex-start">
 			<React.Fragment>
 				<ListItemAvatar onClick={props.onClick}>
@@ -45,23 +45,23 @@ const DownloadListItem = (props) => {
 								</div> : null
 							}
 						</React.Fragment>
-                    }
-                />
-            </React.Fragment>
-            <IconButton onClick={props.onMouseLeave}>
-                <MoreVert/>
-            </IconButton>
-        </ListItem>
-    );
+					}
+				/>
+			</React.Fragment>
+			<IconButton onClick={props.onMouseLeave}>
+				<MoreVert/>
+			</IconButton>
+		</ListItem>
+	);
 };
 
 DownloadListItem.propTypes = {
-    onMouseLeave: PropTypes.func,
-    onClick: PropTypes.func,
-    channelTitle: PropTypes.string,
-    tags: PropTypes.array,
-    title: PropTypes.string,
-    thumbnail: PropTypes.string
+	onMouseLeave: PropTypes.func,
+	onClick: PropTypes.func,
+	channelTitle: PropTypes.string,
+	tags: PropTypes.array,
+	title: PropTypes.string,
+	thumbnail: PropTypes.string
 };
 
 DownloadListItem.defaultProps = {};

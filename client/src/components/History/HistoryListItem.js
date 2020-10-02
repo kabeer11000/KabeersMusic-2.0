@@ -1,5 +1,5 @@
-import React from 'react';
-import './HistoryListItem.css';
+import React from "react";
+import "./HistoryListItem.css";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
@@ -9,40 +9,40 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme) => ({
-    inline: {
-        display: 'inline',
-    },
+	inline: {
+		display: "inline",
+	},
 }));
 const HistoryListItem = (props) => {
 
-    const classes = useStyles();
-    return (<ListItem alignItems="flex-start">
-            <ListItemAvatar>
-                <Avatar alt={props.title} src={props.thumbnail}/>
-            </ListItemAvatar>
-            <ListItemText
-                className={'text-truncate'}
-                primary={props.title}
-                secondary={
-                    <React.Fragment>
-                        <Typography
-                            component="span"
-                            variant="body2"
-                            className={`${classes.inline} text-truncate`}
-                            color="textPrimary"
-                        >
-                            <div className={'text-truncate'}>{props.channelTitle}</div>
-                        </Typography>
-                        <div className={'cardSlider Slider'}>
-                            {props.tags.map((value, index) => {
-                                return <Chip className={'mx-1'} key={index} label={value}/>
-                            })}
-                        </div>
-                    </React.Fragment>
-                }
-            />
-        </ListItem>
-    )
+	const classes = useStyles();
+	return (<ListItem alignItems="flex-start">
+			<ListItemAvatar>
+				<Avatar alt={props.title} src={props.thumbnail}/>
+			</ListItemAvatar>
+			<ListItemText
+				className={"text-truncate"}
+				primary={props.title}
+				secondary={
+					<React.Fragment>
+						<Typography
+							component="span"
+							variant="body2"
+							className={`${classes.inline} text-truncate`}
+							color="textPrimary"
+						>
+							<div className={"text-truncate"}>{props.channelTitle}</div>
+						</Typography>
+						<div className={"cardSlider Slider"}>
+							{props.tags.map((value, index) => {
+								return <Chip className={"mx-1"} key={index} label={value}/>;
+							})}
+						</div>
+					</React.Fragment>
+				}
+			/>
+		</ListItem>
+	);
 };
 
 HistoryListItem.propTypes = {};

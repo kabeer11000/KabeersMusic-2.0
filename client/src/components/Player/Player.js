@@ -119,7 +119,7 @@ const Player = (props) => {
 		);
 		castSnackbar.setSnackbarKey(enqueueSnackbar(`Playing ${props.videoElement.snippet.title} on ${v}`, {
 			persist: true,
-//			action,
+			//			action,
 		}));
 	};
 

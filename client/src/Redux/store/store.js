@@ -4,16 +4,16 @@ import thunk from "redux-thunk";
 import StateLoader from "./state.loader";
 
 const initialState = {
-    currentSong: {
-        audioElement: new Audio(""),
-        videoElement: {},
-        playList: {index: 0, list: []},
-        reOpenDialog: () => {
-        },
-    },
-    drawer: false,
-    q: '',
-    autoPlay: false
+	currentSong: {
+		audioElement: new Audio(""),
+		videoElement: {},
+		playList: {index: 0, list: []},
+		reOpenDialog: () => {
+		},
+	},
+	drawer: false,
+	q: "",
+	autoPlay: false
 };
 /*
 const stateLoader = new StateLoader();
@@ -35,12 +35,12 @@ store.subscribe(() => {
 const stateLoader = new StateLoader();
 const middleware = [thunk];
 const store = createStore(
-    rootReducer,
-    initialState,
-    compose(
-        applyMiddleware(...middleware),
-        window.__REDUX_DEVTOOLS_EXTENSION__
-            ? window.__REDUX_DEVTOOLS_EXTENSION__()
-            : f => f
-    ));
+	rootReducer,
+	initialState,
+	compose(
+		applyMiddleware(...middleware),
+		window.__REDUX_DEVTOOLS_EXTENSION__
+			? window.__REDUX_DEVTOOLS_EXTENSION__()
+			: f => f
+	));
 export default store;

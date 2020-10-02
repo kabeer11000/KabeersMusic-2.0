@@ -44,6 +44,12 @@ const useStyles = makeStyles((theme) => ({
 		margin: 4,
 	},
 }));
+var route = "/users/:uid/pictures";
+var routeMatcher = new RegExp(route.replace(/:[^\s/]+/g, "([\\w-]+)"));
+var url = "/users/1024/pictures";
+
+console.log(url.match(routeMatcher));
+
 const SearchComponentTV = (props) => {
 	let history = useHistory();
 	const [open, setOpen] = React.useState({
@@ -60,7 +66,6 @@ const SearchComponentTV = (props) => {
 		if (!results[2]) return "";
 		return decodeURIComponent(results[2].replace(/\+/g, " "));
 	}
-
 	const [queryArray, setQueryArray] = React.useState([]);
 	const abortController = new AbortController();
 	const [songsResult, setSongsResult] = React.useState(undefined);
@@ -115,7 +120,7 @@ const SearchComponentTV = (props) => {
 		else SuggestOfflineSongs(value).then(t => setQueryArray(t.map(t => ({suggestion: {attributes: {data: t.item.title}}}))));
 		ListItems();
 		history.push({
-			pathname: `search`,
+			pathname: "search",
 			search: "?" + new URLSearchParams({q: value}).toString()
 		});
 		setOpen(prevState => ({
@@ -198,7 +203,7 @@ const SearchComponentTV = (props) => {
 							/>
 						</Paper>
 						<br/>
-						<Paper className={`ml-5`}
+						<Paper className={"ml-5"}
 							   style={{
 								   maxWidth: 400,
 								   maxHeight: "30vh",
@@ -223,7 +228,7 @@ const SearchComponentTV = (props) => {
 											"{tab}": "tab",
 											"{lock}": "caps",
 											"{accept}": "Submit",
-											"{space}": `<svg class="MuiSvgIcon-root jss172" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9v4H6V9H4v6h16V9z"></path></svg>`,
+											"{space}": "<svg class=\"MuiSvgIcon-root jss172\" focusable=\"false\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M18 9v4H6V9H4v6h16V9z\"></path></svg>",
 											"{//}": " "
 										}}
 										{...localStorage.getItem(storageIndex.onScreenKeyboard) ? ({

@@ -12,7 +12,7 @@ const ping = async () => {
     return status;
 };*/
 function ping() {
-    return navigator.onLine;
+	return navigator.onLine;
 }
 
 export default ping;
