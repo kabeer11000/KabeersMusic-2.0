@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {MoreVert} from "@material-ui/icons";
 import PropTypes from "prop-types";
 import {pure} from "recompose";
+import Divider from "@material-ui/core/Divider";
 // eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles((theme) => ({
 	inline: {
@@ -19,39 +20,43 @@ const useStyles = makeStyles((theme) => ({
 const DownloadListItem = (props) => {
 
 	const classes = useStyles();
-	return (<ListItem button alignItems="flex-start">
-			<React.Fragment>
-				<ListItemAvatar onClick={props.onClick}>
-					<Avatar alt={props.title} src={props.thumbnail}/>
-				</ListItemAvatar>
-				<ListItemText
-					className={"text-truncate"}
-					primary={props.title}
-					onClick={props.onClick}
-					secondary={
-						<React.Fragment>
-							<Typography
-								component="span"
-								variant="body2"
-								className={`${classes.inline} text-truncate`}
-								color="textPrimary"
-							>
-								<div className={"text-truncate"}>{props.channelTitle}</div>
-							</Typography>
-							{
-								props.tags.length ? <div className={"cardSlider Slider"}>
-									{props.tags.map((value, index) => <Chip className={"mx-1"} key={index}
-																			label={value}/>)}
-								</div> : null
-							}
-						</React.Fragment>
-					}
-				/>
-			</React.Fragment>
-			<IconButton onClick={props.onMouseLeave}>
-				<MoreVert/>
-			</IconButton>
-		</ListItem>
+	return (
+		<React.Fragment>
+			<ListItem button alignItems="flex-start">
+				<React.Fragment>
+					<ListItemAvatar onClick={props.onClick}>
+						<Avatar alt={props.title} src={props.thumbnail}/>
+					</ListItemAvatar>
+					<ListItemText
+						className={"text-truncate"}
+						primary={props.title}
+						onClick={props.onClick}
+						secondary={
+							<React.Fragment>
+								<Typography
+									component="span"
+									variant="body2"
+									className={`${classes.inline} text-truncate`}
+									color="textPrimary"
+								>
+									<div className={"text-truncate"}>{props.channelTitle}</div>
+								</Typography>
+								{
+									props.tags.length ? <div className={"cardSlider Slider"}>
+										{props.tags.map((value, index) => <Chip className={"mx-1"} key={index}
+																				label={value}/>)}
+									</div> : null
+								}
+							</React.Fragment>
+						}
+					/>
+				</React.Fragment>
+				<IconButton onClick={props.onMouseLeave}>
+					<MoreVert/>
+				</IconButton>
+			</ListItem>
+			<Divider variant="inset" component="li"/>
+		</React.Fragment>
 	);
 };
 

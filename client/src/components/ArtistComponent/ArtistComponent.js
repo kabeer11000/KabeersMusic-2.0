@@ -16,6 +16,12 @@ import {useHistory} from "react-router-dom";
 import Grow from "@material-ui/core/Grow";
 import withRouter from "react-router-dom/es/withRouter";
 import {pure} from "recompose";
+import ListItem from "@material-ui/core/ListItem";
+import List from "@material-ui/core/List";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import Slide from "@material-ui/core/Slide";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -59,6 +65,30 @@ const ArtistSongItem = (props) => {
 		</Grid>
 	);
 };
+const ArtistSongListItem = (props) => (
+	<ListItem alignItems="flex-start" onClick={() => {
+		props.onClick(props.video, props.index);
+	}} button>
+		<ListItemAvatar>
+			<Avatar alt={props.video.snippet.title} src={props.video.snippet.thumbnails.high.url}/>
+		</ListItemAvatar>
+		<ListItemText
+			primary={props.video.snippet.title}
+			secondary={
+				<React.Fragment>
+					<Typography
+						component="span"
+						variant="body2"
+						style={{display: "inline"}}
+						color="textPrimary"
+					>
+					</Typography>
+					{props.video.snippet.channelTitle}
+				</React.Fragment>
+			}
+		/>
+	</ListItem>
+);
 const ArtistComponent = (props) => {
 	const classes = useStyles();
 	let history = useHistory();
@@ -109,20 +139,44 @@ const ArtistComponent = (props) => {
 			abortController.abort();
 		};
 	}, []);
+	const trigger = useScrollTrigger();
 	return (
 		<div className={`ArtistComponent ${classes.root}`}>
-			<AppBar color={"transparent"} elevation={0} style={{position: "relative"}}>
+			{artistObject.items ? <Slide direction={"down"} in={!trigger}>
+				<AppBar style={{position: "fixed"}} className={!trigger ? "d-none" : ""}>
+					<Toolbar>
+						<IconButton onClick={goBack} edge="start" aria-label="close">
+							<ArrowBack/>
+						</IconButton>
+						<Typography variant={"h6"} color={"#FFF"}>
+							{artistObject.author.name}
+						</Typography>
+						<div style={{flex: "1 1 auto"}}/>
+						<Avatar src={artistObject.author.avatar}/>
+					</Toolbar>
+				</AppBar>
+			</Slide> : <AppBar color={"transparent"} elevation={0}>
 				<Toolbar color={"#BBBBBB"} style={{color: "#BBBBBB"}}>
 					<IconButton onClick={goBack} edge="start" aria-label="close">
 						<ArrowBack/>
 					</IconButton>
 					<div style={{flex: "1 1 auto"}}/>
 				</Toolbar>
-			</AppBar>
+			</AppBar>}
+
 			{
+				/*
+					<AppBar position={"sticky"}>
+						<div style={{height:"30vh", width: "100vw", position: "fixed", backgroundImage: "url(https://yt3.ggpht.com/a/AATXAJz7PXt8iYi7r9OMooklphLiaEDTUYHeCr701DzRWw=s100-c-k-c0xffffffff-no-rj-mo)", backgroundRepeat: "no-repeat", backgroundSize: "cover"}}></div>
+					</AppBar>
+				*/
 				artistObject.items ? (
 					<React.Fragment>
-						<div className={"text-left w-100 mx-3"}>
+						<div className={"text-left w-100 mx-3 pt-5 backgroundImage"} style={{
+							backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${artistObject.author.avatar})`,
+							backgroundRepeat: "no-repeat",
+							backgroundSize: "cover"
+						}}>
 							<div className={"p-3"} style={{display: "inline-flex"}}>
 								<Avatar src={artistObject.author.avatar} style={{width: "5rem", height: "5rem"}}/>
 								<div className={"text-center"}
@@ -136,17 +190,20 @@ const ArtistComponent = (props) => {
 								</div>
 							</div>
 							<br/>
-							<Typography variant={"overline"} className={"pl-3"}>{artistObject.author.name}</Typography>
-							<Divider className={"my-2"}/>
+							<Typography variant={"overline"}
+										className={"pl-3 mb-3"}>{artistObject.author.name}</Typography>
 						</div>
-						<Grid container spacing={0.5}>
+						<List>
 							{
 								artistObject.items.map((song, index) => (
-									<ArtistSongItem video={song} index={index} key={index}
-													onClick={PlaySong}/>
+									<React.Fragment>
+										<ArtistSongListItem video={song} index={index} key={index}
+															onClick={PlaySong}/>
+										<Divider variant="inset" component="li"/>
+									</React.Fragment>
 								))
 							}
-						</Grid>
+						</List>
 					</React.Fragment>
 				) : <Preloader/>
 			}

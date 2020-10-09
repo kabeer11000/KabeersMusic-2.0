@@ -212,9 +212,10 @@ const App = (props) => {
 											   )}/>
 										<Player offline={navigator.onLine} misc_func={misc_functions}
 												hidden={mainState.player}
-												changes={changeStates} {...sharedProps}/>
+												changes={changeStates}
+												progress_hidden={mainState.backdrop} {...sharedProps}/>
 										<MiniPlayer hidden={mainState.player} {...sharedProps}/>
-										<Route path={"/home"}
+										<Route exact path={["/home", "/"]}
 											   render={() => <HomeComponent {...sharedProps} misc={misc_functions}
 																			appState={changeStates}/>}/>
 

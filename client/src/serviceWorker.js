@@ -128,7 +128,7 @@ function checkValidServiceWorker(swUrl, config) {
 		});
 }
 
-const blacklist = [/^\/_/, /\/[^/]+\.[^/]+$/];
+//const blacklist = [/^\/_/, /\/[^/]+\.[^/]+$/];
 export function unregister() {
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.ready

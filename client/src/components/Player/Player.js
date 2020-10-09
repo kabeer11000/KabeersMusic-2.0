@@ -1,16 +1,6 @@
 import React, {useEffect} from "react";
 import "./Player.css";
-import {
-	AppBar,
-	Avatar,
-	CircularProgress,
-	Dialog,
-	Drawer,
-	IconButton,
-	Slide,
-	Toolbar,
-	Typography
-} from "@material-ui/core";
+import {AppBar, Avatar, CircularProgress, Drawer, IconButton, Slide, Toolbar, Typography} from "@material-ui/core";
 import {
 	AccountCircle,
 	ArrowBack,
@@ -52,6 +42,7 @@ import {castEnabled, castSnackbar, getCastDevices, sendCast} from "../../functio
 import CastDialog from "./CastDialog";
 import Button from "@material-ui/core/Button";
 import ImagesSlider from "./ComingNext/ImagesSlider";
+import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -127,6 +118,10 @@ const Player = (props) => {
 	const handleClose = () => {
 		addToReduxState([false, true]);
 		setOpen(false);
+	};
+	const handleOpen = () => {
+		addToReduxState([true, false]);
+		setOpen(true);
 	};
 
 	const ReOpen = () => {
@@ -230,6 +225,7 @@ const Player = (props) => {
 			abortController.abort();
 		};
 	}, []);
+
 	function SkipSong(data) {
 		let videoID = "";
 		if (typeof data.video.id === "object") videoID = data.video.id.videoId;
@@ -291,12 +287,22 @@ const Player = (props) => {
 			abortController.abort();
 		};
 	}, []);
-	const downloadButtonState = 0;
 	return (
 		<div className="Player">
 			<CastDialog onClose={handleCastDialogClose} open={castDialogOpen} selectedValue={castSelectedDevice}
 						emails={castDevices}/>
-			<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+			<SwipeableDrawer
+				onClose={handleClose}
+				anchor={"bottom"}
+				variant={"temporary"}
+				ModalProps={{
+					keepMounted: true,
+				}}
+				swipeAreaWidth={20}
+				disableBackdropTransition
+				open={open}
+				disableSwipeToOpen={!props.componentState.MiniPlayer && !open}
+				onOpen={handleOpen}>
 				<AppBar color={"transparent"} elevation={0} style={{position: "relative"}}>
 					<Toolbar color={"#BBBBBB"} style={{color: "#BBBBBB"}}>
 						<IconButton edge="start" onClick={handleClose} aria-label="close">
@@ -325,28 +331,29 @@ const Player = (props) => {
 				</AppBar>
 				<div style={{backgroundColor: "primary.dark", height: "90vh", width: "100%", minHeight: "90vh"}}>
 					<div
-						className={" -ImageCircle thumbnail- text-center"} style={{
+						className={" -ImageCircle thumbnail- text-center my-0 py-0"} style={{
 						marginTop: "0rem"
 					}}>
-						<ImagesSlider playSong={SkipSong}/>
-						<Typography variant={"h6"} component={"div"} className={"mx-4 py-1 text-truncate text-left"}>
+						<ImagesSlider playSong={SkipSong} nowLoading={props.progress_hidden}/>
+						<Typography variant={"h6"} component={"div"} className={"mx-4 py-0 text-truncate text-left"}>
 							{props.videoElement.snippet.title || "Untitled"}
 							<Typography variant={"body2"} style={{opacity: "50%"}}>
 								{props.videoElement.snippet.channelTitle || "Unavailable"}
 							</Typography>
 						</Typography>
 						<div className={"mx-4"}><CustomSlider/></div>
-						<div className={"container mb-2 smallOnDesktop"} style={{
+						<div className={"container mb-0 smallOnDesktop"} style={{
 							width: "100%",
 							display: "inline-flex",
 							justifyContent: "space-around",
 							transform: "translate(0%)"
 						}}>
 							{props.playList.list.items[props.playList.index - 1] ?
-								<IconButton onClick={() => {
-									const item = props.playList.list.items[props.playList.index - 1];
-									SkipSong({video: item, index: props.playList.index - 1});
-								}}><SkipPrevious/></IconButton> :
+								<IconButton onClick={() =>
+									SkipSong({
+										video: props.playList.list.items[props.playList.index - 1],
+										index: props.playList.index - 1
+									})}><SkipPrevious/></IconButton> :
 								<IconButton disabled={true}><SkipPrevious/></IconButton>}
 							<IconButton onClick={() => audioElement.currentTime -= 10}>
 								<Replay10Icon/>
@@ -358,8 +365,10 @@ const Player = (props) => {
 								<Forward10/>
 							</IconButton>
 							{props.playList.list.items[props.playList.index + 1] ? <IconButton onClick={() => {
-								const item = props.playList.list.items[props.playList.index + 1];
-								SkipSong({video: item, index: props.playList.index + 1});
+								SkipSong({
+									video: props.playList.list.items[props.playList.index + 1],
+									index: props.playList.index + 1
+								});
 							}}><SkipNext/></IconButton> : <IconButton disabled={true}><SkipNext/></IconButton>}
 						</div>
 						<br/>
@@ -409,7 +418,7 @@ const Player = (props) => {
 						</Drawer>
 					</div>
 				</div>
-			</Dialog>
+			</SwipeableDrawer>
 		</div>
 	);
 };

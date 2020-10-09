@@ -1,5 +1,5 @@
-//export const hostName = `${window.location.protocol}//${window.location.host}`;
-export const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
+export const hostName = `${window.location.protocol}//${window.location.host}`;
+//export const hostName = `${window.location.protocol}//${window.location.hostname}:9000`;
 
 const endPoints = {
 	hostName: hostName,

@@ -156,19 +156,18 @@ const HomeComponent = (props) => {
 		}).catch(e => enqueueSnackbar("Cannot Play Song"));
 	}
 
-	function init() {
+	const init = () => {
 		if (localStorage.getItem(storageIndex.homeSongObject) === null || !(Date.now() - parseInt(localStorage.getItem(storageIndex.homeTimeObject))) / (100 * 60) > 1) Load();
 		else setSongObj(JSON.parse(localStorage.getItem(storageIndex.homeSongObject)));
 		initAuth().then(token => fetch(endPoints.getFeedArtists, {
 			headers: new Headers({Authorization: `Bearer ${token}`}),
 			signal: abortController.signal
 		}).then(e => e.json()).then(e => setArtists(e)).catch(e => console.log(e)));
-	}
+	};
 
 	useEffect(() => {
 		if (navigator.onLine) init();
-		else enqueueSnackbar("Failed to Load Songs");
-
+		//else enqueueSnackbar("Failed to Load Songs");
 		return () => {
 			abortController.abort();
 		};
@@ -187,15 +186,18 @@ const HomeComponent = (props) => {
 				<div className={`cardSlider text-left Slider ${artists.items ? "d-block" : "d-none"}`}>
 					{artists.items ? (
 						artists.items.map((v, i) => (
-							<Chip
-								component={Link}
-								to={"/artist?id=" + v.id}
-								avatar={<Avatar>{v.name.charAt(0)}</Avatar>}
-								label={v.name}
-								clickable
-								className={"mx-1"}
-								deleteIcon={<Done/>}
-							/>
+
+							<Grow in={true}>
+								<Chip
+									component={Link}
+									to={"/artist?id=" + v.id}
+									avatar={<Avatar>{v.name.charAt(0)}</Avatar>}
+									label={v.name}
+									clickable
+									className={"mx-1"}
+									deleteIcon={<Done/>}
+								/>
+							</Grow>
 						))
 					) : null}
 				</div>

@@ -18,6 +18,7 @@ import {getSong, getSongFromStorage, SuggestOfflineSongs} from "../../functions/
 import {Button, Slide} from "@material-ui/core";
 import SkeletonList from "../SkeletonList/SkeletonList";
 import {pure} from "recompose";
+import Divider from "@material-ui/core/Divider";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -104,24 +105,8 @@ const SearchResultComponent = (props) => {
 		if (!props.query) return history.push("/search");
 		if (navigator.onLine) {
 			SearchYoutube(props.query, abortController)
-				.catch(setListItems(errorPage()))
-				.then(resultsArray => {
-					if (!resultsArray) return;
-					setListItems(() => resultsArray.items ? resultsArray.items.map((value, index) => {
-						if (!value) return;
-						return (
-							<ListItem button key={index} onClick={() => PlaySong(value, {
-								list: resultsArray, index: index
-							})}>
-								<ListItemIcon>
-									<Avatar alt={value.snippet.title} src={value.snippet.thumbnails.default.url}/>
-								</ListItemIcon>
-								<ListItemText primary={`${value.snippet.title}`}
-											  secondary={`${value.snippet.channelTitle}`}/>
-							</ListItem>
-						);
-					}) : errorPage("Nothing Found Retry"));
-				});
+				.catch(setListItems(null))
+				.then(setListItems);
 		} else {
 			SuggestOfflineSongs(props.query)
 				.then(resultsArray => {
@@ -154,7 +139,7 @@ const SearchResultComponent = (props) => {
 			<Dialog fullScreen open={open} onClose={() => {
 			}}>
 				<AppBar className={"fixed-top"}>
-					<Toolbar component={Link} to={`/search?q=${props.query}`}>
+					<Toolbar component={Link} to={`/search?q=${props.query}`} style={{textDecoration: "none"}}>
 						{window.history ? <IconButton onClick={() => {
 							setOpen(false);
 						}} component={Link} style={{textDecoration: "none"}} to={"/home"} color="primary.light"
@@ -173,7 +158,41 @@ const SearchResultComponent = (props) => {
 				</AppBar>
 				<div className={"container px-3"} style={{marginTop: "4rem"}}>
 					<div className={"row"}>
-						{listItems && listItems.length ? listItems : <SkeletonList length={10}/>}
+						{listItems && listItems.items ? (
+							<React.Fragment>
+								{listItems.accounts.length ? (
+									<React.Fragment>
+										{listItems.accounts.map((value, index) => (
+											<ListItem component={Link} button key={index}
+													  to={`/artist?id=${value.url.split("/").slice(-1)[0]}`}>
+												<ListItemIcon>
+													<Avatar alt={value.title} src={value.image}/>
+												</ListItemIcon>
+												<ListItemText primary={`${value.title}`}
+															  secondary={value.subCountLabel ? `${value.subCountLabel} Listeners` : "No Listeners"}/>
+											</ListItem>
+										))}
+										<Divider/>
+									</React.Fragment>
+								) : null}
+								{listItems.items.length ? (
+									<React.Fragment>
+										{listItems.items.map((value, index) => (
+											<ListItem button key={index} onClick={() => PlaySong(value, {
+												list: listItems, index: index
+											})}>
+												<ListItemIcon>
+													<Avatar alt={value.snippet.title}
+															src={value.snippet.thumbnails.default.url}/>
+												</ListItemIcon>
+												<ListItemText primary={`${value.snippet.title}`}
+															  secondary={`${value.snippet.channelTitle}`}/>
+											</ListItem>
+										))}
+									</React.Fragment>
+								) : null}
+							</React.Fragment>
+						) : <SkeletonList length={10}/>}
 					</div>
 				</div>
 			</Dialog>

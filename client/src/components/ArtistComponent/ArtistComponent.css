@@ -1,2 +1,7 @@
 .ArtistComponent {
+
+}
+
+.backgroundImage:before {
+    filter: blur(5px);
 }

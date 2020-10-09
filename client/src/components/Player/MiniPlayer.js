@@ -1,4 +1,4 @@
-import {AppBar, Grow, IconButton, makeStyles, Typography} from "@material-ui/core";
+import {AppBar, IconButton, makeStyles, Typography} from "@material-ui/core";
 import {Close, Pause, PlayCircleOutline} from "@material-ui/icons";
 import React, {useEffect} from "react";
 import store from "../../Redux/store/store";
@@ -98,106 +98,107 @@ const MiniPlayer = (props) => {
 		});
 		 */
 	});
-
-	if (!ComponentStates.dialog && ComponentStates.MiniPlayer && audioElement !== null || "" || undefined) {
-		return props.isTv ? (
-			<AppBar color={"slideDown primary.miniPlayer.main"} style={{
-				position: "fixed",
-				top: "auto",
-				bottom: "0",
-				width: "18vw",
-				height: "40vh"
-			}} component={"div"} elevation={1} className={"d-inline-flex KabeersMiniPlayerContainer"}>
-				<Grow in={true}>
-					<Card className={"SongCard"} style={{width: "100%", height: "100%", borderRadius: 0}}
-						  variant={"elevation"}
-						  elevation={3}>
-						<FocusNode>
-							<CardActionArea>
-								<React.Fragment>
-									<IconButton style={{position: "absolute", right: "0.25rem", top: "0.25rem"}}
-												onClick={cutCurrentSongState}><Close/></IconButton>
-									{button}
-									<CardMedia
-										component={"img"}
-										alt="Contemplative Reptile"
-										image={props.thumbnail || videoElement.snippet.thumbnails.high.url}
-										title={videoElement.snippet.title}
-										loading={"lazy"}
-										style={{height: "26vh", width: "100%"}}
-									/>
-									<div style={{width: "100%", position: "absolute"}}><CustomMiniPlayerSlider/></div>
-								</React.Fragment>
-								<CardContent onClick={() => {
-									props.reOpenDialog();
-									// Update Redux State
-									store.dispatch(setCurrentSongState(audioElement, videoElement, {
-										Dialog: true,
-										MiniPlayer: false
-									}, props.reOpenDialog, props.playList));
-									if (props.componentState.Dialog) store.getState().currentSong.reOpenDialog();
-								}} className={"text-left"}>
-									<Typography gutterBottom variant="h6" component="p" className={"text-truncate"}>
-										{videoElement.snippet.title.slice(0, 70) + " ..."}
-									</Typography>
-									<Typography variant="body2" color="textSecondary" style={{textDecoration: "none"}}
-												component={Link} to={`/artist?id=${videoElement.snippet.channelId}`}
-												className={"text-truncate"}>
-										{videoElement.snippet.description ? videoElement.snippet.description.slice(0, 70) + " ..." : ""}
-										<span className={"text-muted"}>
+	return (
+		<React.Fragment>
+			{(ComponentStates.MiniPlayer && audioElement) ? (
+				props.isTv ? (
+					<AppBar color={"slideDown primary.miniPlayer.main"} style={{
+						position: "fixed",
+						top: "auto",
+						bottom: "0",
+						maxWidth: "30rem",
+						maxHeight: "17rem",
+					}} component={"div"} elevation={1} className={"d-inline-flex KabeersMiniPlayerContainer"}>
+						<Card className={"SongCard"} style={{width: "100%", height: "100%", borderRadius: 0}}
+							  variant={"elevation"}
+							  elevation={3}>
+							<FocusNode>
+								<CardActionArea>
+									<React.Fragment>
+										<IconButton style={{position: "absolute", right: "0.25rem", top: "0.25rem"}}
+													onClick={cutCurrentSongState}><Close/></IconButton>
+										{button}
+										<CardMedia
+											component={"img"}
+											alt="Contemplative Reptile"
+											image={props.thumbnail || videoElement.snippet.thumbnails.high.url}
+											title={videoElement.snippet.title}
+											loading={"lazy"}
+											style={{height: "11rem", width: "100%"}}
+										/>
+										<div style={{width: "100%", position: "absolute"}}><CustomMiniPlayerSlider/>
+										</div>
+									</React.Fragment>
+									<CardContent onClick={() => {
+										props.reOpenDialog();
+										// Update Redux State
+										store.dispatch(setCurrentSongState(audioElement, videoElement, {
+											Dialog: true,
+											MiniPlayer: false
+										}, props.reOpenDialog, props.playList));
+										if (props.componentState.Dialog) store.getState().currentSong.reOpenDialog();
+									}} className={"text-left"}>
+										<Typography gutterBottom variant="h6" component="p" className={"text-truncate"}>
+											{videoElement.snippet.title.slice(0, 70) + " ..."}
+										</Typography>
+										<Typography variant="body2" color="textSecondary"
+													style={{textDecoration: "none"}}
+													component={Link} to={`/artist?id=${videoElement.snippet.channelId}`}
+													className={"text-truncate"}>
+											{videoElement.snippet.description ? videoElement.snippet.description.slice(0, 70) + " ..." : ""}
+											<span className={"text-muted"}>
 											{videoElement.snippet.channelTitle}
 										</span>
-									</Typography>
-									{/*192.168.10.3*/}
-								</CardContent>
-							</CardActionArea>
-						</FocusNode>
-					</Card>
-				</Grow>
-			</AppBar>
-		) : (
-			<AppBar color={"slideDown primary.miniPlayer.main"} style={{
-				position: "fixed",
-				top: "auto",
-				bottom: "3.5rem",
-				width: "100%",
-			}} component={"div"} elevation={1} className={"d-inline-flex KabeersMiniPlayerContainer"}>
-				<div className={"d-inline-flex"}>
-					<div onClick={() => {
-						props.reOpenDialog();
-						// Update Redux State
-						store.dispatch(setCurrentSongState(audioElement, videoElement, {
-							Dialog: true,
-							MiniPlayer: false
-						}, props.reOpenDialog, props.playList));
-						if (props.componentState.Dialog) store.getState().currentSong.reOpenDialog();
-					}} className={"d-inline-flex"}>
-						<img
-							onError="this.onerror=null;this.src='http://docs-kabeersnetwork-kview-app-sta.rf.gd/Private/uploads/5f58af5918860unnamed.jpg';"
-							src={videoElement.snippet.thumbnails.high.url} style={{
-							width: "4rem",
-							height: "3rem",
-							maxWidth: "5rem!important",
-							maxHeight: "4rem!important"
-						}}
-							alt={"Song Image"} className={"KabeersMiniPlayerImage"}/>
-						<Typography component={"span"} className={"text-truncate p-2 KabeersMiniPlayerText"}
-									color={"#000"} style={{
-							width: "10em",
-							color: "primary.miniPlayer.text"
-						}}>{videoElement.snippet.title || "Untitled"}
-						</Typography>
-					</div>
-					<div className={"float-right ml-auto"}>
-						{button}
-						<IconButton onClick={cutCurrentSongState}><Close/></IconButton>
-					</div>
-				</div>
-				<CustomMiniPlayerSlider/>
-			</AppBar>
-		);
-	}
-	return (<React.Fragment/>);
+										</Typography>
+									</CardContent>
+								</CardActionArea>
+							</FocusNode>
+						</Card>
+					</AppBar>
+				) : (
+					<AppBar color={"slideDown primary.miniPlayer.main"} style={{
+						position: "fixed",
+						top: "auto",
+						bottom: "3.5rem",
+						width: "100%",
+					}} component={"div"} elevation={1} className={"d-inline-flex KabeersMiniPlayerContainer"}>
+						<div className={"d-inline-flex"}>
+							<div onClick={() => {
+								props.reOpenDialog();
+								// Update Redux State
+								store.dispatch(setCurrentSongState(audioElement, videoElement, {
+									Dialog: true,
+									MiniPlayer: false
+								}, props.reOpenDialog, props.playList));
+								if (props.componentState.Dialog) store.getState().currentSong.reOpenDialog();
+							}} className={"d-inline-flex"}>
+								<img
+									onError="this.onerror=null;this.src='http://docs-kabeersnetwork-kview-app-sta.rf.gd/Private/uploads/5f58af5918860unnamed.jpg';"
+									src={videoElement.snippet.thumbnails.high.url} style={{
+									width: "4rem",
+									height: "3rem",
+									maxWidth: "5rem!important",
+									maxHeight: "4rem!important"
+								}}
+									alt={"Song Image"} className={"KabeersMiniPlayerImage"}
+									loading={"lazy"}/>
+								<Typography component={"span"} className={"text-truncate p-2 KabeersMiniPlayerText"}
+											color={"#000"} style={{
+									width: "10em",
+									color: "primary.miniPlayer.text"
+								}}>{videoElement.snippet.title || "Untitled"}
+								</Typography>
+							</div>
+							<div className={"float-right ml-auto"}>
+								{button}
+								<IconButton onClick={cutCurrentSongState}><Close/></IconButton>
+							</div>
+						</div>
+						<CustomMiniPlayerSlider/>
+					</AppBar>
+				)
+			) : null}
+		</React.Fragment>);
 };
 
 const mapStateToProps = state => ({
